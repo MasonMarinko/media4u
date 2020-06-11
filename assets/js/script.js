@@ -1,6 +1,8 @@
 //============= Don't forget to add query locators in order to grab answers below
 
 
+// NEED TO ADD INPUTS INTO FETCH
+
 var userSearch = function (title, adult, year, releaseYear) {
     console.log(title)
     console.log(adult)
@@ -29,15 +31,29 @@ var userSearch = function (title, adult, year, releaseYear) {
 //============ together and send to the "userSearch"/fetch request============================================//
 var userSearchInformation = function () {
     
+
+
+    //======= Movie title checks if a title is entered and then returns a movie title they've selected
     var movieName = movieTitle();
     // searchEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
 
+
+
+    //===== Include adult checks if someone wants adult films included in search, if they don't enter anything it will default to NO====
     var includeAdult = adultChoice();
     // something = ""; ==== set this to whatever the default value is, if drop down make it so it gets set back to blank or please select option
 
-    var releaseDate = releaseInput(); //<======== Release date function, verifies if date is 4 digits, otherwise loops back
 
-    // userSearch(movieName, includeAdult, year, releaseYear)    //<========== CALL TO FETCH, COMMENTED FOR NOW
+
+
+    //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
+    var releaseDate = releaseInput(); 
+    // something == "" //<=========================clear field after they search
+
+
+
+    // sends all inputs to fetch/userSearch
+    userSearch(movieName, includeAdult, year, releaseYear)    //<========== CALL TO FETCH, COMMENTED FOR NOW
 }
 
 
@@ -45,8 +61,8 @@ var userSearchInformation = function () {
 
 
 
-
-
+//================ FOURTH FUNCTION=========================//
+// function checks to make sure year is 4 digits long, and is beyond 1887 (first movie 1888) and returns a year/integer
 var releaseInput = function() {
     var dateInput = "2006"; //<========Change to grab from HTML/Search Box
     var dateInputConverted = parseInt(dateInput);    
@@ -69,7 +85,7 @@ var releaseInput = function() {
 
 
 
-
+//================ SECOND FUNCTION=========================//
 //==================== function takes in search result for movie title and returns answer to "userSearchInformation, if user leaves blank then "any" is returned
 //==================== this could also be an alert/modal if preferred.==================================//
 
@@ -93,7 +109,7 @@ var movieTitle = function(movieTitleInput) { //<====================== Ready
 
 
 
-//================ SECOND FUNCTION=========================//
+//================ THIRD FUNCTION=========================//
 //================ function will check the drop down value and return whether the user selected true or false================//
 //=============== ask group if they would like to have this default to NO and not be asked, but function is ready============//
 var adultChoice = function() {
