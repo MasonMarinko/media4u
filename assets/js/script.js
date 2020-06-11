@@ -28,6 +28,26 @@ var formHandler = function (event) {
     }
 };
 
-
+// function to fetch book data using user input as parameter
+var bookFetchHandler = function (searchTerm) {
+    var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" + searchTerm;
+    fetch(apiUrl)
+    .then(function (response) {
+            // request was successful
+            if (response.ok) {
+                response.json().then(function (data) {
+                    console.log(data);
+                    // send data to function which will create object of
+                    // relevent information
+                    // bookObjectCreator(data);
+                });
+            } else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            alert("Unable to connect");
+        });
+};
 
 submitButtonEl.addEventListener("click", formHandler);
