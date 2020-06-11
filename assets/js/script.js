@@ -3,9 +3,7 @@
 
 // NEED TO ADD INPUTS INTO FETCH
 
-var userSearch = function (title, adult, year, releaseYear) {
-    console.log(title)
-    console.log(adult)
+var userSearch = function (title, adult, releaseYear) {
     var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=Avengers&include_adult=false&region=TEST&year=TEST&primary_release_year=TEST"
     fetch(apiUrl)
         .then(function (response) {
@@ -53,7 +51,7 @@ var userSearchInformation = function () {
 
 
     // sends all inputs to fetch/userSearch
-    userSearch(movieName, includeAdult, year, releaseYear)    //<========== CALL TO FETCH, COMMENTED FOR NOW
+    userSearch(movieName, includeAdult, releaseDate)    //<========== CALL TO FETCH, COMMENTED FOR NOW
 }
 
 
