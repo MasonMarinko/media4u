@@ -1,15 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Media 4 U</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
 
 </head>
+
 <body>
+    <section class='hero is-fullheight'>
+
+
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns is-centered">
+                    <div class="column is-one-third">
+                        <form>
+                            <div class="field is-horizontal">
+                                <div class="field-label ">
+                                    <label class="label">Search For</label>
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <div class="control is-expanded">
+                                            <div class="select is-fullwidth">
+                                                <select id="media-select">
+                                                    <option value="movies" selected="true">Movies</option>
+                                                    <option value="music">Music</option>
+                                                    <option value="books">Books</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="control is-expanded">
+                                            <div class="select is-fullwidth">
+                                                <select id="search-by">
+                                                    <!-- should change dynamically depending on media type selected -->
+                                                    <option>Author</option>
+                                                    <option>Title</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field has-addons is-horizontal">
+                                <div class="field-label">
+                                    <label class="label">Search Term</label>
+                                </div>
+                                <div class="field-body">
+                                    <div class="control is-expanded">
+                                        <input class="input" id="search-input" type="text" placeholder="">
+                                    </div>
+                                    <div class="control">
+                                        <button class="button is-link" id="submit-button">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
 
     <script src="./assets/js/script.js"></script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+
+</html>
+>>>>>>> a1d7b673d25fc69afeb8ff89599143db6450f493
