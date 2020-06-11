@@ -1,5 +1,6 @@
 var mediaSelectEl = document.getElementById("media-select");
 var searchInputEl = document.getElementById("search-input");
+var searchByEl = document.getElementById("search-by");
 var submitButtonEl = document.getElementById("submit-button");
 
 // funtion to check which media types are selected
@@ -15,13 +16,11 @@ var formHandler = function (event) {
         console.log("sent to movies");
         // send searchTerm to Mason's movie fetch function
         // movieFetchHandler(searchTerm);
-    }
-    else if (selectedMedia === "music") {
+    } else if (selectedMedia === "music") {
         console.log("sent to music");
         // send searchTerm to music fetch function
         // musicFetchHandler(searchTerm);
-    }
-    else if (selectedMedia === "books") {
+    } else if (selectedMedia === "books") {
         console.log("sent to books");
         // send searchTerm to book fetch function
         bookFetchHandler(searchTerm);
@@ -30,24 +29,48 @@ var formHandler = function (event) {
 
 // function to fetch book data using user input as parameter
 var bookFetchHandler = function (searchTerm) {
-    var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" + searchTerm;
-    fetch(apiUrl)
-    .then(function (response) {
-            // request was successful
-            if (response.ok) {
-                response.json().then(function (data) {
-                    console.log(data);
-                    // send data to function which will create object of
-                    // relevent information
-                    // bookObjectCreator(data);
-                });
-            } else {
-                alert("Error: " + response.statusText);
-            }
-        })
-        .catch(function (error) {
-            alert("Unable to connect");
-        });
+    if (searchByEl.value === "title") {
+        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
+            searchTerm;
+        console.log(apiUrl);
+        fetch(apiUrl)
+            .then(function (response) {
+                // request was successful
+                if (response.ok) {
+                    response.json().then(function (data) {
+                        // send data to function which will create object of
+                        // relevent information
+                        // bookObjectCreator(data);
+                    });
+                } else {
+                    alert("Error: " + response.statusText);
+                }
+            })
+            .catch(function (error) {
+                alert("Unable to connect");
+            });
+    } else if (searchByEl.value === "author") {
+        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
+            searchTerm +
+            "+inauthor:" + searchTerm;
+        console.log(apiUrl);
+        fetch(apiUrl)
+            .then(function (response) {
+                // request was successful
+                if (response.ok) {
+                    response.json().then(function (data) {
+                        // send data to function which will create object of
+                        // relevent information
+                        // bookObjectCreator(data);
+                    });
+                } else {
+                    alert("Error: " + response.statusText);
+                }
+            })
+            .catch(function (error) {
+                alert("Unable to connect");
+            });
+    }
 };
 
 submitButtonEl.addEventListener("click", formHandler);
