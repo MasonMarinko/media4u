@@ -1,24 +1,83 @@
 //============= Don't forget to add query locators in order to grab answers below
 
 
+
 // NEED TO ADD INPUTS INTO FETCH
 
-var userSearch = function (title, adult, releaseYear) {
-    var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=Avengers&include_adult=false&region=TEST&year=TEST&primary_release_year=TEST"
+var userSearch = function (title, adult, releaseYear, genreId) {
+    var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" + title + "&include_adult=" + adult + "&primary_release_year=" + releaseYear
     fetch(apiUrl)
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
-                    console.log(data)
+                    genreCheck(data, genreId)
                 });
             } else {
-                alert("Error: " + response.statusText + '. ' + 'Please make sure the format is City, State');
+                alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
             }
         })
         .catch(function (error) {
-            alert("Unable to connect to Weather Services");
+            alert("Unable to connect to Movie Database, please try again."); //<========== Replace alert with MODAL
         });
 };
+
+
+
+
+
+
+
+
+
+var genreCheck = function(genreInfo, genreInput) {
+    var resultLength = genreInfo.results.length
+    var resultId = genreInfo.results
+
+    for (var i = 0; i < resultLength; i++) {
+        var resultArray = resultId[i].genre_ids
+        if (resultArray.includes(genreInput)) {
+        console.log(resultId[i])
+        } else {
+            return
+    }
+}
+}
+
+
+
+
+
+
+var genreConversion = function(userInput) {
+    var genreList = {
+        "Action": 28,
+        "Adventure": 12,
+        "Animation": 16,
+        "Comedy": 35,
+        "Crime": 80,
+        "Documentary": 99,
+        "Drama": 18,
+        "Family": 10751,
+        "Fantasy": 14,
+        "History": 36,
+        "Horror": 27,
+        "Music": 10402,
+        "Mystery": 9648,
+        "Romance": 10749,
+        "Thriller": 53,
+        "War": 10752,
+        "Western": 37
+    };
+    return (genreList[userInput])
+    }
+
+
+
+
+
+    
+
+
 
 
 
@@ -48,10 +107,11 @@ var userSearchInformation = function () {
     var releaseDate = releaseInput(); 
     // something == "" //<=========================clear field after they search
 
+    var genreId = genreConversion("Adventure"); //<============= Drop down box with all the typical options for genre
 
 
     // sends all inputs to fetch/userSearch
-    userSearch(movieName, includeAdult, releaseDate)    //<========== CALL TO FETCH, COMMENTED FOR NOW
+    userSearch(movieName, includeAdult, releaseDate, genreId)    //<========== CALL TO FETCH, COMMENTED FOR NOW
 }
 
 
@@ -65,16 +125,15 @@ var releaseInput = function() {
     var dateInput = "2006"; //<========Change to grab from HTML/Search Box
     var dateInputConverted = parseInt(dateInput);    
     var dateInputCombined = dateInputConverted.toString();
+    var currentYear = moment().year();
     
-    if (dateInputCombined.length === 4 && dateInputConverted > 1887) { // <====== first movie made in 1888, no need to search before then. Also verified after being parsed that the length is 4
+    if (dateInputCombined.length === 4 && dateInputConverted > 1887 && dateInputConverted <= currentYear) { // <====== first movie made in 1888, no need to search before then. Also verified after being parsed that the length is 4
         return dateInputConverted
     }  else {
-        alert("Please enter a valid year") //<===================== Change to MODAL, make sure that when this loops to beginning of function it only removes and wants correct input from the YEAR search field
         var dateInput = ""
-        releaseInput();
+        return "any"    
     }
 }
-
 
 
 
@@ -89,12 +148,12 @@ var releaseInput = function() {
 
 var movieTitle = function(movieTitleInput) { //<====================== Ready
     
-    var nameSearchResult = "";//===== searchEl.value;  //<======================= update to search box once done!
+    var nameSearchResult = "Avengers";//===== searchEl.value;  //<======================= update to search box once done!
 
     if (nameSearchResult) {
         return nameSearchResult;
     } else if (nameSearchResult === "") {
-        return nameSearchResult = "any"
+        return "any"
         // alert("Please enter a movie title to search") //<=========================UPDATE and make a modal!
     }
 }
@@ -115,11 +174,11 @@ var adultChoice = function() {
     var finalRes = adultSearchResult.toLowerCase(); //<==== In case there is ever typing toLowerCase will make it lower case to ensure it matches the if statement
 
     if (finalRes === "yes") {
-        return finalRes = "true"; //<====================== Verify API can take capital True
+        return "true";
     } else if (finalRes === "no") {
-        return finalRes = "false"// <=================== Verify API can take capital False
+        return "false";
     } else {
-        return finalRes = "false" //<================= Default value is going to be No/False for safety
+        return "false"; //<================= Default value is going to be No/False for safety
     }
 }
 
