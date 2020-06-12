@@ -27,7 +27,6 @@ var userSearch = function (title, adult, releaseYear, genreId) {
 
 
 
-
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
 var genreCheck = function(genreInfo, genreInput) {
     var resultLength = genreInfo.results.length
