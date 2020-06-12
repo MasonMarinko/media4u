@@ -76,18 +76,12 @@ var bookObjectCreator = function (data) {
     };
     // define "authors" location in data
     var authorsArray = data.items[randomNumber].volumeInfo.authors;
-    // save all authors in array
-    var authors = [];
-    for (i = 0; i<authorsArray.length; i++) {
-        var newAuthor = authorsArray[i];
-        authors.push(newAuthor);
-    }
     // create book object
     var bookObject = {
         title: title,
         imageUrl: imageUrl,
         description: description,
-        authors: authors
+        authors: authorsArray
     }
     console.log(bookObject);
     // send bookObject to DOM element creator function
