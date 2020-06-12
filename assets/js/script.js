@@ -4,8 +4,8 @@
 
 // NEED TO ADD INPUTS INTO FETCH
 
-var userSearch = function (title, adult, releaseYear, genreId) {
-    var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" + title + "&include_adult=" + adult + "&primary_release_year=" + releaseYear
+var userSearch = function (title, releaseYear, genreId) {
+    var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" + title + "&include_adult=false&primary_release_year=" + releaseYear
     fetch(apiUrl)
         .then(function (response) {
             if (response.ok) {
@@ -85,13 +85,13 @@ var genreConversion = function(userInput) {
 //============ MAIN search function that calls everything else for MOVIE TITLES! ==============================//
 //============= Function that takes all search criteria and will compound it =================================//
 //============ together and send to the "userSearch"/fetch request============================================//
-var userSearchInformation = function () {
-    
+var userSearchInformation = function (title) {
 
 
     //======= Movie title checks if a title is entered and then returns a movie title they've selected
-    var movieName = movieTitle();
-    // searchEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
+    var movieName = movieTitle(title);
+    searchInputEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
+    console.log(movieName)
 
 
 
@@ -106,7 +106,7 @@ var userSearchInformation = function () {
     var releaseDate = releaseInput(); 
     // something == "" //<=========================clear field after they search
 
-    var genreId = genreConversion("Adventure"); //<============= Drop down box with all the typical options for genre
+    var genreId = genreConversion(); //<============= Drop down box with all the typical options for genre
 
 
     // sends all inputs to fetch/userSearch
@@ -146,12 +146,10 @@ var releaseInput = function() {
 //==================== this could also be an alert/modal if preferred.==================================//
 
 var movieTitle = function(movieTitleInput) { //<====================== Ready
-    
-    var nameSearchResult = "Avengers";//===== searchEl.value;  //<======================= update to search box once done!
 
-    if (nameSearchResult) {
-        return nameSearchResult;
-    } else if (nameSearchResult === "") {
+    if (movieTitleInput) {
+        return movieTitleInput;
+    } else if (movieTitleInput === "") {
         return "any"
         // alert("Please enter a movie title to search") //<=========================UPDATE and make a modal!
     }
@@ -184,9 +182,69 @@ var adultChoice = function() {
 
 
 
-
-
-
-userSearchInformation();
-movieTitle("Avengers");
 // userSearch(name, region, year, releaseYear);
+var mediaSelectEl = document.getElementById("media-select");
+var searchInputEl = document.getElementById("search-input");
+var searchByEl = document.getElementById("search-by");
+var submitButtonEl = document.getElementById("submit-button");
+
+// funtion to check which media types are selected
+// then send input to correct fetch function
+var formHandler = function (event) {
+    event.preventDefault();
+    // define user input from form
+    var searchTerm = searchInputEl.value;
+    // define type of media user selected
+    var selectedMedia = mediaSelectEl.value;
+    // send user input to appropriate fetch function
+    if (selectedMedia === "movies") {
+        userSearchInformation(searchInputEl.value);
+        // send searchTerm to Mason's movie fetch function
+        // movieFetchHandler(searchTerm);
+    } else if (selectedMedia === "music") {
+        console.log("sent to music");
+        // send searchTerm to music fetch function
+        // musicFetchHandler(searchTerm);
+    } else if (selectedMedia === "books") {
+        console.log("sent to books");
+        // send searchTerm to book fetch function
+        bookFetchHandler(searchTerm);
+    }
+};
+
+// function to fetch book data using user input as parameter
+var bookFetchHandler = function (searchTerm) {
+    // initiate apiUrl variable
+    var apiUrl;
+    // check if searching for title or author
+    if (searchByEl.value === "title") {
+        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
+            searchTerm;
+        console.log(apiUrl);
+    } else {
+        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
+            searchTerm +
+            "+inauthor:" + searchTerm;
+        console.log(apiUrl);
+    }
+    // fetch data from api URL
+    fetch(apiUrl)
+        .then(function (response) {
+            // request was successful
+            if (response.ok) {
+                response.json().then(function (data) {
+                    console.log(data);
+                    // send data to function which will create object of
+                    // relevent information
+                    // bookObjectCreator(data);
+                });
+            } else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            alert("Unable to connect");
+        });
+};
+
+submitButtonEl.addEventListener("click", formHandler);
