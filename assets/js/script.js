@@ -1,7 +1,3 @@
-//============= Don't forget to add query locators in order to grab answers below
-
-
-
 // NEED TO ADD INPUTS INTO FETCH
 
 var userSearch = function (title, releaseYear, genreId) {
@@ -198,7 +194,7 @@ var formHandler = function (event) {
     var selectedMedia = mediaSelectEl.value;
     // send user input to appropriate fetch function
     if (selectedMedia === "movies") {
-        userSearchInformation(searchInputEl.value);
+        userSearchInformation(searchTerm);
         // send searchTerm to Mason's movie fetch function
         // movieFetchHandler(searchTerm);
     } else if (selectedMedia === "music") {
@@ -247,8 +243,6 @@ var bookFetchHandler = function (searchTerm) {
         });
 };
 
-<<<<<<< HEAD
-=======
 const mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
@@ -270,5 +264,4 @@ const mediaSelectHandler = function () {
 }
 
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
->>>>>>> master
 submitButtonEl.addEventListener("click", formHandler);
