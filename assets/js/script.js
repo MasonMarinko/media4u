@@ -28,7 +28,7 @@ var userSearch = function (title, adult, releaseYear, genreId) {
 
 
 
-
+//====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
 var genreCheck = function(genreInfo, genreInput) {
     var resultLength = genreInfo.results.length
     var resultId = genreInfo.results
@@ -47,7 +47,7 @@ var genreCheck = function(genreInfo, genreInput) {
 
 
 
-
+//============= User choice for genre sends user here where it will return a number(id) and send it to genreCheck to then verify if movies have that criteria
 var genreConversion = function(userInput) {
     var genreList = {
         "Action": 28,
@@ -68,7 +68,7 @@ var genreConversion = function(userInput) {
         "War": 10752,
         "Western": 37
     };
-    return (genreList[userInput])
+    return (genreList[userInput]) //<========returns number(id) that will be used in genreCheck to verify if the movies fetched have that genre ID
     }
 
 
