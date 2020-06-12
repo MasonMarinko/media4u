@@ -27,6 +27,8 @@ var formHandler = function (event) {
     }
 };
 
+// BOOK MEDIA SECTION
+
 // function to fetch book data using user input as parameter
 var bookFetchHandler = function (searchTerm) {
     // initiate apiUrl variable
@@ -35,12 +37,10 @@ var bookFetchHandler = function (searchTerm) {
     if (searchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             searchTerm;
-        console.log(apiUrl);
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             searchTerm +
             "+inauthor:" + searchTerm;
-        console.log(apiUrl);
     }
     // fetch data from api URL
     fetch(apiUrl)
@@ -48,10 +48,9 @@ var bookFetchHandler = function (searchTerm) {
             // request was successful
             if (response.ok) {
                 response.json().then(function (data) {
-                    console.log(data);
                     // send data to function which will create object of
                     // relevent information
-                    // bookObjectCreator(data);
+                    bookObjectCreator(data);
                 });
             } else {
                 alert("Error: " + response.statusText);
@@ -60,6 +59,39 @@ var bookFetchHandler = function (searchTerm) {
         .catch(function (error) {
             alert("Unable to connect");
         });
+};
+
+var bookObjectCreator = function (data) {
+    // use a random number to select index of returned data to ensure
+    // new books are discovered upon each search
+    var randomNumber = Math.floor(Math.random() * data.items.length);
+    // get title information
+    var title = data.items[randomNumber].volumeInfo.title;
+    // get image url
+    var imageUrl = data.items[randomNumber].volumeInfo.imageLinks.thumbnail;
+    // get description
+    var description = data.items[randomNumber].volumeInfo.description;
+    if (!description) {
+        description = "Description is unavailable for this content.";
+    };
+    // define "authors" location in data
+    var authorsArray = data.items[randomNumber].volumeInfo.authors;
+    // save all authors in array
+    var authors = [];
+    for (i = 0; i<authorsArray.length; i++) {
+        var newAuthor = authorsArray[i];
+        authors.push(newAuthor);
+    }
+    // create book object
+    var bookObject = {
+        title: title,
+        imageUrl: imageUrl,
+        description: description,
+        authors: authors
+    }
+    console.log(bookObject);
+    // send bookObject to DOM element creator function
+    // bookContentCreator(bookObject);
 };
 
 submitButtonEl.addEventListener("click", formHandler);
