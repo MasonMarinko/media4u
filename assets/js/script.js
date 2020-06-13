@@ -27,6 +27,26 @@ var formHandler = function (event) {
     }
 };
 
+const mediaSelectHandler = function () {
+    switch (mediaSelectEl.value) {
+        case "movies":
+        document.getElementById('movie-form').removeAttribute('class', 'is-hidden');
+        document.getElementById('music-form').setAttribute('class', 'is-hidden');
+        document.getElementById('book-form').setAttribute('class', 'is-hidden');
+        break;
+        case "music":
+        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+        document.getElementById('music-form').removeAttribute('class', 'is-hidden');
+        document.getElementById('book-form').setAttribute('class', 'is-hidden');
+        break;
+        case "books":
+        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+        document.getElementById('music-form').setAttribute('class', 'is-hidden');
+        document.getElementById('book-form').removeAttribute('class', 'is-hidden');
+        break;
+    }
+}
+
 // BOOK MEDIA SECTION
 
 // function to fetch book data using user input as parameter
@@ -88,4 +108,6 @@ var bookObjectCreator = function (data) {
     // bookContentCreator(bookObject);
 };
 
+mediaSelectEl.addEventListener("change", mediaSelectHandler);
 submitButtonEl.addEventListener("click", formHandler);
+
