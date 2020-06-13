@@ -2,6 +2,88 @@
 
 var userSearch = function (title, releaseYear, genreId) {
     var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" + title + "&include_adult=false&primary_release_year=" + releaseYear
+var mediaSelectEl = document.getElementById("media-select");
+var searchInputEl = document.getElementById("search-input");
+var searchByEl = document.getElementById("search-by");
+var submitButtonEl = document.getElementById("submit-button");
+
+// funtion to check which media types are selected
+// then send input to correct fetch function
+var formHandler = function (event) {
+    event.preventDefault();
+    // define user input from form
+    var searchTerm = searchInputEl.value;
+    // define type of media user selected
+    var selectedMedia = mediaSelectEl.value;
+    // send user input to appropriate fetch function
+    if (selectedMedia === "movies") {
+        console.log("sent to movies");
+        // send searchTerm to Mason's movie fetch function
+        // movieFetchHandler(searchTerm);
+    } else if (selectedMedia === "music") {
+        console.log("sent to music");
+        // send searchTerm to music fetch function
+        // musicFetchHandler(searchTerm);
+    } else if (selectedMedia === "books") {
+        console.log("sent to books");
+        // send searchTerm to book fetch function
+        bookFetchHandler(searchTerm);
+    }
+};
+
+// BOOKS SECTION
+// function to fetch book data using user input as parameter
+var bookFetchHandler = function (searchTerm) {
+    // initiate apiUrl variable
+    var apiUrl;
+    // check if searching for title or author
+    if (searchByEl.value === "title") {
+        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
+            searchTerm;
+        console.log(apiUrl);
+    } else {
+        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
+            searchTerm +
+            "+inauthor:" + searchTerm;
+        console.log(apiUrl);
+    }
+    // fetch data from api URL
+    fetch(apiUrl)
+        .then(function (response) {
+            // request was successful
+            if (response.ok) {
+                response.json().then(function (data) {
+                    console.log(data);
+                    // send data to function which will create object of
+                    // relevent information
+                    // bookObjectCreator(data);
+                });
+            } else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            alert("Unable to connect");
+        });
+};
+
+submitButtonEl.addEventListener("click", formHandler);
+
+// MOVIE SECTION
+//============= Don't forget to add query locators in order to grab answers below
+
+
+
+// NEED TO ADD INPUTS INTO FETCH
+
+var userSearch = function (title, adult, releaseYear, genreId) {
+    var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" +
+    title +
+    "&include_adult=" +
+    adult +
+    "&primary_release_year=" +
+    releaseYear;
+    
     fetch(apiUrl)
         .then(function (response) {
             if (response.ok) {
@@ -179,6 +261,7 @@ var adultChoice = function() {
 
 
 // userSearch(name, region, year, releaseYear);
+<<<<<<< HEAD
 var mediaSelectEl = document.getElementById("media-select");
 var searchInputEl = document.getElementById("search-input");
 var searchByEl = document.getElementById("search-by");
@@ -266,3 +349,5 @@ var mediaSelectHandler = function () {
 
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 submitButtonEl.addEventListener("click", formHandler);
+=======
+>>>>>>> 9dbcf0caeab14e15ae164614dd365fd66f5ef453
