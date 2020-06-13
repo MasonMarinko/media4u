@@ -121,7 +121,7 @@ var movieTitle = function(movieTitleInput) { //<====================== Ready
 var mediaSelectEl = document.getElementById("media-select");
 var searchInputEl = document.getElementById("search-input");
 var searchByEl = document.getElementById("search-by");
-var searchGenreEl = document.getElementById("search-by-genre")
+var searchGenreEl = document.getElementsByClassName("search-by-genre");
 var submitButtonEl = document.getElementById("submit-button");
 var yearInputEl = document.getElementById("search-by-year");
 
@@ -138,7 +138,7 @@ var formHandler = function (event) {
     // send user input to appropriate fetch function
     if (selectedMedia === "movies") {
         var yearInput = yearInputEl.value
-        var genreIdNum = searchGenreEl.value
+        var genreIdNum = searchGenreEl[0].value
         userSearchInformation(searchTerm, yearInput, genreIdNum);
         // send searchTerm to Mason's movie fetch function
         // movieFetchHandler(searchTerm);
@@ -192,7 +192,6 @@ var mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
         document.getElementById('movie-form').removeAttribute('class', 'is-hidden');
-        document.getElementById('search-by-author').setAttribute('class', "is-hidden")
         document.getElementById('music-form').setAttribute('class', 'is-hidden');
         document.getElementById('book-form').setAttribute('class', 'is-hidden');
         break;
