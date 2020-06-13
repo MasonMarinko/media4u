@@ -12,8 +12,17 @@
     <link rel="stylesheet" href="./assets/css/style.css">
 
 </head>
-
 <body>
+    
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#top">
+                <img src="assets/images/favicon.png" width="48" height="18">
+                <h1 class="is-primary"><strong>Media 4 U</strong></h1>
+            </a>
+        </div>
+    </nav>
+
     <section class='hero is-fullheight'>
 
 
@@ -48,7 +57,7 @@
                                     </div>
                                     <div class="field-body control is-expanded">
                                         <div class="select is-fullwidth">
-                                            <select id="search-genre">
+                                            <select id="search-by-genre">
                                                 <option value="">Any</option>
                                                 <option value="28">Action</option>
                                                 <option value="12">Adventure</option>
@@ -77,7 +86,7 @@
                                     </div>
                                     <div class="field-body">
                                         <div class="field control is-expanded">
-                                            <input type="text" class="input">
+                                            <input type="text" class="input" id="search-by-year">
                                         </div>
                                     </div>
                                 </div>
@@ -125,6 +134,19 @@
         </div>
     </section>
 
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <a href="#top"><strong>Media 4 U</strong></a>
+            </p>
+            <p>
+            <strong>&copy; Copyright 2020</strong>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 
