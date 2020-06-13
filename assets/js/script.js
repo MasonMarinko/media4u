@@ -261,7 +261,6 @@ var adultChoice = function() {
 
 
 // userSearch(name, region, year, releaseYear);
-<<<<<<< HEAD
 var mediaSelectEl = document.getElementById("media-select");
 var searchInputEl = document.getElementById("search-input");
 var searchByEl = document.getElementById("search-by");
@@ -349,5 +348,3 @@ var mediaSelectHandler = function () {
 
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 submitButtonEl.addEventListener("click", formHandler);
-=======
->>>>>>> 9dbcf0caeab14e15ae164614dd365fd66f5ef453
