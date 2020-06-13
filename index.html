@@ -14,6 +14,16 @@
 </head>
 
 <body>
+
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#top">
+                <img src="assets/images/favicon.png" width="48" height="18">
+                <h1 class="is-primary"><strong>Media 4 U</strong></h1>
+            </a>
+        </div>
+    </nav>
+
     <section class='hero is-fullheight'>
 
 
@@ -41,7 +51,7 @@
                                 </div>
                             </div>
                             <!-- Start of Movie Form -->
-                            <div id="movie-form">
+                            <div id="movie-form" class="my-2">
                                 <div class="field is-horizontal">
                                     <div class="field-label">
                                         <label class="label">Genre</label>
@@ -85,11 +95,11 @@
                                 </div> -->
                                 <div class="field is-horizontal">
                                     <div class="field-label">
-                                        <div class="label">Year</div>
+                                        <label class="label">Year</label>
                                     </div>
                                     <div class="field-body">
-                                        <div class="control is-expanded">
-                                            <input type="text" class="input">
+                                        <div class="field control is-expanded">
+                                            <input type="text" class="input" id="search-by-year">
                                         </div>
                                     </div>
                                 </div>
@@ -98,16 +108,20 @@
                                         <label class="label">Title</label>
                                     </div>
                                     <div class="field-body">
-                                        <div class="control is-expanded">
+                                        <div class="field control is-expanded">
                                             <input class="input" id="search-input" type="text" placeholder="">
                                         </div>
                                     </div>
                                 </div>
                             </div><!-- End of movie Form -->
-                            <div id="music-form"></div>
+
+                            <div id="music-form" class="field"></div>
                             <div id="book-form"></div>
-                            <div class="control">
-                                <button class="button is-link" id="submit-button">Submit</button>
+
+                            <div class="columns is-centered">
+                                <div class="column is-offset-one-fifth">
+                                    <button class="button is-link is-fullwidth" id="submit-button">Submit</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -144,11 +158,12 @@
                 <a href="#top"><strong>Media 4 U</strong></a>
             </p>
             <p>
-            <strong>&copy; Copyright 2020</strong>
+                <strong>&copy; Copyright 2020</strong>
             </p>
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 
