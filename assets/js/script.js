@@ -27,41 +27,6 @@ var formHandler = function (event) {
     }
 };
 
-// function to fetch book data using user input as parameter
-var bookFetchHandler = function (searchTerm) {
-    // initiate apiUrl variable
-    var apiUrl;
-    // check if searching for title or author
-    if (searchByEl.value === "title") {
-        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            searchTerm;
-        console.log(apiUrl);
-    } else {
-        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            searchTerm +
-            "+inauthor:" + searchTerm;
-        console.log(apiUrl);
-    }
-    // fetch data from api URL
-    fetch(apiUrl)
-        .then(function (response) {
-            // request was successful
-            if (response.ok) {
-                response.json().then(function (data) {
-                    console.log(data);
-                    // send data to function which will create object of
-                    // relevent information
-                    // bookObjectCreator(data);
-                });
-            } else {
-                alert("Error: " + response.statusText);
-            }
-        })
-        .catch(function (error) {
-            alert("Unable to connect");
-        });
-};
-
 const mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
@@ -82,5 +47,67 @@ const mediaSelectHandler = function () {
     }
 }
 
+// BOOK MEDIA SECTION
+
+// function to fetch book data using user input as parameter
+var bookFetchHandler = function (searchTerm) {
+    // initiate apiUrl variable
+    var apiUrl;
+    // check if searching for title or author
+    if (searchByEl.value === "title") {
+        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
+            searchTerm;
+    } else {
+        var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
+            searchTerm +
+            "+inauthor:" + searchTerm;
+    }
+    // fetch data from api URL
+    fetch(apiUrl)
+        .then(function (response) {
+            // request was successful
+            if (response.ok) {
+                response.json().then(function (data) {
+                    // send data to function which will create object of
+                    // relevent information
+                    bookObjectCreator(data);
+                });
+            } else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            alert("Unable to connect");
+        });
+};
+
+var bookObjectCreator = function (data) {
+    // use a random number to select index of returned data to ensure
+    // new books are discovered upon each search
+    var randomNumber = Math.floor(Math.random() * data.items.length);
+    // get title information
+    var title = data.items[randomNumber].volumeInfo.title;
+    // get image url
+    var imageUrl = data.items[randomNumber].volumeInfo.imageLinks.thumbnail;
+    // get description
+    var description = data.items[randomNumber].volumeInfo.description;
+    if (!description) {
+        description = "Description is unavailable for this content.";
+    };
+    // define "authors" location in data
+    var authorsArray = data.items[randomNumber].volumeInfo.authors;
+    // create book object
+    var bookObject = {
+        title: title,
+        imageUrl: imageUrl,
+        description: description,
+        authors: authorsArray
+    }
+    console.log(bookObject);
+    // send bookObject to DOM element creator function
+    // bookContentCreator(bookObject);
+};
+
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 submitButtonEl.addEventListener("click", formHandler);
+
