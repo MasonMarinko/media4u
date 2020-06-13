@@ -86,8 +86,8 @@ var userSearchInformation = function (title) {
 
     //======= Movie title checks if a title is entered and then returns a movie title they've selected
     var movieName = movieTitle(title);
-    searchInputEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
     console.log(movieName)
+    searchInputEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
 
 
 
@@ -184,6 +184,7 @@ var searchInputEl = document.getElementById("search-input");
 var searchByEl = document.getElementById("search-by");
 var submitButtonEl = document.getElementById("submit-button");
 
+
 // funtion to check which media types are selected
 // then send input to correct fetch function
 var formHandler = function (event) {
@@ -243,7 +244,7 @@ var bookFetchHandler = function (searchTerm) {
         });
 };
 
-const mediaSelectHandler = function () {
+var mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
         document.getElementById('movie-form').removeAttribute('class', 'is-hidden');
