@@ -187,20 +187,7 @@ var bookFetchHandler = function (searchTerm) {
 };
 
 var bookObjectCreator = function (data) {
-    // create up to 30 random numbers corresponding to returned books
-    var randomNumArray = [];
-    // var numberGenerator = function (randomNumArray) {
-    //     console.log("this far");
-    //     console.log(data.items.length);
-    //     if (randomNumArray.length >= 30 || randomNumArray.length === data.items.length) return;
-    //     var randomNumber = Math.floor(Math.random() * data.items.length + 1);
-    //     if (randomNumArray.indexOf(randomNumber) < 0) {
-    //         randomNumArray.push(randomNumber);
-    //         console.log(randomNumArray);
-    //     }
-    // }
-    numberGenerator(data, randomNumArray);
-
+    console.log(data.items);
     // create book object
     var bookObject = {
         title: [],
@@ -208,45 +195,37 @@ var bookObjectCreator = function (data) {
         description: [],
         authors: []
     }
-    // iterate through 30 random results and add to book object
-    for (i = 0; i < randomNumArray; i++) {
-        // use a random number to select index of returned data to ensure
-        // new books are discovered upon each search
-        // var randomNumber = Math.floor(Math.random() * data.items.length);
-        var randomIndex = randomNumArray[i];
-        console.log(randomIndex);
+    // cycle through data and add info to object
+    for (i = 0; i < data.items.length; i++) {
         // get title information
-        var title = data.items[randomIndex].volumeInfo.title;
+        var title = data.items[i].volumeInfo.title;
         // get image url
-        var imageUrl = data.items[randomIndex].volumeInfo.imageLinks.thumbnail;
+        var imageUrl;
+        var imagesLocation = data.items[i].volumeInfo.imageLinks;
+        if (!imagesLocation) {
+            imageUrl = "https://visualsound.com/products/smart-inventory-clearance/unavailable-image/";
+        } else {
+            imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+        };
         // get description
-        var description = data.items[randomIndex].volumeInfo.description;
+        var description = data.items[i].volumeInfo.description;
         if (!description) {
-            description = "Description is unavailable for this content.";
+            description = "Description is unavailable for this book.";
         };
         // define "authors" location in data
-        var authorsArray = data.items[randomIndex].volumeInfo.authors;
-        // push values to book object
+        var authors = data.items[i].volumeInfo.authors;
+        if (!authors) {
+            authors = "Authors unavailable for this book."
+        };
+        // push info to book object
         bookObject.title.push(title);
         bookObject.imageUrl.push(imageUrl);
         bookObject.description.push(description);
-        bookObject.authors.push(authorsArray);
-
+        bookObject.authors.push(authors);
         console.log(bookObject);
-    }
+    };
     // send bookObject to DOM element creator function
     // bookContentCreator(bookObject);
-};
-
-var numberGenerator = function (data, randomNumArray) {
-    for (i = 0; i<data.items.length; i++);
-    console.log(data);
-    if (randomNumArray.length >= 30 || randomNumArray.length === data.items.length) return;
-    var randomNumber = Math.floor(Math.random() * data.items.length + 1);
-    if (randomNumArray.indexOf(randomNumber) < 0) {
-        randomNumArray.push(randomNumber);
-        console.log(randomNumArray);
-    }
 };
 
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
