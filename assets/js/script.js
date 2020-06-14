@@ -37,20 +37,20 @@ var formHandler = function (event) {
 const mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
-        document.getElementById('movie-form').removeAttribute('class', 'is-hidden');
-        document.getElementById('music-form').setAttribute('class', 'is-hidden');
-        document.getElementById('book-form').setAttribute('class', 'is-hidden');
-        break;
+            document.getElementById('movie-form').removeAttribute('class', 'is-hidden');
+            document.getElementById('music-form').setAttribute('class', 'is-hidden');
+            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            break;
         case "music":
-        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-        document.getElementById('music-form').removeAttribute('class', 'is-hidden');
-        document.getElementById('book-form').setAttribute('class', 'is-hidden');
-        break;
+            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+            document.getElementById('music-form').removeAttribute('class', 'is-hidden');
+            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            break;
         case "books":
-        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-        document.getElementById('music-form').setAttribute('class', 'is-hidden');
-        document.getElementById('book-form').removeAttribute('class', 'is-hidden');
-        break;
+            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+            document.getElementById('music-form').setAttribute('class', 'is-hidden');
+            document.getElementById('book-form').removeAttribute('class', 'is-hidden');
+            break;
     }
 }
 
@@ -61,10 +61,10 @@ const mediaSelectHandler = function () {
 
 var userSearch = function (title, releaseYear, genreId) {
     var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" +
-    title +
-    "&include_adult=false&primary_release_year=" +
-    releaseYear;
-    
+        title +
+        "&include_adult=false&primary_release_year=" +
+        releaseYear;
+
     fetch(apiUrl)
         .then(function (response) {
             if (response.ok) {
@@ -81,18 +81,18 @@ var userSearch = function (title, releaseYear, genreId) {
 };
 
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
-var genreCheck = function(genreInfo, genreInput) {
+var genreCheck = function (genreInfo, genreInput) {
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
 
     for (var i = 0; i < resultLength; i++) {
         var resultArray = resultId[i].genre_ids
         if (resultArray.includes(parseInt(genreInput))) {
-        console.log(resultId[i])
+            console.log(resultId[i])
         } else {
             return
+        }
     }
-}
 }
 
 //============ MAIN search function that calls everything else for MOVIE TITLES! ==============================//
@@ -108,27 +108,27 @@ var userSearchInformation = function (title, year, genre) {
 
 
     //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
-    var releaseDate = releaseInput(year); 
+    var releaseDate = releaseInput(year);
     yearInputEl.value = "";
     searchGenreEl.value = "";
 
 
     // sends all inputs to fetch/userSearch
-    userSearch(movieName, releaseDate, genre)    //<========== CALL TO FETCH, COMMENTED FOR NOW
+    userSearch(movieName, releaseDate, genre) //<========== CALL TO FETCH, COMMENTED FOR NOW
 }
 
 //================ FOURTH FUNCTION=========================//
 // function checks to make sure year is 4 digits long, and is beyond 1887 (first movie 1888) and returns a year/integer
-var releaseInput = function(yearInput) {
+var releaseInput = function (yearInput) {
     var dateInput = parseInt(yearInput); //<========Change to grab from HTML/Search Box
     var dateInputCombined = dateInput.toString();
     var currentYear = moment().year();
-    
+
     if (dateInputCombined.length === 4 && dateInput > 1887 && dateInput <= currentYear) { // <====== first movie made in 1888, no need to search before then. Also verified after being parsed that the length is 4
         return dateInput
-    }  else {
+    } else {
         var dateInput = ""
-        return "any"    
+        return "any"
     }
 }
 
@@ -136,7 +136,7 @@ var releaseInput = function(yearInput) {
 //==================== function takes in search result for movie title and returns answer to "userSearchInformation, if user leaves blank then "any" is returned
 //==================== this could also be an alert/modal if preferred.==================================//
 
-var movieTitle = function(movieTitleInput) { //<====================== Ready
+var movieTitle = function (movieTitleInput) { //<====================== Ready
 
     if (movieTitleInput) {
         return movieTitleInput;
@@ -182,32 +182,33 @@ var bookFetchHandler = function (searchTerm) {
 };
 
 var bookObjectCreator = function (data) {
-    // use a random number to select index of returned data to ensure
-    // new books are discovered upon each search
-    var randomNumber = Math.floor(Math.random() * data.items.length);
-    // get title information
-    var title = data.items[randomNumber].volumeInfo.title;
-    // get image url
-    var imageUrl = data.items[randomNumber].volumeInfo.imageLinks.thumbnail;
-    // get description
-    var description = data.items[randomNumber].volumeInfo.description;
-    if (!description) {
-        description = "Description is unavailable for this content.";
-    };
-    // define "authors" location in data
-    var authorsArray = data.items[randomNumber].volumeInfo.authors;
-    // create book object
-    var bookObject = {
-        title: title,
-        imageUrl: imageUrl,
-        description: description,
-        authors: authorsArray
+    for (i = 0; i < 30; i++) {
+        // use a random number to select index of returned data to ensure
+        // new books are discovered upon each search
+        var randomNumber = Math.floor(Math.random() * data.items.length);
+        // get title information
+        var title = data.items[randomNumber].volumeInfo.title;
+        // get image url
+        var imageUrl = data.items[randomNumber].volumeInfo.imageLinks.thumbnail;
+        // get description
+        var description = data.items[randomNumber].volumeInfo.description;
+        if (!description) {
+            description = "Description is unavailable for this content.";
+        };
+        // define "authors" location in data
+        var authorsArray = data.items[randomNumber].volumeInfo.authors;
+        // create book object
+        var bookObject = {
+            title: title,
+            imageUrl: imageUrl,
+            description: description,
+            authors: authorsArray
+        }
+        console.log(bookObject);
     }
-    console.log(bookObject);
     // send bookObject to DOM element creator function
     // bookContentCreator(bookObject);
 };
 
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 submitButtonEl.addEventListener("click", formHandler);
-
