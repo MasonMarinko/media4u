@@ -64,7 +64,7 @@ var userSearch = function (title, releaseYear, genreId) {
     title +
     "&include_adult=false&primary_release_year=" +
     releaseYear;
-    
+
     fetch(apiUrl)
         .then(function (response) {
             if (response.ok) {
@@ -108,7 +108,7 @@ var userSearchInformation = function (title, year, genre) {
 
 
     //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
-    var releaseDate = releaseInput(year); 
+    var releaseDate = releaseInput(year);
     yearInputEl.value = "";
     searchGenreEl.value = "";
 
@@ -123,12 +123,12 @@ var releaseInput = function(yearInput) {
     var dateInput = parseInt(yearInput); //<========Change to grab from HTML/Search Box
     var dateInputCombined = dateInput.toString();
     var currentYear = moment().year();
-    
+
     if (dateInputCombined.length === 4 && dateInput > 1887 && dateInput <= currentYear) { // <====== first movie made in 1888, no need to search before then. Also verified after being parsed that the length is 4
         return dateInput
     }  else {
         var dateInput = ""
-        return "any"    
+        return "any"
     }
 }
 
@@ -209,5 +209,5 @@ var bookObjectCreator = function (data) {
 };
 
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
-submitButtonEl.addEventListener("click", formHandler);
+submitButtonEl.addEventListener("submit", formHandler);
 
