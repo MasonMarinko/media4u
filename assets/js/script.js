@@ -182,28 +182,47 @@ var bookFetchHandler = function (searchTerm) {
 };
 
 var bookObjectCreator = function (data) {
-    for (i = 0; i < 30; i++) {
+    // create up to 30 random numbers corresponding to returned books
+    var randomNumArray = [];
+    var numberGenerator = function(randomNumArray) {
+        if (randomNumArray.length >= 30 || randomNumArray.length === data.items.length) return;
+        var randomNumber = Math.floor(Math.random() * data.items.length + 1);
+        if (randomNumArray.indexOf(randomNumber) < 0) {
+            randomNumArray.push(newNumber);
+            console.log(randomNumArray);
+        }
+        numberGenerator(randomNumArray);
+    }
+    // create book object
+    var bookObject = {
+        title: [],
+        imageUrl: [],
+        description: [],
+        authors: []
+    }
+    // iterate through 30 random results and add to book object
+    for (i = 0; i < randomNumArray; i++) {
         // use a random number to select index of returned data to ensure
         // new books are discovered upon each search
-        var randomNumber = Math.floor(Math.random() * data.items.length);
+        // var randomNumber = Math.floor(Math.random() * data.items.length);
+        var randomIndex = randomNumArray[i];
         // get title information
-        var title = data.items[randomNumber].volumeInfo.title;
+        var title = data.items[randomIndex].volumeInfo.title;
         // get image url
-        var imageUrl = data.items[randomNumber].volumeInfo.imageLinks.thumbnail;
+        var imageUrl = data.items[randomIndex].volumeInfo.imageLinks.thumbnail;
         // get description
-        var description = data.items[randomNumber].volumeInfo.description;
+        var description = data.items[randomIndex].volumeInfo.description;
         if (!description) {
             description = "Description is unavailable for this content.";
         };
         // define "authors" location in data
         var authorsArray = data.items[randomNumber].volumeInfo.authors;
-        // create book object
-        var bookObject = {
-            title: title,
-            imageUrl: imageUrl,
-            description: description,
-            authors: authorsArray
-        }
+        // push values to book object
+        bookObject.title.push(title);
+        bookObject.imageUrl.push(imageUrl);
+        bookObject.description.push(description);
+        bookObject.authors.push(authorsArray);
+        
         console.log(bookObject);
     }
     // send bookObject to DOM element creator function
