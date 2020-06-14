@@ -39,6 +39,10 @@ var userSearch = function (title, releaseYear, genreId) {
 
 
 
+
+
+
+
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
 var genreCheck = function(genreInfo, genreInput) {
     console.log(genreInfo)
@@ -61,21 +65,84 @@ var genreCheck = function(genreInfo, genreInput) {
 finalResultStyle(movieArray)
 }
 
+
+
+
+
+
+
 //================ Results added to DOM in order to display===============//
 var finalResultStyle = function(results) {
-    console.log(results)
-    document.getElementById('movie-container').removeAttribute('class', 'is-hidden');
-    // document.getElementById('').setAttribute('class', 'is-hidden');
-    // document.getElementById('book-form').setAttribute('class', 'is-hidden');
+    console.log(results.length)
+    var movieContainerEl = document.getElementById("movie-container");
+       var movieMainEl = document.getElementById("movie-info-0");
 
-    var movieMainEl = document.getElementById("main-movie-title");
-    var movieSubtitleEl = document.getElementById("movie-subtitle");
-    var movieDescriptionEl = document.getElementById("movie-description");
+    if (results.resultLength=== 0) {
+        movieContainerEl.textContent = "No Movies Found"
+        return;
+    }
+
+
+
+
+
+//========BEGINNING FIRST CHUNK================//
+    var posterContainerEl = document.createElement("div");
+    posterContainerEl.classList = "media"
+
+    var posterContainerTwoEl = document.createElement("div");
+    posterContainerTwoEl.classList = "media-left"
+
+    var figureEl = document.createElement("figure");
+    figureEl.classList = "image is-48x48"
+
+    var moviePosterEl = document.createElement("img");
+    moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original/ygCQnDEqUEIamBpdQdDYnFfxvgM.jpg")
+
+
+    movieMainEl.appendChild(posterContainerEl)
+
+
+    posterContainerEl.appendChild(posterContainerTwoEl)
+
+    posterContainerTwoEl.appendChild(figureEl)
+
+    figureEl.appendChild(moviePosterEl)
+//==============END FIRST CHUNK===============//
+
+//============= Beginning Second Chunk=============//
+    var titleContainerEl = document.createElement("div");
+    titleContainerEl.classList = "media-content"
+
+    var movieTitleEl = document.createElement("p");
+    movieTitleEl.classList = "title is-4"
+    movieTitleEl.setAttribute("id", "main-movie-title")
+    movieTitleEl.textContent = "Testing, is this working??"
+
+    movieMainEl.appendChild(titleContainerEl)
+
+    titleContainerEl.appendChild(movieTitleEl)
+//================End second chunk===============//
+
+//================= Beginning Final Chunk================//
+    var descContainerEl = document.createElement("div");
+    descContainerEl.classList = "content"
+    descContainerEl.setAttribute = "movie-description"
+    descContainerEl.textContent = "Yes this is the description of the movie, let's see how long this will work for!"
+
+    movieMainEl.appendChild(descContainerEl)
+
+
+
+
+
+    // var moviePosterEl = document.getElementById("movie-poster");
+    // var movieDescriptionEl = document.getElementById("movie-description");
 
     
-    movieMainEl.textContent = results.original_title;
-    movieSubtitleEl.textContent = "secondary title";
-    movieDescriptionEl.textContent = results.overview;
+    // movieMainEl.textContent = results[0].original_title;
+    // moviePosterEl.textContent = "https://image.tmdb.org/t/p/w500/kHQ81KIAq8kD9NfUmHjTgAahoCW.jpg";
+    // movieDescriptionEl.textContent = results[0].overview;
 
 // var submitButtonEl = document.getElementById("submit-button");
 // var yearInputEl = document.getElementById("search-by-year");
