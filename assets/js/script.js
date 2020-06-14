@@ -61,9 +61,9 @@ const mediaSelectHandler = function () {
 
 var userSearch = function (title, releaseYear, genreId) {
     var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" +
-        title +
-        "&include_adult=false&primary_release_year=" +
-        releaseYear;
+    title +
+    "&include_adult=false&primary_release_year=" +
+    releaseYear;
 
     fetch(apiUrl)
         .then(function (response) {
@@ -230,4 +230,5 @@ var bookObjectCreator = function (data) {
 };
 
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
-submitButtonEl.addEventListener("click", formHandler);
+submitButtonEl.addEventListener("submit", formHandler);
+
