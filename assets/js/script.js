@@ -1,36 +1,39 @@
 // userSearch(name, region, year, releaseYear);
 var mediaSelectEl = document.getElementById("media-select");
-var searchInputEl = document.getElementById("search-input");
+var bookSearchInputEl = document.getElementById("book-input");
 var searchByEl = document.getElementById("search-by");
 var searchGenreEl = document.getElementsByClassName("search-by-genre");
-var submitButtonEl = document.getElementById("submit-button");
+var searchFormEl = document.getElementById("search-form");
 var yearInputEl = document.getElementById("search-by-year");
 
 
 
-// funtion to check which media types are selected
+// function to check which media types are selected
 // then send input to correct fetch function
 var formHandler = function (event) {
     event.preventDefault();
-    // define user input from form
-    var searchTerm = searchInputEl.value;
+    console.log("button pressed");
     // define type of media user selected
     var selectedMedia = mediaSelectEl.value;
+    console.log(selectedMedia);
     // send user input to appropriate fetch function
-    if (selectedMedia === "movies") {
+    if (selectedMedia === "books") {
+        console.log("sent to books");
+        // define user input from  bookform
+        var bookSearchTerm = bookSearchInputEl.value;
+        console.log(bookSearchTerm);
+        // send searchTerm to book fetch function
+        bookFetchHandler(bookSearchTerm);
+    } else if (selectedMedia === "music") {
+        console.log("sent to music");
+        // send searchTerm to music fetch function
+        // musicFetchHandler(searchTerm);
+    } else if (selectedMedia === "movies") {
         var yearInput = yearInputEl.value
         var genreIdNum = searchGenreEl[0].value
         userSearchInformation(searchTerm, yearInput, genreIdNum);
         // send searchTerm to Mason's movie fetch function
         // movieFetchHandler(searchTerm);
-    } else if (selectedMedia === "music") {
-        console.log("sent to music");
-        // send searchTerm to music fetch function
-        // musicFetchHandler(searchTerm);
-    } else if (selectedMedia === "books") {
-        console.log("sent to books");
-        // send searchTerm to book fetch function
-        bookFetchHandler(searchTerm);
     }
 };
 
@@ -61,9 +64,9 @@ const mediaSelectHandler = function () {
 
 var userSearch = function (title, releaseYear, genreId) {
     var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" +
-    title +
-    "&include_adult=false&primary_release_year=" +
-    releaseYear;
+        title +
+        "&include_adult=false&primary_release_year=" +
+        releaseYear;
 
     fetch(apiUrl)
         .then(function (response) {
@@ -151,10 +154,12 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
 
 // function to fetch book data using user input as parameter
 var bookFetchHandler = function (searchTerm) {
+    console.log("book fetch");
     // initiate apiUrl variable
     var apiUrl;
     // check if searching for title or author
-    if (searchByEl.value === "title") {
+    var bookSearchByEl = document.getElementById("book-search-by");
+    if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             searchTerm;
     } else {
@@ -184,15 +189,18 @@ var bookFetchHandler = function (searchTerm) {
 var bookObjectCreator = function (data) {
     // create up to 30 random numbers corresponding to returned books
     var randomNumArray = [];
-    var numberGenerator = function(randomNumArray) {
-        if (randomNumArray.length >= 30 || randomNumArray.length === data.items.length) return;
-        var randomNumber = Math.floor(Math.random() * data.items.length + 1);
-        if (randomNumArray.indexOf(randomNumber) < 0) {
-            randomNumArray.push(newNumber);
-            console.log(randomNumArray);
-        }
-        numberGenerator(randomNumArray);
-    }
+    // var numberGenerator = function (randomNumArray) {
+    //     console.log("this far");
+    //     console.log(data.items.length);
+    //     if (randomNumArray.length >= 30 || randomNumArray.length === data.items.length) return;
+    //     var randomNumber = Math.floor(Math.random() * data.items.length + 1);
+    //     if (randomNumArray.indexOf(randomNumber) < 0) {
+    //         randomNumArray.push(randomNumber);
+    //         console.log(randomNumArray);
+    //     }
+    // }
+    numberGenerator(data, randomNumArray);
+
     // create book object
     var bookObject = {
         title: [],
@@ -206,6 +214,7 @@ var bookObjectCreator = function (data) {
         // new books are discovered upon each search
         // var randomNumber = Math.floor(Math.random() * data.items.length);
         var randomIndex = randomNumArray[i];
+        console.log(randomIndex);
         // get title information
         var title = data.items[randomIndex].volumeInfo.title;
         // get image url
@@ -216,19 +225,29 @@ var bookObjectCreator = function (data) {
             description = "Description is unavailable for this content.";
         };
         // define "authors" location in data
-        var authorsArray = data.items[randomNumber].volumeInfo.authors;
+        var authorsArray = data.items[randomIndex].volumeInfo.authors;
         // push values to book object
         bookObject.title.push(title);
         bookObject.imageUrl.push(imageUrl);
         bookObject.description.push(description);
         bookObject.authors.push(authorsArray);
-        
+
         console.log(bookObject);
     }
     // send bookObject to DOM element creator function
     // bookContentCreator(bookObject);
 };
 
-mediaSelectEl.addEventListener("change", mediaSelectHandler);
-submitButtonEl.addEventListener("submit", formHandler);
+var numberGenerator = function (data, randomNumArray) {
+    for (i = 0; i<data.items.length; i++);
+    console.log(data);
+    if (randomNumArray.length >= 30 || randomNumArray.length === data.items.length) return;
+    var randomNumber = Math.floor(Math.random() * data.items.length + 1);
+    if (randomNumArray.indexOf(randomNumber) < 0) {
+        randomNumArray.push(randomNumber);
+        console.log(randomNumArray);
+    }
+};
 
+mediaSelectEl.addEventListener("change", mediaSelectHandler);
+searchFormEl.addEventListener("submit", formHandler);
