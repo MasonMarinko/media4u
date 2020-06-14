@@ -1,4 +1,12 @@
 // NEED TO ADD INPUTS INTO FETCH
+// userSearch(name, region, year, releaseYear);
+var mediaSelectEl = document.getElementById("media-select");
+var searchInputEl = document.getElementById("search-input");
+var searchByEl = document.getElementById("search-by");
+var searchGenreEl = document.getElementsByClassName("search-by-genre");
+var submitButtonEl = document.getElementById("submit-button");
+var yearInputEl = document.getElementById("search-by-year");
+var closeEl = document.getElementsByClassName("modal-close")
 
 // MOVIE SECTION
 //============= Don't forget to add query locators in order to grab answers below
@@ -33,17 +41,48 @@ var userSearch = function (title, releaseYear, genreId) {
 
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
 var genreCheck = function(genreInfo, genreInput) {
+    console.log(genreInfo)
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
+    var anyChosen = searchGenreEl[0].value
+    movieArray = [];
 
     for (var i = 0; i < resultLength; i++) {
         var resultArray = resultId[i].genre_ids
         if (resultArray.includes(parseInt(genreInput))) {
-        console.log(resultId[i])
+            movieArray.push(resultId[i])
+        } else if (anyChosen === "Any") {
+            movieArray.push(resultId[i])
         } else {
-            return
+            console.log("Nothing Returned") //<============================ MODAL NEEDED
+         return
     }
 }
+finalResultStyle(movieArray)
+}
+
+//================ Results added to DOM in order to display===============//
+var finalResultStyle = function(results) {
+    console.log(results)
+    document.getElementById('movie-container').removeAttribute('class', 'is-hidden');
+    // document.getElementById('').setAttribute('class', 'is-hidden');
+    // document.getElementById('book-form').setAttribute('class', 'is-hidden');
+
+    var movieMainEl = document.getElementById("main-movie-title");
+    var movieSubtitleEl = document.getElementById("movie-subtitle");
+    var movieDescriptionEl = document.getElementById("movie-description");
+
+    
+    movieMainEl.textContent = results.original_title;
+    movieSubtitleEl.textContent = "secondary title";
+    movieDescriptionEl.textContent = results.overview;
+
+// var submitButtonEl = document.getElementById("submit-button");
+// var yearInputEl = document.getElementById("search-by-year");
+// var closeEl = document.getElementsByClassName("modal-close")
+// todayTempEl.textContent = currentTemp + " \xB0 F";
+// todayHumidEl.textContent = currentHum + "%";
+// todayWindEl.textContent = currentWind + " MPH";
 }
 
 
@@ -66,7 +105,6 @@ var userSearchInformation = function (title, year, genre) {
     //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
     var releaseDate = releaseInput(year); 
     yearInputEl.value = "";
-    searchGenreEl.value = "";
 
 
     // sends all inputs to fetch/userSearch
@@ -114,16 +152,6 @@ var movieTitle = function(movieTitleInput) { //<====================== Ready
     }
 }
 
-
-
-
-// userSearch(name, region, year, releaseYear);
-var mediaSelectEl = document.getElementById("media-select");
-var searchInputEl = document.getElementById("search-input");
-var searchByEl = document.getElementById("search-by");
-var searchGenreEl = document.getElementsByClassName("search-by-genre");
-var submitButtonEl = document.getElementById("submit-button");
-var yearInputEl = document.getElementById("search-by-year");
 
 
 
@@ -207,6 +235,12 @@ var mediaSelectHandler = function () {
         break;
     }
 }
+
+var closeModal = function () {
+    console.log("button clicked")
+}
+
+
 
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 submitButtonEl.addEventListener("click", formHandler);

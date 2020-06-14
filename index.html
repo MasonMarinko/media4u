@@ -19,7 +19,6 @@
 </body>
     <section class='hero is-fullheight'>
 
-
         <div class="hero-body">
             <div class="container">
                 <div class="columns is-centered">
@@ -70,7 +69,7 @@
                                     <div class="field-body control is-expanded">
                                         <div class="select is-fullwidth">
                                             <select id="search-by" class= "search-by-genre">
-                                                <option value="">Any</option>
+                                                <option value="Any">Any</option>
                                                 <option value="28">Action</option>
                                                 <option value="12">Adventure</option>
                                                 <option value="16">Animation</option>
@@ -136,6 +135,30 @@
             </div>
         </div>
 
+        <div class="card is-hidden" id = "movie-container" value = movie-1>
+            <div class="card-content">
+              <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <img src="https://image.tmdb.org/t/p/w500/kHQ81KIAq8kD9NfUmHjTgAahoCW.jpg" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <p class="title is-4" id="main-movie-title">Avenger</p>
+                  <!-- <p class="subtitle is-6" id="movie-subtitle">The Last Avenger</p> -->
+                </div>
+              </div>
+          
+              <div class="content" id="movie-description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+                <a href="#">#css</a> <a href="#">#responsive</a>
+                <br>
+                <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+              </div>
+            </div>
+          </div>
+
 
     </section>
 
@@ -154,7 +177,6 @@
                     </div>
                 </div> <!-- end of dynamically created element -->
             </div>
-        </div>
         </div>
     </section>
 
