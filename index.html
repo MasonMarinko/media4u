@@ -30,7 +30,7 @@
             <div class="container">
                 <div class="columns is-centered">
                     <div class="column is-one-third">
-                        <form>
+                        <form id=search-form>
                             <div class="field is-horizontal">
                                 <div class="field-label ">
                                     <label class="label">Search For</label>
@@ -160,7 +160,7 @@
                                 </div>
                                 <div class="field is-horizontal">
                                     <div class="field-label">
-                                        <label class="label">Title</label>
+                                        <label class="label">Search For:</label>
                                     </div>
                                     <div class="field-body">
                                         <div class="field control is-expanded">
@@ -169,7 +169,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!-- end of book form -->
 
                             <div class="columns is-centered">
                                 <div class="column is-offset-one-fifth">
@@ -196,6 +196,25 @@
         </div>
         <div class="container">
             <div class="columns is-mobile is-multiline">
+                <!-- start of dynamically created element -->
+                <div class="column is-one-fifth-desktop is-one-third-tablet is-half-mobile">
+                    <div class="image">
+                        <!-- poster image -->
+                        <img src="http://image.tmdb.org/t/p/original/ygCQnDEqUEIamBpdQdDYnFfxvgM.jpg" alt="">
+                    </div>
+                </div> <!-- end of dynamically created element -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CLONE OF DISPLAY SECTION FOR TESTING BOOK CONTENT -->
+    <section id="content-display" class='section is-hidden'>
+        <div class="container has-text-centered has text-weight-bold is-size-1">
+            <!-- dynamic value -->
+            <h2 id="content-title">Movies</h2>
+        </div>
+        <div class="container">
+            <div id="posters-wrapper" class="columns is-mobile is-multiline">
                 <!-- start of dynamically created element -->
                 <div class="column is-one-fifth-desktop is-one-third-tablet is-half-mobile">
                     <div class="image">
