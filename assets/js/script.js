@@ -279,6 +279,7 @@ var bookFetchHandler = function (searchTerm) {
                 response.json().then(function (data) {
                     // send data to function which will create object of
                     // relevent information
+                    console.log(data);
                     bookObjectCreator(data);
                 });
             } else {
@@ -302,7 +303,7 @@ var bookObjectCreator = function (data) {
         var imageUrl;
         var imagesLocation = data.items[i].volumeInfo.imageLinks;
         if (!imagesLocation) {
-            imageUrl = "https://visualsound.com/products/smart-inventory-clearance/unavailable-image/";
+            imageUrl = "./assets/images/image-unavailable.jpg";
         } else {
             imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
         };
@@ -339,7 +340,30 @@ var bookObjectCreator = function (data) {
 var bookContentCreator = function (booksArray) {
     contentDisplayEl.classList.remove("is-hidden");
     contentTitleEl.textContent = "Books";
-    postersWrapperEl
+    postersWrapperEl.innerHTML = "";
+    for (i = 0; i < booksArray.length; i++) {
+        // create book element to go inside postersWrapper
+        var singlePosterEl = document.createElement("div");
+        // give book element an id referencing its index in booksArray
+        var indexId = "index-" + i;
+        singlePosterEl.setAttribute("id", indexId);
+        // set styling for book div
+        singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+        // create div to hold img
+        var bookPosterEl = document.createElement("div");
+        // give div class name image
+        bookPosterEl.className = "image";
+        // create img element
+        var bookImageEl = document.createElement("img");
+        // set source of img element
+        var imageSrc = booksArray[i].imageUrl;
+        bookImageEl.setAttribute("src", imageSrc);
+        // append elements
+        bookPosterEl.appendChild(bookImageEl);
+        singlePosterEl.appendChild(bookPosterEl);
+        // append book poster to postersWrapper to be displayed
+        postersWrapperEl.appendChild(singlePosterEl);
+    }
 };
 
 
