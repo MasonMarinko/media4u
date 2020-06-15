@@ -265,11 +265,14 @@ var bookFetchHandler = function (searchTerm) {
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            userInput;
+            userInput +
+            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
-            "+inauthor:" + userInput;
+            "+inauthor:" +
+            userInput +
+            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
@@ -350,17 +353,17 @@ var bookContentCreator = function (booksArray) {
         // set styling for book div
         singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
         // create div to hold img
-        var bookPosterEl = document.createElement("div");
+        var bookImgWrapperEl = document.createElement("div");
         // give div class name image
-        bookPosterEl.className = "image";
+        bookImgWrapperEl.className = "image pointer";
         // create img element
         var bookImageEl = document.createElement("img");
         // set source of img element
         var imageSrc = booksArray[i].imageUrl;
         bookImageEl.setAttribute("src", imageSrc);
         // append elements
-        bookPosterEl.appendChild(bookImageEl);
-        singlePosterEl.appendChild(bookPosterEl);
+        bookImgWrapperEl.appendChild(bookImageEl);
+        singlePosterEl.appendChild(bookImgWrapperEl);
         // append book poster to postersWrapper to be displayed
         postersWrapperEl.appendChild(singlePosterEl);
     }
