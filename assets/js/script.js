@@ -32,7 +32,7 @@ var formHandler = function (event) {
         // send userInput to music fetch function
         // musicFetchHandler(userInput);
     } else if (selectedMedia === "books") {
-
+        console.log("sent to books");
         bookFetchHandler();
     }
 };
@@ -40,20 +40,20 @@ var formHandler = function (event) {
 const mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
-        document.getElementById('movie-form').setAttribute('class', 'field');
-        document.getElementById('music-form').setAttribute('class', 'is-hidden');
-        document.getElementById('book-form').setAttribute('class', 'is-hidden');
-        break;
+            document.getElementById('movie-form').setAttribute('class', 'field');
+            document.getElementById('music-form').setAttribute('class', 'is-hidden');
+            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            break;
         case "music":
-        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-        document.getElementById('music-form').setAttribute('class', 'field');
-        document.getElementById('book-form').setAttribute('class', 'is-hidden');
-        break;
+            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+            document.getElementById('music-form').setAttribute('class', 'field');
+            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            break;
         case "books":
-        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-        document.getElementById('music-form').setAttribute('class', 'is-hidden');
-        document.getElementById('book-form').setAttribute('class', 'field');
-        break;
+            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+            document.getElementById('music-form').setAttribute('class', 'is-hidden');
+            document.getElementById('book-form').setAttribute('class', 'field');
+            break;
     }
 }
 
@@ -93,7 +93,7 @@ var userSearch = function (title, releaseYear) {
 
 
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
-var genreCheck = function(genreInfo) {
+var genreCheck = function (genreInfo) {
     var genreInput = searchGenreEl.value
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
@@ -108,10 +108,10 @@ var genreCheck = function(genreInfo) {
             movieArray.push(resultId[i])
         } else {
             console.log("Nothing Returned") //<============================ MODAL NEEDED
-         return
+            return
+        }
     }
-}
-finalResultStyle(movieArray)
+    finalResultStyle(movieArray)
 }
 
 
@@ -121,62 +121,62 @@ finalResultStyle(movieArray)
 
 
 //================ Results added to DOM in order to display===============//
-var finalResultStyle = function(results) {
+var finalResultStyle = function (results) {
     var movieContainerEl = document.getElementById("movie-container");
-       var movieMainEl = document.getElementById("movie-info-0");
+    var movieMainEl = document.getElementById("movie-info-0");
 
-    if (results.resultLength=== 0) {
+    if (results.resultLength === 0) {
         movieContainerEl.textContent = "No Movies Found"
         return;
     }
 
 
-for (var i = 0; i < results.length; i++) {
+    for (var i = 0; i < results.length; i++) {
 
-//========BEGINNING FIRST CHUNK================//
-    var posterContainerEl = document.createElement("div");
-    posterContainerEl.classList = "media"
+        //========BEGINNING FIRST CHUNK================//
+        var posterContainerEl = document.createElement("div");
+        posterContainerEl.classList = "media"
 
-    var posterContainerTwoEl = document.createElement("div");
-    posterContainerTwoEl.classList = "media-left"
+        var posterContainerTwoEl = document.createElement("div");
+        posterContainerTwoEl.classList = "media-left"
 
-    var figureEl = document.createElement("figure");
-    figureEl.classList = "image is-48x48"
+        var figureEl = document.createElement("figure");
+        figureEl.classList = "image is-48x48"
 
-    var moviePosterEl = document.createElement("img");
-    moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+        var moviePosterEl = document.createElement("img");
+        moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
 
-    movieMainEl.appendChild(posterContainerEl)
+        movieMainEl.appendChild(posterContainerEl)
 
-    posterContainerEl.appendChild(posterContainerTwoEl)
+        posterContainerEl.appendChild(posterContainerTwoEl)
 
-    posterContainerTwoEl.appendChild(figureEl)
+        posterContainerTwoEl.appendChild(figureEl)
 
-    figureEl.appendChild(moviePosterEl)
-//==============END FIRST CHUNK===============//
+        figureEl.appendChild(moviePosterEl)
+        //==============END FIRST CHUNK===============//
 
-//============= Beginning Second Chunk=============//
-    var titleContainerEl = document.createElement("div");
-    titleContainerEl.classList = "media-content"
+        //============= Beginning Second Chunk=============//
+        var titleContainerEl = document.createElement("div");
+        titleContainerEl.classList = "media-content"
 
-    var movieTitleEl = document.createElement("p");
-    movieTitleEl.classList = "title is-4"
-    movieTitleEl.setAttribute("id", "main-movie-title")
-    movieTitleEl.textContent = results[i].original_title;
+        var movieTitleEl = document.createElement("p");
+        movieTitleEl.classList = "title is-4"
+        movieTitleEl.setAttribute("id", "main-movie-title")
+        movieTitleEl.textContent = results[i].original_title;
 
-    movieMainEl.appendChild(titleContainerEl)
+        movieMainEl.appendChild(titleContainerEl)
 
-    titleContainerEl.appendChild(movieTitleEl)
-//================End second chunk===============//
+        titleContainerEl.appendChild(movieTitleEl)
+        //================End second chunk===============//
 
-//================= Beginning Final Chunk================//
-    var descContainerEl = document.createElement("div");
-    descContainerEl.classList = "content"
-    descContainerEl.setAttribute = "movie-description"
-    descContainerEl.textContent = results[i].overview
+        //================= Beginning Final Chunk================//
+        var descContainerEl = document.createElement("div");
+        descContainerEl.classList = "content"
+        descContainerEl.setAttribute = "movie-description"
+        descContainerEl.textContent = results[i].overview
 
-    movieMainEl.appendChild(descContainerEl)
-}
+        movieMainEl.appendChild(descContainerEl)
+    }
 
 }
 
@@ -199,7 +199,7 @@ var movieSearchHandler = function () {
     yearInputEl.value = "";
 
     // sends all inputs to fetch/userSearch
-    userSearch(movieName, releaseDate)    //<========== CALL TO FETCH, COMMENTED FOR NOW
+    userSearch(movieName, releaseDate) //<========== CALL TO FETCH, COMMENTED FOR NOW
 }
 
 
@@ -258,12 +258,11 @@ var bookFetchHandler = function (searchTerm) {
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-     userInput;
+            userInput;
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
             "+inauthor:" + userInput;
-
     }
     // fetch data from api URL
     fetch(apiUrl)
@@ -271,10 +270,9 @@ var bookFetchHandler = function (searchTerm) {
             // request was successful
             if (response.ok) {
                 response.json().then(function (data) {
-                    console.log(data);
                     // send data to function which will create object of
                     // relevent information
-                    // bookObjectCreator(data);
+                    bookObjectCreator(data);
                 });
             } else {
                 alert("Error: " + response.statusText);
@@ -321,8 +319,8 @@ var bookObjectCreator = function (data) {
         bookObject.imageUrl.push(imageUrl);
         bookObject.description.push(description);
         bookObject.authors.push(authors);
-        console.log(bookObject);
     };
+    console.log(bookObject);
     // send bookObject to DOM element creator function
     // bookContentCreator(bookObject);
 };
