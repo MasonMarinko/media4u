@@ -3,6 +3,10 @@ var mediaSelectEl = document.getElementById("media-select");
 var searchFormEl = document.getElementById("search-form");
 var submitButtonEl = document.getElementById("submit-button");
 var closeEl = document.getElementsByClassName("modal-close")
+// content section elements
+var contentDisplayEl = document.getElementById("content-display");
+var contentTitleEl = document.getElementById("content-title");
+var postersWrapperEl = document.getElementById("posters-wrapper");
 // movie elements
 var movieTitleEl = document.getElementById("movie-title");
 var searchGenreEl = document.getElementById("search-by-genre");
@@ -234,7 +238,7 @@ var releaseInput = function (yearInput) {
 //==================== this could also be an alert/modal if preferred.==================================//
 
 var movieTitle = function (movieTitleInput) { //<====================== Ready
-
+    
     if (movieTitleInput) {
         return movieTitleInput;
     } else if (movieTitleInput === "") {
@@ -243,6 +247,9 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
     }
 }
 
+var closeModal = function () {
+    console.log("button clicked")
+}
 //====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
@@ -285,13 +292,8 @@ var bookFetchHandler = function (searchTerm) {
 
 var bookObjectCreator = function (data) {
     console.log(data.items);
-    // create book object
-    var bookObject = {
-        title: [],
-        imageUrl: [],
-        description: [],
-        authors: []
-    }
+    // create array to hold book objects
+    var booksArray = [];
     // cycle through data and add info to object
     for (i = 0; i < data.items.length; i++) {
         // get title information
@@ -314,20 +316,32 @@ var bookObjectCreator = function (data) {
         if (!authors) {
             authors = "Authors unavailable for this book."
         };
+        // create book object
+        var bookObject = {
+            title: [],
+            imageUrl: [],
+            description: [],
+            authors: []
+        }
         // push info to book object
         bookObject.title.push(title);
         bookObject.imageUrl.push(imageUrl);
         bookObject.description.push(description);
         bookObject.authors.push(authors);
+        // push book object to booksArray
+        booksArray.push(bookObject);
+        console.log(booksArray);
     };
-    console.log(bookObject);
     // send bookObject to DOM element creator function
-    // bookContentCreator(bookObject);
+    bookContentCreator(booksArray);
 };
 
-var closeModal = function () {
-    console.log("button clicked")
-}
+var bookContentCreator = function (booksArray) {
+    contentDisplayEl.classList.remove("is-hidden");
+    contentTitleEl.textContent = "Books";
+    postersWrapperEl
+};
+
 
 
 
