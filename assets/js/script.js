@@ -1,59 +1,59 @@
-// userSearch(name, region, year, releaseYear);
 var mediaSelectEl = document.getElementById("media-select");
 var bookSearchInputEl = document.getElementById("book-input");
 var searchByEl = document.getElementById("search-by");
 var searchGenreEl = document.getElementsByClassName("search-by-genre");
 var searchFormEl = document.getElementById("search-form");
+
+var movieTitleEl = document.getElementById("movie-title");
+var searchGenreEl = document.getElementById("search-by-genre");
 var yearInputEl = document.getElementById("search-by-year");
+
+var bookSearchByEl = document.getElementById("book-search-by");
+var bookInputEl = document.getElementById("book-input")
+
+var submitButtonEl = document.getElementById("submit-button");
 
 
 
 // function to check which media types are selected
-// then send input to correct fetch function
+// then send input to correct fetch functions
 var formHandler = function (event) {
     event.preventDefault();
-    console.log("button pressed");
-    // define type of media user selected
+
     var selectedMedia = mediaSelectEl.value;
-    console.log(selectedMedia);
+
     // send user input to appropriate fetch function
-    if (selectedMedia === "books") {
-        console.log("sent to books");
-        // define user input from  bookform
-        var bookSearchTerm = bookSearchInputEl.value;
-        console.log(bookSearchTerm);
-        // send searchTerm to book fetch function
-        bookFetchHandler(bookSearchTerm);
+    if (selectedMedia === "movies") {
+
+        movieSearchHandler();
+
     } else if (selectedMedia === "music") {
         console.log("sent to music");
-        // send searchTerm to music fetch function
-        // musicFetchHandler(searchTerm);
-    } else if (selectedMedia === "movies") {
-        var yearInput = yearInputEl.value
-        var genreIdNum = searchGenreEl[0].value
-        userSearchInformation(searchTerm, yearInput, genreIdNum);
-        // send searchTerm to Mason's movie fetch function
-        // movieFetchHandler(searchTerm);
+        // send userInput to music fetch function
+        // musicFetchHandler(userInput);
+    } else if (selectedMedia === "books") {
+
+        bookFetchHandler();
     }
 };
 
 const mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
-            document.getElementById('movie-form').removeAttribute('class', 'is-hidden');
-            document.getElementById('music-form').setAttribute('class', 'is-hidden');
-            document.getElementById('book-form').setAttribute('class', 'is-hidden');
-            break;
+        document.getElementById('movie-form').setAttribute('class', 'field');
+        document.getElementById('music-form').setAttribute('class', 'is-hidden');
+        document.getElementById('book-form').setAttribute('class', 'is-hidden');
+        break;
         case "music":
-            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-            document.getElementById('music-form').removeAttribute('class', 'is-hidden');
-            document.getElementById('book-form').setAttribute('class', 'is-hidden');
-            break;
+        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+        document.getElementById('music-form').setAttribute('class', 'field');
+        document.getElementById('book-form').setAttribute('class', 'is-hidden');
+        break;
         case "books":
-            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-            document.getElementById('music-form').setAttribute('class', 'is-hidden');
-            document.getElementById('book-form').removeAttribute('class', 'is-hidden');
-            break;
+        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+        document.getElementById('music-form').setAttribute('class', 'is-hidden');
+        document.getElementById('book-form').setAttribute('class', 'field');
+        break;
     }
 }
 
@@ -62,7 +62,7 @@ const mediaSelectHandler = function () {
 
 // NEED TO ADD INPUTS INTO FETCH
 
-var userSearch = function (title, releaseYear, genreId) {
+var userSearch = function (title, releaseYear) {
     var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" +
         title +
         "&include_adult=false&primary_release_year=" +
@@ -72,7 +72,7 @@ var userSearch = function (title, releaseYear, genreId) {
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
-                    genreCheck(data, genreId)
+                    genreCheck(data)
                 });
             } else {
                 alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
@@ -84,7 +84,8 @@ var userSearch = function (title, releaseYear, genreId) {
 };
 
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
-var genreCheck = function (genreInfo, genreInput) {
+var genreCheck = function(genreInfo) {
+    var genreInput = searchGenreEl.value
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
 
@@ -101,23 +102,19 @@ var genreCheck = function (genreInfo, genreInput) {
 //============ MAIN search function that calls everything else for MOVIE TITLES! ==============================//
 //============= Function that takes all search criteria and will compound it =================================//
 //============ together and send to the "userSearch"/fetch request============================================//
-var userSearchInformation = function (title, year, genre) {
-
+var movieSearchHandler = function () {
 
     //======= Movie title checks if a title is entered and then returns a movie title they've selected
-    var movieName = movieTitle(title);
+    var movieName = movieTitle(movieTitleEl.value);
     searchInputEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
 
-
-
     //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
-    var releaseDate = releaseInput(year);
+    var releaseDate = releaseInput(yearInputEl.value);
     yearInputEl.value = "";
     searchGenreEl.value = "";
 
-
     // sends all inputs to fetch/userSearch
-    userSearch(movieName, releaseDate, genre) //<========== CALL TO FETCH, COMMENTED FOR NOW
+    userSearch(movieName, releaseDate)    //<========== CALL TO FETCH, COMMENTED FOR NOW
 }
 
 //================ FOURTH FUNCTION=========================//
@@ -157,15 +154,19 @@ var bookFetchHandler = function (searchTerm) {
     console.log("book fetch");
     // initiate apiUrl variable
     var apiUrl;
+
+    // book input value
+    userInput = bookInputEl.value
+
     // check if searching for title or author
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            searchTerm;
+            userInput;
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            searchTerm +
-            "+inauthor:" + searchTerm;
+            userInput +
+            "+inauthor:" + userInput;
     }
     // fetch data from api URL
     fetch(apiUrl)
