@@ -120,7 +120,6 @@ var finalResultStyle = function(results) {
     movieMainEl.innerHTML = "";
 
 
-
     if (results.resultLength=== 0) {
         movieContainerEl.textContent = "No Movies Found"
         return;
