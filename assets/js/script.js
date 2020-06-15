@@ -280,6 +280,7 @@ var bookFetchHandler = function (searchTerm) {
                 // send data to function which will create object of
                 // relevent information
                 console.log(data);
+                bookInputEl.value = "";
                 bookObjectCreator(data);
             });
         } else {
@@ -366,6 +367,8 @@ var bookContentCreator = function (booksArray) {
         // append book poster to postersWrapper to be displayed
         postersWrapperEl.appendChild(bookPosterEl);
     }
+    // jump to content section
+    window.location.hash = "content-display";
 };
 
 
