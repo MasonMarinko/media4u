@@ -2,6 +2,7 @@
 var mediaSelectEl = document.getElementById("media-select");
 var searchFormEl = document.getElementById("search-form");
 var submitButtonEl = document.getElementById("submit-button");
+var closeEl = document.getElementsByClassName("modal-close")
 // movie elements
 var movieTitleEl = document.getElementById("movie-title");
 var searchGenreEl = document.getElementById("search-by-genre");
@@ -59,6 +60,8 @@ const mediaSelectHandler = function () {
 // MOVIE SECTION
 //============= Don't forget to add query locators in order to grab answers below
 
+
+
 // NEED TO ADD INPUTS INTO FETCH
 
 var userSearch = function (title, releaseYear) {
@@ -82,21 +85,105 @@ var userSearch = function (title, releaseYear) {
         });
 };
 
+
+
+
+
+
+
+
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
 var genreCheck = function(genreInfo) {
     var genreInput = searchGenreEl.value
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
+    var anyChosen = searchGenreEl[0].value
+    movieArray = [];
 
     for (var i = 0; i < resultLength; i++) {
         var resultArray = resultId[i].genre_ids
         if (resultArray.includes(parseInt(genreInput))) {
-            console.log(resultId[i])
+            movieArray.push(resultId[i])
+        } else if (anyChosen === "Any") {
+            movieArray.push(resultId[i])
         } else {
-            return
-        }
+            console.log("Nothing Returned") //<============================ MODAL NEEDED
+         return
     }
 }
+finalResultStyle(movieArray)
+}
+
+
+
+
+
+
+
+//================ Results added to DOM in order to display===============//
+var finalResultStyle = function(results) {
+    var movieContainerEl = document.getElementById("movie-container");
+       var movieMainEl = document.getElementById("movie-info-0");
+
+    if (results.resultLength=== 0) {
+        movieContainerEl.textContent = "No Movies Found"
+        return;
+    }
+
+
+for (var i = 0; i < results.length; i++) {
+
+//========BEGINNING FIRST CHUNK================//
+    var posterContainerEl = document.createElement("div");
+    posterContainerEl.classList = "media"
+
+    var posterContainerTwoEl = document.createElement("div");
+    posterContainerTwoEl.classList = "media-left"
+
+    var figureEl = document.createElement("figure");
+    figureEl.classList = "image is-48x48"
+
+    var moviePosterEl = document.createElement("img");
+    moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+
+    movieMainEl.appendChild(posterContainerEl)
+
+    posterContainerEl.appendChild(posterContainerTwoEl)
+
+    posterContainerTwoEl.appendChild(figureEl)
+
+    figureEl.appendChild(moviePosterEl)
+//==============END FIRST CHUNK===============//
+
+//============= Beginning Second Chunk=============//
+    var titleContainerEl = document.createElement("div");
+    titleContainerEl.classList = "media-content"
+
+    var movieTitleEl = document.createElement("p");
+    movieTitleEl.classList = "title is-4"
+    movieTitleEl.setAttribute("id", "main-movie-title")
+    movieTitleEl.textContent = results[i].original_title;
+
+    movieMainEl.appendChild(titleContainerEl)
+
+    titleContainerEl.appendChild(movieTitleEl)
+//================End second chunk===============//
+
+//================= Beginning Final Chunk================//
+    var descContainerEl = document.createElement("div");
+    descContainerEl.classList = "content"
+    descContainerEl.setAttribute = "movie-description"
+    descContainerEl.textContent = results[i].overview
+
+    movieMainEl.appendChild(descContainerEl)
+}
+
+}
+
+
+
+
+
 
 //============ MAIN search function that calls everything else for MOVIE TITLES! ==============================//
 //============= Function that takes all search criteria and will compound it =================================//
@@ -110,11 +197,15 @@ var movieSearchHandler = function () {
     //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
     var releaseDate = releaseInput(yearInputEl.value);
     yearInputEl.value = "";
-    searchGenreEl.value = "";
 
     // sends all inputs to fetch/userSearch
     userSearch(movieName, releaseDate)    //<========== CALL TO FETCH, COMMENTED FOR NOW
 }
+
+
+
+
+
 
 //================ FOURTH FUNCTION=========================//
 // function checks to make sure year is 4 digits long, and is beyond 1887 (first movie 1888) and returns a year/integer
@@ -131,6 +222,13 @@ var releaseInput = function (yearInput) {
     }
 }
 
+
+
+
+
+
+
+
 //================ SECOND FUNCTION=========================//
 //==================== function takes in search result for movie title and returns answer to "userSearchInformation, if user leaves blank then "any" is returned
 //==================== this could also be an alert/modal if preferred.==================================//
@@ -145,8 +243,7 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
     }
 }
 
-// ********************************************************************************************************************************
-// BOOK MEDIA SECTION
+//====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
 var bookFetchHandler = function (searchTerm) {
@@ -161,11 +258,12 @@ var bookFetchHandler = function (searchTerm) {
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            userInput;
+     userInput;
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
             "+inauthor:" + userInput;
+
     }
     // fetch data from api URL
     fetch(apiUrl)
@@ -173,9 +271,10 @@ var bookFetchHandler = function (searchTerm) {
             // request was successful
             if (response.ok) {
                 response.json().then(function (data) {
+                    console.log(data);
                     // send data to function which will create object of
                     // relevent information
-                    bookObjectCreator(data);
+                    // bookObjectCreator(data);
                 });
             } else {
                 alert("Error: " + response.statusText);
@@ -227,6 +326,12 @@ var bookObjectCreator = function (data) {
     // send bookObject to DOM element creator function
     // bookContentCreator(bookObject);
 };
+
+var closeModal = function () {
+    console.log("button clicked")
+}
+
+
 
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
