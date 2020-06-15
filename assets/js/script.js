@@ -15,7 +15,7 @@ var yearInputEl = document.getElementById("search-by-year");
 var bookSearchInputEl = document.getElementById("book-input");
 var bookSearchByEl = document.getElementById("book-search-by");
 var bookInputEl = document.getElementById("book-input")
-
+var booksArray = [];
 
 
 
@@ -247,9 +247,6 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
     }
 }
 
-var closeModal = function () {
-    console.log("button clicked")
-}
 //====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
@@ -257,47 +254,45 @@ var bookFetchHandler = function (searchTerm) {
     console.log("book fetch");
     // initiate apiUrl variable
     var apiUrl;
-
+    
     // book input value
     var userInput = bookInputEl.value
-
+    
     // check if searching for title or author
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+        userInput +
+        "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            userInput +
-            "+inauthor:" +
-            userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+        userInput +
+        "+inauthor:" +
+        userInput +
+        "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
-        .then(function (response) {
-            // request was successful
-            if (response.ok) {
-                response.json().then(function (data) {
-                    // send data to function which will create object of
-                    // relevent information
-                    console.log(data);
-                    bookObjectCreator(data);
-                });
-            } else {
-                alert("Error: " + response.statusText);
-            }
-        })
-        .catch(function (error) {
-            alert("Unable to connect");
-        });
+    .then(function (response) {
+        // request was successful
+        if (response.ok) {
+            response.json().then(function (data) {
+                // send data to function which will create object of
+                // relevent information
+                console.log(data);
+                bookObjectCreator(data);
+            });
+        } else {
+            alert("Error: " + response.statusText);
+        }
+    })
+    .catch(function (error) {
+        alert("Unable to connect");
+    });
 };
 
 var bookObjectCreator = function (data) {
     console.log(data.items);
-    // create array to hold book objects
-    var booksArray = [];
     // cycle through data and add info to object
     for (i = 0; i < data.items.length; i++) {
         // get title information
@@ -346,31 +341,74 @@ var bookContentCreator = function (booksArray) {
     postersWrapperEl.innerHTML = "";
     for (i = 0; i < booksArray.length; i++) {
         // create book element to go inside postersWrapper
-        var singlePosterEl = document.createElement("div");
-        // give book element an id referencing its index in booksArray
-        var indexId = "index-" + i;
-        singlePosterEl.setAttribute("id", indexId);
+        var bookPosterEl = document.createElement("div");
         // set styling for book div
-        singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+        bookPosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
         // create div to hold img
         var bookImgWrapperEl = document.createElement("div");
         // give div class name image
         bookImgWrapperEl.className = "image pointer";
         // create img element
         var bookImageEl = document.createElement("img");
+        // set class for img element
+        bookImageEl.className = "book-poster";
+        // give img element an id referencing its index in booksArray
+        var indexId = "index-" + i;
+        bookImageEl.setAttribute("id", indexId);
         // set source of img element
         var imageSrc = booksArray[i].imageUrl;
         bookImageEl.setAttribute("src", imageSrc);
         // append elements
         bookImgWrapperEl.appendChild(bookImageEl);
-        singlePosterEl.appendChild(bookImgWrapperEl);
+        bookPosterEl.appendChild(bookImgWrapperEl);
         // append book poster to postersWrapper to be displayed
-        postersWrapperEl.appendChild(singlePosterEl);
+        postersWrapperEl.appendChild(bookPosterEl);
     }
 };
 
 
+var bookModalCreator = function () {
+    // find out which book was clicked and get corresponding book object from booksArray
+    console.log(event.target.id);
+    var clickedIndex = event.target.id.replace("index-", "");
+    var clickedBook = booksArray[clickedIndex];
+    // create modal elements
+    var modalEl = document.createElement("div");
+    modalEl.className = "modal is-active";
+    var modalBackGroundEl = document.createElement("div");
+    modalBackGroundEl.className = "modal-background";
+    var modalContentEl = document.createElement("div");
+    modalContentEl.className = "modal-content";
+    var modalCloseEl = document.createElement("button");
+    modalCloseEl.className = "modal-close is-large";
+    modalCloseEl.id = "modal-close";
+    modalCloseEl.setAttribute("aria-label", "close");
+    // append modal elements to DOM
+    modalEl.appendChild(modalBackGroundEl);
+    modalEl.appendChild(modalContentEl);
+    modalEl.appendChild(modalCloseEl);
+    contentDisplayEl.appendChild(modalEl);
+    
+    console.log(clickedBook);
+}
 
+var closeModal = function () {
+    var modalEl = document.querySelector(".is-active");
+    console.log("modal close was clicked")
+    console.log(modalEl.classList);
+    modalEl.classList.remove("is-active");
+}
 
+var clickChecker = function (event) {
+    console.log(event.target.className);
+    if (event.target.className == "book-poster") {
+        bookModalCreator(event);
+    }
+    if (event.target.id == "modal-close") {
+        closeModal();
+    }
+};
+
+document.addEventListener("click", clickChecker);
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
