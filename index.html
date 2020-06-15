@@ -30,7 +30,7 @@
             <div class="container">
                 <div class="columns is-centered">
                     <div class="column is-one-third">
-                        <form>
+                        <form id=search-form>
                             <div class="field is-horizontal">
                                 <div class="field-label ">
                                     <label class="label">Search For</label>
@@ -112,10 +112,37 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- End of movie Form -->
-
-                            <div id="music-form" class="field is-hidden"></div>
-                          
+                            </div>
+                            <!-- End of movie Form -->
+                            <!-- Start music form-->
+                            <div id="music-form" class="field is-hidden">
+                                <div class="field is-horizontal">
+                                    <div class="field-label">
+                                        <label class="label">Search By</label>
+                                    </div>
+                                    <div class="field-body control is-expanded">
+                                        <div class="select is-fullwidth">
+                                            <select id="music-search-by">
+                                                <option value="artist">Artist</option>
+                                                <option value="song">Song</option>
+                                                <option value="album">Album</option>
+                                                <option value="instrument">Instrument</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label">
+                                        <label class="label">Title</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field control is-expanded">
+                                            <input class="input" id="music-input" type="text" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End music form -->
                             <!-- BOOK FORM -->
                             <div id="book-form" class="field is-hidden">
                                 <div class="field is-horizontal">
@@ -133,7 +160,7 @@
                                 </div>
                                 <div class="field is-horizontal">
                                     <div class="field-label">
-                                        <label class="label">Title</label>
+                                        <label class="label">Search For:</label>
                                     </div>
                                     <div class="field-body">
                                         <div class="field control is-expanded">
@@ -142,7 +169,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!-- end of book form -->
 
                             <div class="columns is-centered">
                                 <div class="column is-offset-one-fifth">
@@ -158,7 +185,7 @@
         <div class="card" id = "movie-container">
             <div class="card-content" id = "movie-info-0">
             </div>
-          </div>
+        </div>
 
     </section>
 
@@ -169,6 +196,25 @@
         </div>
         <div class="container">
             <div class="columns is-mobile is-multiline">
+                <!-- start of dynamically created element -->
+                <div class="column is-one-fifth-desktop is-one-third-tablet is-half-mobile">
+                    <div class="image">
+                        <!-- poster image -->
+                        <img src="http://image.tmdb.org/t/p/original/ygCQnDEqUEIamBpdQdDYnFfxvgM.jpg" alt="">
+                    </div>
+                </div> <!-- end of dynamically created element -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CLONE OF DISPLAY SECTION FOR TESTING BOOK CONTENT -->
+    <section id="content-display" class='section is-hidden'>
+        <div class="container has-text-centered has text-weight-bold is-size-1">
+            <!-- dynamic value -->
+            <h2 id="content-title">Movies</h2>
+        </div>
+        <div class="container">
+            <div id="posters-wrapper" class="columns is-mobile is-multiline">
                 <!-- start of dynamically created element -->
                 <div class="column is-one-fifth-desktop is-one-third-tablet is-half-mobile">
                     <div class="image">

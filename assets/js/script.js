@@ -129,6 +129,7 @@ var finalResultStyle = function(results) {
 for (var i = 0; i < results.length; i++) {
 
 //========BEGINNING FIRST CHUNK================//
+        
     var posterContainerEl = document.createElement("div");
     posterContainerEl.classList = "media"
 
