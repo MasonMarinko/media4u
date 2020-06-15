@@ -292,6 +292,8 @@ var bookFetchHandler = function (searchTerm) {
 };
 
 var bookObjectCreator = function (data) {
+    // clear books array from previous searches
+    booksArray = [];
     console.log(data.items);
     // cycle through data and add info to object
     for (i = 0; i < data.items.length; i++) {
@@ -377,28 +379,66 @@ var bookModalCreator = function () {
     modalEl.className = "modal is-active";
     var modalBackGroundEl = document.createElement("div");
     modalBackGroundEl.className = "modal-background";
-    var modalContentEl = document.createElement("div");
-    modalContentEl.className = "modal-content";
+    var modalCardEl = document.createElement("div");
+    modalCardEl.className = "modal-card";
+    // modal card head
+    var modalHeadEl = document.createElement("header");
+    modalHeadEl.className = "modal-card-head";
+    var modalTitleEl = document.createElement("p");
+    modalTitleEl.className = "modal-card-title";
+    modalTitleEl.textContent = clickedBook.title;
     var modalCloseEl = document.createElement("button");
-    modalCloseEl.className = "modal-close is-large";
+    modalCloseEl.className = "delete";
     modalCloseEl.id = "modal-close";
     modalCloseEl.setAttribute("aria-label", "close");
+    // modal card content
+    var modalBodyEl = document.createElement("section");
+    modalBodyEl.className = "modal-card-body";
+    // modal image
+    var modalImageEl = document.createElement("p");
+    modalImageEl.className = "image is-128x128 mb-3";
+    var imgEl = document.createElement("img");
+    imgEl.setAttribute("src", clickedBook.imageUrl);
+    // modal card book description
+    var modalDescTitleEl = document.createElement("h1");
+    modalDescTitleEl.className = "has-text-weight-bold mt-3";
+    modalDescTitleEl.textContent = "About the Book";
+    var modalDescEl = document.createElement("p");
+    modalDescEl.className = "pb-3";
+    modalDescEl.textContent = clickedBook.description;
+    // modal card authors
+    var modalAuthorsTitleEl = document.createElement("h1");
+    modalAuthorsTitleEl.className = "has-text-weight-bold";
+    modalAuthorsTitleEl.textContent = "Author(s):";
+    var modalAuthorsEl = document.createElement("p");
+    console.log(clickedBook.authors);
+    modalAuthorsEl.textContent = clickedBook.authors;
     // append modal elements to DOM
     modalEl.appendChild(modalBackGroundEl);
-    modalEl.appendChild(modalContentEl);
-    modalEl.appendChild(modalCloseEl);
+    modalHeadEl.appendChild(modalTitleEl);
+    modalHeadEl.appendChild(modalCloseEl);
+    modalCardEl.appendChild(modalHeadEl);
+    modalEl.appendChild(modalCardEl);
+    modalBodyEl.appendChild(modalImageEl);
+    modalImageEl.appendChild(imgEl);
+    modalBodyEl.appendChild(modalDescTitleEl);
+    modalBodyEl.appendChild(modalDescEl);
+    modalBodyEl.appendChild(modalAuthorsTitleEl);
+    modalBodyEl.appendChild(modalAuthorsEl);
+    modalCardEl.appendChild(modalBodyEl);
     contentDisplayEl.appendChild(modalEl);
     
     console.log(clickedBook);
 }
-
+//===============END OF BOOK SECTION==========================//
+// function to close modals when close button is clicked
 var closeModal = function () {
     var modalEl = document.querySelector(".is-active");
     console.log("modal close was clicked")
     console.log(modalEl.classList);
     modalEl.classList.remove("is-active");
 }
-
+// function to check clicks on dynamically generated elements
 var clickChecker = function (event) {
     console.log(event.target.className);
     if (event.target.className == "book-poster") {
