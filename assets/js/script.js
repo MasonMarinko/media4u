@@ -91,7 +91,7 @@ var genreCheck = function(genreInfo) {
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
     var anyChosen = searchGenreEl[0].value
-    movieArray = [];
+    var movieArray = [];
 
     for (var i = 0; i < resultLength; i++) {
         var resultArray = resultId[i].genre_ids
@@ -117,6 +117,9 @@ finalResultStyle(movieArray)
 var finalResultStyle = function(results) {
     var movieContainerEl = document.getElementById("movie-container");
        var movieMainEl = document.getElementById("movie-info-0");
+    movieMainEl.innerHTML = "";
+
+
 
     if (results.resultLength=== 0) {
         movieContainerEl.textContent = "No Movies Found"
