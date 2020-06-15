@@ -45,7 +45,6 @@ var userSearch = function (title, releaseYear, genreId) {
 
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
 var genreCheck = function(genreInfo, genreInput) {
-    console.log(genreInfo)
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
     var anyChosen = searchGenreEl[0].value
@@ -73,7 +72,6 @@ finalResultStyle(movieArray)
 
 //================ Results added to DOM in order to display===============//
 var finalResultStyle = function(results) {
-    console.log(results.length)
     var movieContainerEl = document.getElementById("movie-container");
        var movieMainEl = document.getElementById("movie-info-0");
 
@@ -83,8 +81,7 @@ var finalResultStyle = function(results) {
     }
 
 
-
-
+for (var i = 0; i < results.length; i++) {
 
 //========BEGINNING FIRST CHUNK================//
     var posterContainerEl = document.createElement("div");
@@ -97,11 +94,9 @@ var finalResultStyle = function(results) {
     figureEl.classList = "image is-48x48"
 
     var moviePosterEl = document.createElement("img");
-    moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original/ygCQnDEqUEIamBpdQdDYnFfxvgM.jpg")
-
+    moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
 
     movieMainEl.appendChild(posterContainerEl)
-
 
     posterContainerEl.appendChild(posterContainerTwoEl)
 
@@ -117,7 +112,7 @@ var finalResultStyle = function(results) {
     var movieTitleEl = document.createElement("p");
     movieTitleEl.classList = "title is-4"
     movieTitleEl.setAttribute("id", "main-movie-title")
-    movieTitleEl.textContent = "Testing, is this working??"
+    movieTitleEl.textContent = results[i].original_title;
 
     movieMainEl.appendChild(titleContainerEl)
 
@@ -128,28 +123,11 @@ var finalResultStyle = function(results) {
     var descContainerEl = document.createElement("div");
     descContainerEl.classList = "content"
     descContainerEl.setAttribute = "movie-description"
-    descContainerEl.textContent = "Yes this is the description of the movie, let's see how long this will work for!"
+    descContainerEl.textContent = results[i].overview
 
     movieMainEl.appendChild(descContainerEl)
+}
 
-
-
-
-
-    // var moviePosterEl = document.getElementById("movie-poster");
-    // var movieDescriptionEl = document.getElementById("movie-description");
-
-    
-    // movieMainEl.textContent = results[0].original_title;
-    // moviePosterEl.textContent = "https://image.tmdb.org/t/p/w500/kHQ81KIAq8kD9NfUmHjTgAahoCW.jpg";
-    // movieDescriptionEl.textContent = results[0].overview;
-
-// var submitButtonEl = document.getElementById("submit-button");
-// var yearInputEl = document.getElementById("search-by-year");
-// var closeEl = document.getElementsByClassName("modal-close")
-// todayTempEl.textContent = currentTemp + " \xB0 F";
-// todayHumidEl.textContent = currentHum + "%";
-// todayWindEl.textContent = currentWind + " MPH";
 }
 
 
