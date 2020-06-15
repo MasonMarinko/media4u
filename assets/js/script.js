@@ -108,7 +108,7 @@ var genreCheck = function (genreInfo) {
         var resultArray = resultId[i].genre_ids
         if (resultArray.includes(parseInt(genreInput))) {
             movieArray.push(resultId[i])
-        } else if (anyChosen === "Any") {
+        } else if (anyChosen === "any") {
             movieArray.push(resultId[i])
         } else {
             console.log("Nothing Returned") //<============================ MODAL NEEDED
@@ -128,6 +128,7 @@ var genreCheck = function (genreInfo) {
 var finalResultStyle = function (results) {
     var movieContainerEl = document.getElementById("movie-container");
     var movieMainEl = document.getElementById("movie-info-0");
+    movieMainEl.textContent = ""
 
     if (results.resultLength === 0) {
         movieContainerEl.textContent = "No Movies Found"
@@ -148,7 +149,14 @@ var finalResultStyle = function (results) {
         figureEl.classList = "image is-48x48"
 
         var moviePosterEl = document.createElement("img");
-        moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+        if (results[i].poster_path) {
+            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+        } else if (results[i].backdrop_path) {
+            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].backdrop_path)
+        } else {
+            moviePosterEl.setAttribute("src", "./assets/images/image-unavailable.jpg")
+
+        }
 
         movieMainEl.appendChild(posterContainerEl)
 
@@ -196,7 +204,7 @@ var movieSearchHandler = function () {
 
     //======= Movie title checks if a title is entered and then returns a movie title they've selected
     var movieName = movieTitle(movieTitleEl.value);
-    searchInputEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
+    movieTitleEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
 
     //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
     var releaseDate = releaseInput(yearInputEl.value);
@@ -238,7 +246,7 @@ var releaseInput = function (yearInput) {
 //==================== this could also be an alert/modal if preferred.==================================//
 
 var movieTitle = function (movieTitleInput) { //<====================== Ready
-    
+
     if (movieTitleInput) {
         return movieTitleInput;
     } else if (movieTitleInput === "") {
