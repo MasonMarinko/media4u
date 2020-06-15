@@ -1,17 +1,16 @@
+// general elements
 var mediaSelectEl = document.getElementById("media-select");
-var bookSearchInputEl = document.getElementById("book-input");
-var searchByEl = document.getElementById("search-by");
-var searchGenreEl = document.getElementsByClassName("search-by-genre");
 var searchFormEl = document.getElementById("search-form");
-
+var submitButtonEl = document.getElementById("submit-button");
+// movie elements
 var movieTitleEl = document.getElementById("movie-title");
 var searchGenreEl = document.getElementById("search-by-genre");
 var yearInputEl = document.getElementById("search-by-year");
-
+// book elements
+var bookSearchInputEl = document.getElementById("book-input");
 var bookSearchByEl = document.getElementById("book-search-by");
 var bookInputEl = document.getElementById("book-input")
 
-var submitButtonEl = document.getElementById("submit-button");
 
 
 
@@ -156,7 +155,7 @@ var bookFetchHandler = function (searchTerm) {
     var apiUrl;
 
     // book input value
-    userInput = bookInputEl.value
+    var userInput = bookInputEl.value
 
     // check if searching for title or author
     var bookSearchByEl = document.getElementById("book-search-by");
