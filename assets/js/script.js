@@ -240,34 +240,7 @@ var movieTitle = function(movieTitleInput) { //<====================== Ready
     }
 }
 
-
-
-
-// funtion to check which media types are selected
-// then send input to correct fetch function
-var formHandler = function (event) {
-    event.preventDefault();
-    // define user input from form
-    var searchTerm = searchInputEl.value;
-    // define type of media user selected
-    var selectedMedia = mediaSelectEl.value;
-    // send user input to appropriate fetch function
-    if (selectedMedia === "movies") {
-        var yearInput = yearInputEl.value
-        var genreIdNum = searchGenreEl[0].value
-        userSearchInformation(searchTerm, yearInput, genreIdNum);
-        // send searchTerm to Mason's movie fetch function
-        // movieFetchHandler(searchTerm);
-    } else if (selectedMedia === "music") {
-        console.log("sent to music");
-        // send searchTerm to music fetch function
-        // musicFetchHandler(searchTerm);
-    } else if (selectedMedia === "books") {
-        console.log("sent to books");
-        // send searchTerm to book fetch function
-        bookFetchHandler(searchTerm);
-    }
-};
+//====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
 var bookFetchHandler = function () {
@@ -307,25 +280,32 @@ var bookFetchHandler = function () {
         });
 };
 
-var mediaSelectHandler = function () {
-    switch (mediaSelectEl.value) {
-        case "movies":
-        document.getElementById('movie-form').removeAttribute('class', 'is-hidden');
-        document.getElementById('music-form').setAttribute('class', 'is-hidden');
-        document.getElementById('book-form').setAttribute('class', 'is-hidden');
-        break;
-        case "music":
-        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-        document.getElementById('music-form').removeAttribute('class', 'is-hidden');
-        document.getElementById('book-form').setAttribute('class', 'is-hidden');
-        break;
-        case "books":
-        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-        document.getElementById('music-form').setAttribute('class', 'is-hidden');
-        document.getElementById('book-form').removeAttribute('class', 'is-hidden');
-        break;
-    }
-}
+var bookObjectCreator = function (data) {
+    // use a random number to select index of returned data to ensure
+    // new books are discovered upon each search
+    var randomNumber = Math.floor(Math.random() * data.items.length);
+    // get title information
+    var title = data.items[randomNumber].volumeInfo.title;
+    // get image url
+    var imageUrl = data.items[randomNumber].volumeInfo.imageLinks.thumbnail;
+    // get description
+    var description = data.items[randomNumber].volumeInfo.description;
+    if (!description) {
+        description = "Description is unavailable for this content.";
+    };
+    // define "authors" location in data
+    var authorsArray = data.items[randomNumber].volumeInfo.authors;
+    // create book object
+    var bookObject = {
+        title: title,
+        imageUrl: imageUrl,
+        description: description,
+        authors: authorsArray
+         }
+    console.log(bookObject);
+    // send bookObject to DOM element creator function
+    // bookContentCreator(bookObject);
+};
 
 var closeModal = function () {
     console.log("button clicked")
