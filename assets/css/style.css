@@ -1,0 +1,19 @@
+.media {
+    border-top: 3px solid black;
+    padding-top: 5px;
+    height: 150px
+}
+
+.title {
+    padding-bottom: 10px;
+    padding-top: 5px;
+}
+
+.image img {
+    height: 150px;
+    width: auto;
+}
+
+img {
+    max-width: 100px;
+}

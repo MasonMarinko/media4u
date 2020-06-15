@@ -16,12 +16,10 @@ var submitButtonEl = document.getElementById("submit-button");
 // then send input to correct fetch function
 var formHandler = function (event) {
     event.preventDefault();
-
     var selectedMedia = mediaSelectEl.value;
 
     // send user input to appropriate fetch function
     if (selectedMedia === "movies") {
-
         movieSearchHandler();
 
     } else if (selectedMedia === "music") {
@@ -53,9 +51,6 @@ const mediaSelectHandler = function () {
         break;
     }
 }
-
-// MOVIE SECTION
-//============= Don't forget to add query locators in order to grab answers below
 
 
 
@@ -92,6 +87,7 @@ var userSearch = function (title, releaseYear) {
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
 var genreCheck = function(genreInfo) {
     var genreInput = searchGenreEl.value
+    console.log(searchGenreEl.value)
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
     var anyChosen = searchGenreEl[0].value
@@ -141,7 +137,12 @@ for (var i = 0; i < results.length; i++) {
     figureEl.classList = "image is-48x48"
 
     var moviePosterEl = document.createElement("img");
-    moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+
+    if (results[i].poster_path) {
+        moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+    } else {
+        moviePosterEl.setAttribute("src", "./assets/images/not-available.jpg")
+    }
 
     movieMainEl.appendChild(posterContainerEl)
 
@@ -189,7 +190,7 @@ var movieSearchHandler = function () {
 
     //======= Movie title checks if a title is entered and then returns a movie title they've selected
     var movieName = movieTitle(movieTitleEl.value);
-    searchInputEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
+    movieTitleEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
 
     //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
     var releaseDate = releaseInput(yearInputEl.value);
@@ -313,6 +314,6 @@ var closeModal = function () {
 
 
 
+submitButtonEl.addEventListener("click", formHandler);
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
-submitButtonEl.addEventListener("submit", formHandler);
 
