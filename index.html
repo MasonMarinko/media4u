@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="has-navbar-fixed-top">
 
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,7 @@
 
     <title>Media 4 U</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
 
@@ -22,9 +23,26 @@
                 <h1 class="is-primary"><strong>Media 4 U</strong></h1>
             </a>
         </div>
+        <button class="button panel-heading" id="toggle-interest-panel">
+            <span>Saved Interests</span>
+            <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </button>
     </nav>
 
-    <section class='hero is-fullheight'>
+    <div class="is-hidden" id='interest-panel'>
+            <p class="panel-tabs" id='panel-tabs'>
+                <a class="is-active" id='movie-tab'>Movies</a>
+                <a id='music-tab'>Music</a>
+                <a id='book-tab'>Books</a>
+            </p>
+            <div id="movie-panel"></div>
+            <div id="music-panel" class='is-hidden'></div>
+            <div id="book-panel" class='is-hidden'></div>
+    </div>
+
+    <section class='hero is-fullheight-with-navbar'>
 
         <div class="hero-body">
             <div class="container">
