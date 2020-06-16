@@ -393,9 +393,10 @@ let interestToggleEl = document.getElementById('toggle-interest-panel')
 interestToggleEl.addEventListener('click', function () {
     var interestPanelEl = document.getElementById('interest-panel')
     if (interestPanelEl.className === 'is-hidden') {
-        interestPanelEl.removeAttribute('class')
+        interestPanelEl.classList = 'panel'
+        window.scrollTo(0, 0)
     } else {
-        interestPanelEl.setAttribute('class', 'is-hidden')
+        interestPanelEl.classList = 'is-hidden'
     }
 })
 
