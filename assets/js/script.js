@@ -116,8 +116,7 @@ finalResultStyle(movieArray)
 //================ Results added to DOM in order to display===============//
 var finalResultStyle = function(results) {
     var movieContainerEl = document.getElementById("movie-container");
-       var movieMainEl = document.getElementById("movie-info-0");
-    movieMainEl.innerHTML = "";
+    movieContainerEl.innerHTML = "";
 
 
     if (results.resultLength=== 0) {
@@ -127,9 +126,13 @@ var finalResultStyle = function(results) {
 
 
 for (var i = 0; i < results.length; i++) {
+    let wrapper = document.createElement("div");
+    wrapper.classList.add("card-content")
+    wrapper.setAttribute("id", "movie-info-" + i)
+    wrapper.addEventListener("click", movieClick)
+
 
 //========BEGINNING FIRST CHUNK================//
-        
     var posterContainerEl = document.createElement("div");
     posterContainerEl.classList = "media"
 
@@ -147,13 +150,14 @@ for (var i = 0; i < results.length; i++) {
         moviePosterEl.setAttribute("src", "./assets/images/not-available.jpg")
     }
 
-    movieMainEl.appendChild(posterContainerEl)
+    wrapper.appendChild(posterContainerEl)
 
     posterContainerEl.appendChild(posterContainerTwoEl)
 
     posterContainerTwoEl.appendChild(figureEl)
 
     figureEl.appendChild(moviePosterEl)
+
 //==============END FIRST CHUNK===============//
 
 //============= Beginning Second Chunk=============//
@@ -165,7 +169,7 @@ for (var i = 0; i < results.length; i++) {
     movieTitleEl.setAttribute("id", "main-movie-title")
     movieTitleEl.textContent = results[i].original_title;
 
-    movieMainEl.appendChild(titleContainerEl)
+    wrapper.appendChild(titleContainerEl)
 
     titleContainerEl.appendChild(movieTitleEl)
 //================End second chunk===============//
@@ -176,11 +180,18 @@ for (var i = 0; i < results.length; i++) {
     descContainerEl.setAttribute = "movie-description"
     descContainerEl.textContent = results[i].overview
 
-    movieMainEl.appendChild(descContainerEl)
+    wrapper.appendChild(descContainerEl)
+
+    movieContainerEl.appendChild(wrapper)
 }
 
 }
 
+
+function movieClick(event){
+    console.log(event.target)
+    console.log(event.target.closest('.card-content'))
+}
 
 
 
