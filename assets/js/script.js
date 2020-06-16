@@ -186,7 +186,6 @@ for (var i = 0; i < results.length; i++) {
 
 
 function movieClick(event){
-    console.log(event.target)
     console.log(event.target.closest('.card-content'))
 }
 
