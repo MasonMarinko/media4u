@@ -126,83 +126,119 @@ var genreCheck = function (genreInfo) {
             return
         }
     }
-    console.log(movieArray)
     finalResultStyle(movieArray)
 }
 
 
 
-
-
-
-
-//================ Results added to DOM in order to display===============//
-var finalResultStyle = function (results) {
-    var movieContainerEl = document.getElementById("movie-container");
-    var movieMainEl = document.getElementById("movie-info-0");
-    movieMainEl.textContent = ""
-
-    if (results.resultLength === 0) {
-        movieContainerEl.textContent = "No Movies Found"
-        return;
+//=================Show movie posters based on results==============//
+var finalResultStyle = function (movieArray) {
+    contentDisplayEl.classList.remove("is-hidden");
+    contentTitleEl.textContent = "Movies";
+    postersWrapperEl.innerHTML = "";
+    for (i = 0; i < movieArray.length; i++) {
+        // create book element to go inside postersWrapper
+        var singlePosterEl = document.createElement("div");
+        // give book element an id referencing its index in movieArray
+        var indexId = "index-" + i;
+        singlePosterEl.setAttribute("id", indexId);
+        // set styling for book div
+        singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+        // create div to hold img
+        var bookImgWrapperEl = document.createElement("div");
+        // give div class name image
+        bookImgWrapperEl.className = "image pointer";
+        // create img element
+        var bookImageEl = document.createElement("img");
+        // set source of img element
+        var imageSrc = "http://image.tmdb.org/t/p/original" + movieArray[i].poster_path;
+        bookImageEl.setAttribute("src", imageSrc);
+        // append elements
+        bookImgWrapperEl.appendChild(bookImageEl);
+        singlePosterEl.appendChild(bookImgWrapperEl);
+        // append book poster to postersWrapper to be displayed
+        postersWrapperEl.appendChild(singlePosterEl);
     }
+};
 
 
-    for (var i = 0; i < results.length; i++) {
 
-        //========BEGINNING FIRST CHUNK================//
-        var posterContainerEl = document.createElement("div");
-        posterContainerEl.classList = "media"
 
-        var posterContainerTwoEl = document.createElement("div");
-        posterContainerTwoEl.classList = "media-left"
 
-        var figureEl = document.createElement("figure");
-        figureEl.classList = "image is-48x48"
 
-        var moviePosterEl = document.createElement("img");
-        if (results[i].poster_path) {
-            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
-        } else if (results[i].backdrop_path) {
-            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].backdrop_path)
-        } else {
-            moviePosterEl.setAttribute("src", "./assets/images/image-unavailable.jpg")
 
-        }
 
-        movieMainEl.appendChild(posterContainerEl)
 
-        posterContainerEl.appendChild(posterContainerTwoEl)
 
-        posterContainerTwoEl.appendChild(figureEl)
 
-        figureEl.appendChild(moviePosterEl)
-        //==============END FIRST CHUNK===============//
 
-        //============= Beginning Second Chunk=============//
-        var titleContainerEl = document.createElement("div");
-        titleContainerEl.classList = "media-content"
+// //================ Results added to DOM in order to display===============//
+// var finalResultStyle = function (results) {
+//     var movieContainerEl = document.getElementById("movie-container");
+//     var movieMainEl = document.getElementById("movie-info-0");
+//     movieMainEl.textContent = ""
 
-        var movieTitleEl = document.createElement("p");
-        movieTitleEl.classList = "title is-4"
-        movieTitleEl.setAttribute("id", "main-movie-title")
-        movieTitleEl.textContent = results[i].original_title;
+//     if (results.resultLength === 0) {
+//         movieContainerEl.textContent = "No Movies Found"
+//         return;
+//     }
 
-        movieMainEl.appendChild(titleContainerEl)
 
-        titleContainerEl.appendChild(movieTitleEl)
-        //================End second chunk===============//
+//     for (var i = 0; i < results.length; i++) {
 
-        //================= Beginning Final Chunk================//
-        var descContainerEl = document.createElement("div");
-        descContainerEl.classList = "content"
-        descContainerEl.setAttribute = "movie-description"
-        descContainerEl.textContent = results[i].overview
+//         //========BEGINNING FIRST CHUNK================//
+//         var posterContainerEl = document.createElement("div");
+//         posterContainerEl.classList = "media"
 
-        movieMainEl.appendChild(descContainerEl)
-    }
+//         var posterContainerTwoEl = document.createElement("div");
+//         posterContainerTwoEl.classList = "media-left"
 
-}
+//         var figureEl = document.createElement("figure");
+//         figureEl.classList = "image is-48x48"
+
+//         var moviePosterEl = document.createElement("img");
+//         if (results[i].poster_path) {
+//             moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+//         } else if (results[i].backdrop_path) {
+//             moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].backdrop_path)
+//         } else {
+//             moviePosterEl.setAttribute("src", "./assets/images/image-unavailable.jpg")
+
+//         }
+
+//         movieMainEl.appendChild(posterContainerEl)
+
+//         posterContainerEl.appendChild(posterContainerTwoEl)
+
+//         posterContainerTwoEl.appendChild(figureEl)
+
+//         figureEl.appendChild(moviePosterEl)
+//         //==============END FIRST CHUNK===============//
+
+//         //============= Beginning Second Chunk=============//
+//         var titleContainerEl = document.createElement("div");
+//         titleContainerEl.classList = "media-content"
+
+//         var movieTitleEl = document.createElement("p");
+//         movieTitleEl.classList = "title is-4"
+//         movieTitleEl.setAttribute("id", "main-movie-title")
+//         movieTitleEl.textContent = results[i].original_title;
+
+//         movieMainEl.appendChild(titleContainerEl)
+
+//         titleContainerEl.appendChild(movieTitleEl)
+//         //================End second chunk===============//
+
+//         //================= Beginning Final Chunk================//
+//         var descContainerEl = document.createElement("div");
+//         descContainerEl.classList = "content"
+//         descContainerEl.setAttribute = "movie-description"
+//         descContainerEl.textContent = results[i].overview
+
+//         movieMainEl.appendChild(descContainerEl)
+//     }
+
+// }
 
 
 
