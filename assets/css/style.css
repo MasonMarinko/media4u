@@ -21,3 +21,11 @@ img {
 .pointer {
     cursor: pointer
 }
+
+#movie-panel,
+#music-panel,
+#book-panel {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 5em;
+}
