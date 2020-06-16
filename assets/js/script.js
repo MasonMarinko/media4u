@@ -341,16 +341,11 @@ var bookObjectCreator = function (data) {
         };
         // create book object
         var bookObject = {
-            title: [],
-            imageUrl: [],
-            description: [],
-            authors: []
+            title: title,
+            imageUrl: imageUrl,
+            description: description,
+            authors: authors,
         }
-        // push info to book object
-        bookObject.title.push(title);
-        bookObject.imageUrl.push(imageUrl);
-        bookObject.description.push(description);
-        bookObject.authors.push(authors);
         // push book object to booksArray
         booksArray.push(bookObject);
         console.log(booksArray);
@@ -385,6 +380,15 @@ var bookContentCreator = function (booksArray) {
         singlePosterEl.appendChild(bookImgWrapperEl);
         // append book poster to postersWrapper to be displayed
         postersWrapperEl.appendChild(singlePosterEl);
+
+        // add to interest button
+        let interestButtonEl = document.createElement('button');
+        interestButtonEl.classList = 'button';
+        interestButtonEl.setAttribute('type', 'book');
+        interestButtonEl.setAttribute('data-id', indexId);
+        interestButtonEl.textContent = 'Add to interests'
+        interestButtonEl.addEventListener('click', saveInterest)
+        singlePosterEl.appendChild(interestButtonEl)
     }
 };
 
@@ -444,7 +448,6 @@ const saveInterest = function (event) {
     targetId = targetId[1]
 
     let interestEl;
-    debugger;
     switch (targetType) {
         case 'movie':
             savedMovies = JSON.parse(localStorage.getItem("m4u-savedMovies")) || []
