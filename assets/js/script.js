@@ -2,7 +2,8 @@
 var mediaSelectEl = document.getElementById("media-select");
 var searchFormEl = document.getElementById("search-form");
 var submitButtonEl = document.getElementById("submit-button");
-var closeEl = document.getElementsByClassName("modal-close")
+var closeEl = document.getElementsByClassName("modal-close");
+var panelTabsEl = document.getElementById('panel-tabs')
 // content section elements
 var contentDisplayEl = document.getElementById("content-display");
 var contentTitleEl = document.getElementById("content-title");
@@ -377,6 +378,47 @@ var bookContentCreator = function (booksArray) {
     }
 };
 
+let interestToggleEl = document.getElementById('toggle-interest-panel')
+interestToggleEl.addEventListener('click', function () {
+    var interestPanelEl = document.getElementById('interest-panel')
+    if (interestPanelEl.className === 'is-hidden') {
+        interestPanelEl.removeAttribute('class')
+    } else {
+        interestPanelEl.setAttribute('class', 'is-hidden')
+    }
+})
+
+const panelTabHandler = function (event) {
+    switch (event.target.id) {
+        case "movie-tab":
+            document.getElementById('movie-tab').setAttribute('class', 'is-active');
+            document.getElementById('music-tab').removeAttribute('class');
+            document.getElementById('book-tab').removeAttribute('class');
+            document.getElementById('movie-panel').removeAttribute('class');
+            document.getElementById('music-panel').setAttribute('class', 'is-hidden');
+            document.getElementById('book-panel').setAttribute('class', 'is-hidden');
+
+            break;
+        case "music-tab":
+            document.getElementById('music-tab').setAttribute('class', 'is-active');
+            document.getElementById('movie-tab').removeAttribute('class');
+            document.getElementById('book-tab').removeAttribute('class');
+            document.getElementById('music-panel').removeAttribute('class');
+            document.getElementById('movie-panel').setAttribute('class', 'is-hidden');
+            document.getElementById('book-panel').setAttribute('class', 'is-hidden');
+            break;
+        case "book-tab":
+            document.getElementById('book-tab').setAttribute('class', 'is-active');
+            document.getElementById('movie-tab').removeAttribute('class');
+            document.getElementById('music-tab').removeAttribute('class');
+            document.getElementById('book-panel').removeAttribute('class');
+            document.getElementById('movie-panel').setAttribute('class', 'is-hidden');
+            document.getElementById('music-panel').setAttribute('class', 'is-hidden');
+            break;
+    }
+}
+
+// class='panel-block'
 
 // Save Interest Feature
 // event listener target needs an id (for event listener),
@@ -424,11 +466,12 @@ const saveInterest = function (event) {
             break;
     }
 
-    // updateInterestModal()
+    // updateInterestSection()
 }
 
 // saveInterestBtn.addEventListener('click', saveInterest);
 // attach saveInterestBtn and event listener to modals
 
+panelTabsEl.addEventListener('click', panelTabHandler)
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
