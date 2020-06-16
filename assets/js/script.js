@@ -112,14 +112,13 @@ var genreCheck = function (genreInfo) {
     var genreInput = searchGenreEl.value
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
-    var anyChosen = searchGenreEl[0].value
     movieArray = [];
 
     for (var i = 0; i < resultLength; i++) {
         var resultArray = resultId[i].genre_ids
         if (resultArray.includes(parseInt(genreInput))) {
             movieArray.push(resultId[i])
-        } else if (anyChosen === "any") {
+        } else if (genreInput === "any") {
             movieArray.push(resultId[i])
         } else {
             console.log("Nothing Returned") //<============================ MODAL NEEDED
@@ -472,34 +471,56 @@ const saveInterest = function (event) {
     updateInterestSection()
 }
 
+const createDeleteButton = function(itemEl, array, type) {
+    deleteContainerEl = document.createElement('div');
+    deleteContainerEl.className = 'ml-2';
+    itemEl.appendChild(deleteContainerEl);
+    deleteButtonEl = document.createElement('button');
+    deleteButtonEl.className = 'delete';
+    deleteContainerEl.appendChild(deleteButtonEl);
+
+    deleteContainerEl.addEventListener('click', function (event) {
+        debugger;
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].title === itemEl.textContent) {
+                array.splice(i, 1)
+                localStorage.setItem(`m4u-saved${type}`, JSON.stringify(array))
+                itemEl.remove();
+            }
+        }
+    })
+}
+
 const updateInterestSection = function () {
-    let array = [];
 
     moviePanelEl.textContent = ''
-    array = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
-    for (let i = 0; i < array.length; i++) {
+    let movieArray = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
+    for (let i = 0; i < movieArray.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
+        itemEl.textContent = movieArray[i].title
         moviePanelEl.appendChild(itemEl)
+        createDeleteButton(itemEl, movieArray, "Movies");
     }
 
     musicPanelEl.textContent = ''
-    array = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
-    for (let i = 0; i < array.length; i++) {
+    let musicArray = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
+    for (let i = 0; i < musicArray.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
-        musicPanelEl.appendChild(itemEl)
+        itemEl.textContent = musicArray[i].title;
+        musicPanelEl.appendChild(itemEl);
+        createDeleteButton(itemEl, musicArray, "Music");
     }
 
     bookPanelEl.textContent = ''
-    array = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
-    for (let i = 0; i < array.length; i++) {
+    let bookArray = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
+    for (let i = 0; i < bookArray.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
+        itemEl.textContent = bookArray[i].title
         bookPanelEl.appendChild(itemEl)
+        createDeleteButton(itemEl, bookArray, "Books");
     }
 }
 
@@ -511,3 +532,4 @@ mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 
 updateInterestSection();
+
