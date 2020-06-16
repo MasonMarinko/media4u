@@ -2,7 +2,11 @@
 var mediaSelectEl = document.getElementById("media-select");
 var searchFormEl = document.getElementById("search-form");
 var submitButtonEl = document.getElementById("submit-button");
-var closeEl = document.getElementsByClassName("modal-close")
+var closeEl = document.getElementsByClassName("modal-close");
+var panelTabsEl = document.getElementById('panel-tabs')
+var moviePanelEl = document.getElementById('movie-panel')
+var musicPanelEl = document.getElementById('music-panel')
+var bookPanelEl = document.getElementById('book-panel')
 // content section elements
 var contentDisplayEl = document.getElementById("content-display");
 var contentTitleEl = document.getElementById("content-title");
@@ -15,7 +19,14 @@ var yearInputEl = document.getElementById("search-by-year");
 var bookSearchInputEl = document.getElementById("book-input");
 var bookSearchByEl = document.getElementById("book-search-by");
 var bookInputEl = document.getElementById("book-input")
+// arrays
 var booksArray = [];
+var movieArray = [];
+var musicArray = [];
+var savedMovies = [];
+var savedMusic = [];
+var savedBooks = [];
+
 
 
 
@@ -108,13 +119,14 @@ var genreCheck = function (genreInfo) {
         var resultArray = resultId[i].genre_ids
         if (resultArray.includes(parseInt(genreInput))) {
             movieArray.push(resultId[i])
-        } else if (anyChosen === "Any") {
+        } else if (anyChosen === "any") {
             movieArray.push(resultId[i])
         } else {
             console.log("Nothing Returned") //<============================ MODAL NEEDED
             return
         }
     }
+    console.log(movieArray)
     finalResultStyle(movieArray)
 }
 
@@ -128,6 +140,7 @@ var genreCheck = function (genreInfo) {
 var finalResultStyle = function (results) {
     var movieContainerEl = document.getElementById("movie-container");
     var movieMainEl = document.getElementById("movie-info-0");
+    movieMainEl.textContent = ""
 
     if (results.resultLength === 0) {
         movieContainerEl.textContent = "No Movies Found"
@@ -148,7 +161,14 @@ var finalResultStyle = function (results) {
         figureEl.classList = "image is-48x48"
 
         var moviePosterEl = document.createElement("img");
-        moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+        if (results[i].poster_path) {
+            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+        } else if (results[i].backdrop_path) {
+            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].backdrop_path)
+        } else {
+            moviePosterEl.setAttribute("src", "./assets/images/image-unavailable.jpg")
+
+        }
 
         movieMainEl.appendChild(posterContainerEl)
 
@@ -196,7 +216,7 @@ var movieSearchHandler = function () {
 
     //======= Movie title checks if a title is entered and then returns a movie title they've selected
     var movieName = movieTitle(movieTitleEl.value);
-    searchInputEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
+    movieTitleEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
 
     //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
     var releaseDate = releaseInput(yearInputEl.value);
@@ -238,7 +258,7 @@ var releaseInput = function (yearInput) {
 //==================== this could also be an alert/modal if preferred.==================================//
 
 var movieTitle = function (movieTitleInput) { //<====================== Ready
-    
+
     if (movieTitleInput) {
         return movieTitleInput;
     } else if (movieTitleInput === "") {
@@ -296,6 +316,8 @@ var bookObjectCreator = function (data) {
     // clear books array from previous searches
     booksArray = [];
     console.log(data.items);
+    // create array to hold book objects
+    booksArray = []
     // cycle through data and add info to object
     for (i = 0; i < data.items.length; i++) {
         // get title information
@@ -371,6 +393,88 @@ var bookContentCreator = function (booksArray) {
     window.location.hash = "content-display";
 };
 
+let interestToggleEl = document.getElementById('toggle-interest-panel')
+interestToggleEl.addEventListener('click', function () {
+    var interestPanelEl = document.getElementById('interest-panel')
+    if (interestPanelEl.className === 'is-hidden') {
+        interestPanelEl.classList = 'panel'
+        window.scrollTo(0, 0)
+    } else {
+        interestPanelEl.classList = 'is-hidden'
+    }
+})
+
+const panelTabHandler = function (event) {
+    switch (event.target.id) {
+        case "movie-tab":
+            document.getElementById('movie-tab').setAttribute('class', 'is-active');
+            document.getElementById('music-tab').removeAttribute('class');
+            document.getElementById('book-tab').removeAttribute('class');
+            moviePanelEl.removeAttribute('class');
+            musicPanelEl.setAttribute('class', 'is-hidden');
+            bookPanelEl.setAttribute('class', 'is-hidden');
+            break;
+        case "music-tab":
+            document.getElementById('music-tab').setAttribute('class', 'is-active');
+            document.getElementById('movie-tab').removeAttribute('class');
+            document.getElementById('book-tab').removeAttribute('class');
+            musicPanelEl.removeAttribute('class');
+            moviePanelEl.setAttribute('class', 'is-hidden');
+            bookPanelEl.setAttribute('class', 'is-hidden');
+            break;
+        case "book-tab":
+            document.getElementById('book-tab').setAttribute('class', 'is-active');
+            document.getElementById('movie-tab').removeAttribute('class');
+            document.getElementById('music-tab').removeAttribute('class');
+            bookPanelEl.removeAttribute('class');
+            moviePanelEl.setAttribute('class', 'is-hidden');
+            musicPanelEl.setAttribute('class', 'is-hidden');
+            break;
+    }
+}
+
+// Save Interest Feature
+// event listener target needs an id (for event listener),
+// a type (movie, book, or music)
+// and a data-id (for getting the item from the array),
+// and will be attatched to the display modals
+
+
+const saveInterest = function (event) {
+    let targetEl = event.target
+
+    let targetType = targetEl.getAttribute("type")
+    let targetId = targetEl.getAttribute("data-id")
+    targetId = targetId.split("-")
+    targetId = targetId[1]
+
+    let interestEl;
+    debugger;
+    switch (targetType) {
+        case 'movie':
+            savedMovies = JSON.parse(localStorage.getItem("m4u-savedMovies")) || []
+            interestEl = movieArray[targetId]
+            savedMovies.push(interestEl)
+            localStorage.setItem("m4u-savedMovies", JSON.stringify(savedMovies))
+            break;
+        case 'music':
+            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
+            interestEl = musicArray[targetId]
+            savedMusic.push(interestEl)
+            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
+            break;
+        case 'book':
+            savedBooks = JSON.parse(localStorage.getItem("m4u-savedBooks")) || []
+            interestEl = booksArray[targetId]
+            savedBooks.push(interestEl)
+            localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
+            break;
+        default:
+        // error handling
+    }
+
+    updateInterestSection()
+}
 
 var bookModalCreator = function () {
     // find out which book was clicked and get corresponding book object from booksArray
@@ -453,5 +557,42 @@ var clickChecker = function (event) {
 };
 
 document.addEventListener("click", clickChecker);
+const updateInterestSection = function () {
+    let array = [];
+
+    moviePanelEl.textContent = ''
+    array = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
+    for (let i = 0; i < array.length; i++) {
+        let itemEl = document.createElement('div');
+        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
+        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
+        moviePanelEl.appendChild(itemEl)
+    }
+
+    musicPanelEl.textContent = ''
+    array = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
+    for (let i = 0; i < array.length; i++) {
+        let itemEl = document.createElement('div');
+        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
+        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
+        musicPanelEl.appendChild(itemEl)
+    }
+
+    bookPanelEl.textContent = ''
+    array = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
+    for (let i = 0; i < array.length; i++) {
+        let itemEl = document.createElement('div');
+        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
+        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
+        bookPanelEl.appendChild(itemEl)
+    }
+}
+
+// saveInterestBtn.addEventListener('click', saveInterest);
+// attach saveInterestBtn and event listener to modals
+
+panelTabsEl.addEventListener('click', panelTabHandler)
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
+
+updateInterestSection();

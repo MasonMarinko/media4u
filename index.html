@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="has-navbar-fixed-top">
 
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,7 @@
 
     <title>Media 4 U</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
 
@@ -22,9 +23,26 @@
                 <h1 class="is-primary"><strong>Media 4 U</strong></h1>
             </a>
         </div>
+        <button class="button panel-heading" id="toggle-interest-panel">
+            <span>Saved Interests</span>
+            <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </button>
     </nav>
 
-    <section class='hero is-fullheight'>
+    <div class="is-hidden" id='interest-panel'>
+            <p class="panel-tabs" id='panel-tabs'>
+                <a class="is-active" id='movie-tab'>Movies</a>
+                <a id='music-tab'>Music</a>
+                <a id='book-tab'>Books</a>
+            </p>
+            <div id="movie-panel"></div>
+            <div id="music-panel" class='is-hidden'></div>
+            <div id="book-panel" class='is-hidden'></div>
+    </div>
+
+    <section class='hero is-fullheight-with-navbar'>
 
         <div class="hero-body">
             <div class="container">
@@ -58,7 +76,7 @@
                                     <div class="field-body control is-expanded">
                                         <div class="select is-fullwidth">
                                             <select id="search-by-genre">
-                                                <option value="">Any</option>
+                                                <option value="any">Any</option>
                                                 <option value="28">Action</option>
                                                 <option value="12">Adventure</option>
                                                 <option value="16">Animation</option>
@@ -112,10 +130,37 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- End of movie Form -->
-
-                            <div id="music-form" class="field is-hidden"></div>
-
+                            </div>
+                            <!-- End of movie Form -->
+                            <!-- Start music form-->
+                            <div id="music-form" class="field is-hidden">
+                                <div class="field is-horizontal">
+                                    <div class="field-label">
+                                        <label class="label">Search By</label>
+                                    </div>
+                                    <div class="field-body control is-expanded">
+                                        <div class="select is-fullwidth">
+                                            <select id="music-search-by">
+                                                <option value="artist">Artist</option>
+                                                <option value="song">Song</option>
+                                                <option value="album">Album</option>
+                                                <option value="instrument">Instrument</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label">
+                                        <label class="label">Title</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field control is-expanded">
+                                            <input class="input" id="music-input" type="text" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End music form -->
                             <!-- BOOK FORM -->
                             <div id="book-form" class="field is-hidden">
                                 <div class="field is-horizontal">
