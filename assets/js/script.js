@@ -1,3 +1,4 @@
+// general elements
 var mediaSelectEl = document.getElementById("media-select");
 var searchFormEl = document.getElementById("search-form");
 var submitButtonEl = document.getElementById("submit-button");
@@ -14,10 +15,10 @@ var postersWrapperEl = document.getElementById("posters-wrapper");
 var movieTitleEl = document.getElementById("movie-title");
 var searchGenreEl = document.getElementById("search-by-genre");
 var yearInputEl = document.getElementById("search-by-year");
-var closeEl = document.getElementsByClassName("modal-close")
+// book elements
+var bookSearchInputEl = document.getElementById("book-input");
 var bookSearchByEl = document.getElementById("book-search-by");
 var bookInputEl = document.getElementById("book-input")
-var submitButtonEl = document.getElementById("submit-button");
 // arrays
 var booksArray = [];
 var movieArray = [];
@@ -28,14 +29,17 @@ var savedBooks = [];
 
 
 
-// funtion to check which media types are selected
-// then send input to correct fetch function
+
+// function to check which media types are selected
+// then send input to correct fetch functions
 var formHandler = function (event) {
     event.preventDefault();
+
     var selectedMedia = mediaSelectEl.value;
 
     // send user input to appropriate fetch function
     if (selectedMedia === "movies") {
+
         movieSearchHandler();
 
     } else if (selectedMedia === "music") {
@@ -43,7 +47,7 @@ var formHandler = function (event) {
         // send userInput to music fetch function
         // musicFetchHandler(userInput);
     } else if (selectedMedia === "books") {
-
+        console.log("sent to books");
         bookFetchHandler();
     }
 };
@@ -51,22 +55,25 @@ var formHandler = function (event) {
 const mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
-        document.getElementById('movie-form').setAttribute('class', 'field');
-        document.getElementById('music-form').setAttribute('class', 'is-hidden');
-        document.getElementById('book-form').setAttribute('class', 'is-hidden');
-        break;
+            document.getElementById('movie-form').setAttribute('class', 'field');
+            document.getElementById('music-form').setAttribute('class', 'is-hidden');
+            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            break;
         case "music":
-        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-        document.getElementById('music-form').setAttribute('class', 'field');
-        document.getElementById('book-form').setAttribute('class', 'is-hidden');
-        break;
+            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+            document.getElementById('music-form').setAttribute('class', 'field');
+            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            break;
         case "books":
-        document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-        document.getElementById('music-form').setAttribute('class', 'is-hidden');
-        document.getElementById('book-form').setAttribute('class', 'field');
-        break;
+            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+            document.getElementById('music-form').setAttribute('class', 'is-hidden');
+            document.getElementById('book-form').setAttribute('class', 'field');
+            break;
     }
 }
+
+// MOVIE SECTION
+//============= Don't forget to add query locators in order to grab answers below
 
 
 
@@ -74,9 +81,9 @@ const mediaSelectHandler = function () {
 
 var userSearch = function (title, releaseYear) {
     var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" +
-    title +
-    "&include_adult=false&primary_release_year=" +
-    releaseYear;
+        title +
+        "&include_adult=false&primary_release_year=" +
+        releaseYear;
 
     fetch(apiUrl)
         .then(function (response) {
@@ -101,26 +108,26 @@ var userSearch = function (title, releaseYear) {
 
 
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
-var genreCheck = function(genreInfo) {
+var genreCheck = function (genreInfo) {
     var genreInput = searchGenreEl.value
-    console.log(searchGenreEl.value)
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
     var anyChosen = searchGenreEl[0].value
-    var movieArray = [];
+    movieArray = [];
 
     for (var i = 0; i < resultLength; i++) {
         var resultArray = resultId[i].genre_ids
         if (resultArray.includes(parseInt(genreInput))) {
             movieArray.push(resultId[i])
-        } else if (anyChosen === "Any") {
+        } else if (anyChosen === "any") {
             movieArray.push(resultId[i])
         } else {
             console.log("Nothing Returned") //<============================ MODAL NEEDED
-         return
+            return
+        }
     }
-}
-finalResultStyle(movieArray)
+    console.log(movieArray)
+    finalResultStyle(movieArray)
 }
 
 
@@ -130,83 +137,73 @@ finalResultStyle(movieArray)
 
 
 //================ Results added to DOM in order to display===============//
-var finalResultStyle = function(results) {
+var finalResultStyle = function (results) {
     var movieContainerEl = document.getElementById("movie-container");
-    movieContainerEl.innerHTML = "";
+    var movieMainEl = document.getElementById("movie-info-0");
+    movieMainEl.textContent = ""
 
-
-    if (results.resultLength=== 0) {
+    if (results.resultLength === 0) {
         movieContainerEl.textContent = "No Movies Found"
         return;
     }
 
 
-for (var i = 0; i < results.length; i++) {
-    let wrapper = document.createElement("div");
-    wrapper.classList.add("card-content")
-    wrapper.setAttribute("id", "movie-info-" + i)
-    wrapper.addEventListener("click", movieClick)
+    for (var i = 0; i < results.length; i++) {
 
+        //========BEGINNING FIRST CHUNK================//
+        var posterContainerEl = document.createElement("div");
+        posterContainerEl.classList = "media"
 
-//========BEGINNING FIRST CHUNK================//
-    var posterContainerEl = document.createElement("div");
-    posterContainerEl.classList = "media"
+        var posterContainerTwoEl = document.createElement("div");
+        posterContainerTwoEl.classList = "media-left"
 
-    var posterContainerTwoEl = document.createElement("div");
-    posterContainerTwoEl.classList = "media-left"
+        var figureEl = document.createElement("figure");
+        figureEl.classList = "image is-48x48"
 
-    var figureEl = document.createElement("figure");
-    figureEl.classList = "image is-48x48"
+        var moviePosterEl = document.createElement("img");
+        if (results[i].poster_path) {
+            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
+        } else if (results[i].backdrop_path) {
+            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].backdrop_path)
+        } else {
+            moviePosterEl.setAttribute("src", "./assets/images/image-unavailable.jpg")
 
-    var moviePosterEl = document.createElement("img");
+        }
 
-    if (results[i].poster_path) {
-        moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
-    } else {
-        moviePosterEl.setAttribute("src", "./assets/images/not-available.jpg")
+        movieMainEl.appendChild(posterContainerEl)
+
+        posterContainerEl.appendChild(posterContainerTwoEl)
+
+        posterContainerTwoEl.appendChild(figureEl)
+
+        figureEl.appendChild(moviePosterEl)
+        //==============END FIRST CHUNK===============//
+
+        //============= Beginning Second Chunk=============//
+        var titleContainerEl = document.createElement("div");
+        titleContainerEl.classList = "media-content"
+
+        var movieTitleEl = document.createElement("p");
+        movieTitleEl.classList = "title is-4"
+        movieTitleEl.setAttribute("id", "main-movie-title")
+        movieTitleEl.textContent = results[i].original_title;
+
+        movieMainEl.appendChild(titleContainerEl)
+
+        titleContainerEl.appendChild(movieTitleEl)
+        //================End second chunk===============//
+
+        //================= Beginning Final Chunk================//
+        var descContainerEl = document.createElement("div");
+        descContainerEl.classList = "content"
+        descContainerEl.setAttribute = "movie-description"
+        descContainerEl.textContent = results[i].overview
+
+        movieMainEl.appendChild(descContainerEl)
     }
 
-    wrapper.appendChild(posterContainerEl)
-
-    posterContainerEl.appendChild(posterContainerTwoEl)
-
-    posterContainerTwoEl.appendChild(figureEl)
-
-    figureEl.appendChild(moviePosterEl)
-
-//==============END FIRST CHUNK===============//
-
-//============= Beginning Second Chunk=============//
-    var titleContainerEl = document.createElement("div");
-    titleContainerEl.classList = "media-content"
-
-    var movieTitleEl = document.createElement("p");
-    movieTitleEl.classList = "title is-4"
-    movieTitleEl.setAttribute("id", "main-movie-title")
-    movieTitleEl.textContent = results[i].original_title;
-
-    wrapper.appendChild(titleContainerEl)
-
-    titleContainerEl.appendChild(movieTitleEl)
-//================End second chunk===============//
-
-//================= Beginning Final Chunk================//
-    var descContainerEl = document.createElement("div");
-    descContainerEl.classList = "content"
-    descContainerEl.setAttribute = "movie-description"
-    descContainerEl.textContent = results[i].overview
-
-    wrapper.appendChild(descContainerEl)
-
-    movieContainerEl.appendChild(wrapper)
 }
 
-}
-
-
-function movieClick(event){
-    console.log(event.target.closest('.card-content'))
-}
 
 
 
@@ -226,7 +223,7 @@ var movieSearchHandler = function () {
     yearInputEl.value = "";
 
     // sends all inputs to fetch/userSearch
-    userSearch(movieName, releaseDate)    //<========== CALL TO FETCH, COMMENTED FOR NOW
+    userSearch(movieName, releaseDate) //<========== CALL TO FETCH, COMMENTED FOR NOW
 }
 
 
@@ -236,14 +233,14 @@ var movieSearchHandler = function () {
 
 //================ FOURTH FUNCTION=========================//
 // function checks to make sure year is 4 digits long, and is beyond 1887 (first movie 1888) and returns a year/integer
-var releaseInput = function(yearInput) {
+var releaseInput = function (yearInput) {
     var dateInput = parseInt(yearInput); //<========Change to grab from HTML/Search Box
     var dateInputCombined = dateInput.toString();
     var currentYear = moment().year();
 
     if (dateInputCombined.length === 4 && dateInput > 1887 && dateInput <= currentYear) { // <====== first movie made in 1888, no need to search before then. Also verified after being parsed that the length is 4
         return dateInput
-    }  else {
+    } else {
         var dateInput = ""
         return "any"
     }
@@ -260,7 +257,7 @@ var releaseInput = function(yearInput) {
 //==================== function takes in search result for movie title and returns answer to "userSearchInformation, if user leaves blank then "any" is returned
 //==================== this could also be an alert/modal if preferred.==================================//
 
-var movieTitle = function(movieTitleInput) { //<====================== Ready
+var movieTitle = function (movieTitleInput) { //<====================== Ready
 
     if (movieTitleInput) {
         return movieTitleInput;
@@ -270,25 +267,32 @@ var movieTitle = function(movieTitleInput) { //<====================== Ready
     }
 }
 
+var closeModal = function () {
+    console.log("button clicked")
+}
 //====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
-var bookFetchHandler = function () {
+var bookFetchHandler = function (searchTerm) {
+    console.log("book fetch");
     // initiate apiUrl variable
     var apiUrl;
 
     // book input value
-    userInput = bookInputEl.value
+    var userInput = bookInputEl.value
 
     // check if searching for title or author
+    var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-     userInput;
+            userInput +
+            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
-            "+inauthor:" + userInput;
-
+            "+inauthor:" +
+            userInput +
+            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
@@ -296,10 +300,10 @@ var bookFetchHandler = function () {
             // request was successful
             if (response.ok) {
                 response.json().then(function (data) {
-                    console.log(data);
                     // send data to function which will create object of
                     // relevent information
-                    // bookObjectCreator(data);
+                    console.log(data);
+                    bookObjectCreator(data);
                 });
             } else {
                 alert("Error: " + response.statusText);
@@ -311,17 +315,6 @@ var bookFetchHandler = function () {
 };
 
 var bookObjectCreator = function (data) {
-    // use a random number to select index of returned data to ensure
-    // new books are discovered upon each search
-    var randomNumber = Math.floor(Math.random() * data.items.length);
-    // get title information
-    var title = data.items[randomNumber].volumeInfo.title;
-    // get image url
-    var imageUrl = data.items[randomNumber].volumeInfo.imageLinks.thumbnail;
-    // get description
-    var description = data.items[randomNumber].volumeInfo.description;
-    if (!description) {
-        description = "Description is unavailable for this content.";
     console.log(data.items);
     // create array to hold book objects
     booksArray = []
@@ -363,22 +356,39 @@ var bookObjectCreator = function (data) {
         booksArray.push(bookObject);
         console.log(booksArray);
     };
-    // define "authors" location in data
-    var authorsArray = data.items[randomNumber].volumeInfo.authors;
-    // create book object
-    var bookObject = {
-        title: title,
-        imageUrl: imageUrl,
-        description: description,
-        authors: authorsArray
-         }
-    console.log(bookObject);
     // send bookObject to DOM element creator function
-    // bookContentCreator(bookObject);
+    bookContentCreator(booksArray);
 };
 
-var closeModal = function () {
-    console.log("button clicked")
+var bookContentCreator = function (booksArray) {
+    contentDisplayEl.classList.remove("is-hidden");
+    contentTitleEl.textContent = "Books";
+    postersWrapperEl.innerHTML = "";
+    for (i = 0; i < booksArray.length; i++) {
+        // create book element to go inside postersWrapper
+        var singlePosterEl = document.createElement("div");
+        // give book element an id referencing its index in booksArray
+        var indexId = "index-" + i;
+        singlePosterEl.setAttribute("id", indexId);
+        // set styling for book div
+        singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+        // create div to hold img
+        var bookImgWrapperEl = document.createElement("div");
+        // give div class name image
+        bookImgWrapperEl.className = "image pointer";
+        // create img element
+        var bookImageEl = document.createElement("img");
+        // set source of img element
+        var imageSrc = booksArray[i].imageUrl;
+        bookImageEl.setAttribute("src", imageSrc);
+        // append elements
+        bookImgWrapperEl.appendChild(bookImageEl);
+        singlePosterEl.appendChild(bookImgWrapperEl);
+        // append book poster to postersWrapper to be displayed
+        postersWrapperEl.appendChild(singlePosterEl);
+    }
+};
+
 let interestToggleEl = document.getElementById('toggle-interest-panel')
 interestToggleEl.addEventListener('click', function () {
     var interestPanelEl = document.getElementById('interest-panel')
@@ -482,9 +492,6 @@ const updateInterestSection = function () {
         itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
         musicPanelEl.appendChild(itemEl)
     }
-
-submitButtonEl.addEventListener("click", formHandler);
-mediaSelectEl.addEventListener("change", mediaSelectHandler);
 
     bookPanelEl.textContent = ''
     array = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
