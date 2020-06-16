@@ -199,6 +199,15 @@ var finalResultStyle = function (results) {
         descContainerEl.textContent = results[i].overview
 
         movieMainEl.appendChild(descContainerEl)
+
+        // ================== Interest Button =================//
+        let interestButtonEl = document.createElement('button');
+        interestButtonEl.classList = 'button';
+        interestButtonEl.setAttribute('type', 'movie');
+        interestButtonEl.setAttribute('data-id', `index-${i}`);
+        interestButtonEl.textContent = 'Add to interests'
+        interestButtonEl.addEventListener('click', saveInterest)
+        movieMainEl.appendChild(interestButtonEl)
     }
 
 }
@@ -483,7 +492,6 @@ const createDeleteButton = function(itemEl, array, type) {
     deleteContainerEl.appendChild(deleteButtonEl);
 
     deleteContainerEl.addEventListener('click', function (event) {
-        debugger;
         for (let i = 0; i < array.length; i++) {
             if (array[i].title === itemEl.textContent) {
                 array.splice(i, 1)
