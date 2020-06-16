@@ -1,13 +1,10 @@
 var mediaSelectEl = document.getElementById("media-select");
-
 var movieTitleEl = document.getElementById("movie-title");
 var searchGenreEl = document.getElementById("search-by-genre");
 var yearInputEl = document.getElementById("search-by-year");
 var closeEl = document.getElementsByClassName("modal-close")
-
 var bookSearchByEl = document.getElementById("book-search-by");
 var bookInputEl = document.getElementById("book-input")
-
 var submitButtonEl = document.getElementById("submit-button");
 
 
