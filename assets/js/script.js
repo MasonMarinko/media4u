@@ -293,17 +293,46 @@ var bookFetchHandler = function () {
 };
 
 var bookObjectCreator = function (data) {
-    // use a random number to select index of returned data to ensure
-    // new books are discovered upon each search
-    var randomNumber = Math.floor(Math.random() * data.items.length);
-    // get title information
-    var title = data.items[randomNumber].volumeInfo.title;
-    // get image url
-    var imageUrl = data.items[randomNumber].volumeInfo.imageLinks.thumbnail;
-    // get description
-    var description = data.items[randomNumber].volumeInfo.description;
-    if (!description) {
-        description = "Description is unavailable for this content.";
+    console.log(data.items);
+    // create array to hold book objects
+    booksArray = []
+    // cycle through data and add info to object
+    for (i = 0; i < data.items.length; i++) {
+        // get title information
+        var title = data.items[i].volumeInfo.title;
+        // get image url
+        var imageUrl;
+        var imagesLocation = data.items[i].volumeInfo.imageLinks;
+        if (!imagesLocation) {
+            imageUrl = "./assets/images/image-unavailable.jpg";
+        } else {
+            imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+        };
+        // get description
+        var description = data.items[i].volumeInfo.description;
+        if (!description) {
+            description = "Description is unavailable for this book.";
+        };
+        // define "authors" location in data
+        var authors = data.items[i].volumeInfo.authors;
+        if (!authors) {
+            authors = "Authors unavailable for this book."
+        };
+        // create book object
+        var bookObject = {
+            title: [],
+            imageUrl: [],
+            description: [],
+            authors: []
+        }
+        // push info to book object
+        bookObject.title.push(title);
+        bookObject.imageUrl.push(imageUrl);
+        bookObject.description.push(description);
+        bookObject.authors.push(authors);
+        // push book object to booksArray
+        booksArray.push(bookObject);
+        console.log(booksArray);
     };
     // define "authors" location in data
     var authorsArray = data.items[randomNumber].volumeInfo.authors;
@@ -323,7 +352,57 @@ var closeModal = function () {
     console.log("button clicked")
 }
 
+// Save Interest Feature
+// event listener target needs an id (for event listener),
+// a type (movie, book, or music)
+// and a data-id (for getting the item from the array),
+// and will be attatched to the display modals
+let booksArray = [];
+let movieArray = [];
+let musicArray = [];
+let savedMovies = [];
+let savedMusic = [];
+let savedBooks = [];
 
+const saveInterest = function (event) {
+    let targetEl = event.target
+
+    let targetType = targetEl.getAttribute("type")
+    let targetId = targetEl.getAttribute("data-id")
+    targetId = targetId.split("-")
+    targetId = targetId[1]
+
+    let interestEl;
+
+    switch (targetType) {
+        case 'movie':
+            savedMovies = JSON.parse(localStorage.getItem("m4u-savedMovies"))
+            interestEl = movieArray[targetId]
+            savedMovies.push(interestEl)
+            localStorage.setItem("m4u-savedMovies", JSON.stringify(savedMovies))
+            break;
+        case 'music':
+            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic"))
+            interestEl = musicArray[targetId]
+            savedMusic.push(interestEl)
+            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
+            break;
+        case 'book':
+            savedBooks = JSON.parse(localStorage.getItem("m4u-savedBooks"))
+            interestEl = booksArray[targetId]
+            savedBooks.push(interestEl)
+            localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
+            break;
+        default:
+            // error handling
+            break;
+    }
+
+    // updateInterestModal()
+}
+
+// saveInterestBtn.addEventListener('click', saveInterest);
+// attach saveInterestBtn and event listener to modals
 
 submitButtonEl.addEventListener("click", formHandler);
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
