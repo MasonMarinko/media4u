@@ -20,7 +20,9 @@ img {
 }
 
 .pointer {
-    cursor: pointer
+    cursor: pointer;
+    font-size: larger;
+    font-weight: bold;
 }
 
 #movie-panel,
@@ -29,4 +31,8 @@ img {
     display: flex;
     flex-wrap: wrap;
     padding: 0 5em;
+}
+
+.text-to-front {
+    z-index: 1;
 }
