@@ -112,14 +112,13 @@ var genreCheck = function (genreInfo) {
     var genreInput = searchGenreEl.value
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
-    var anyChosen = searchGenreEl[0].value
     movieArray = [];
 
     for (var i = 0; i < resultLength; i++) {
         var resultArray = resultId[i].genre_ids
         if (resultArray.includes(parseInt(genreInput))) {
             movieArray.push(resultId[i])
-        } else if (anyChosen === "any") {
+        } else if (genreInput === "any") {
             movieArray.push(resultId[i])
         } else {
             console.log("Nothing Returned") //<============================ MODAL NEEDED
@@ -200,6 +199,15 @@ var finalResultStyle = function (results) {
         descContainerEl.textContent = results[i].overview
 
         movieMainEl.appendChild(descContainerEl)
+
+        // ================== Interest Button =================//
+        let interestButtonEl = document.createElement('button');
+        interestButtonEl.classList = 'button';
+        interestButtonEl.setAttribute('type', 'movie');
+        interestButtonEl.setAttribute('data-id', `index-${i}`);
+        interestButtonEl.textContent = 'Add to interests'
+        interestButtonEl.addEventListener('click', saveInterest)
+        movieMainEl.appendChild(interestButtonEl)
     }
 
 }
@@ -274,42 +282,42 @@ var bookFetchHandler = function (searchTerm) {
     console.log("book fetch");
     // initiate apiUrl variable
     var apiUrl;
-    
+
     // book input value
     var userInput = bookInputEl.value
-    
+
     // check if searching for title or author
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-        userInput +
-        "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            userInput +
+            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-        userInput +
-        "+inauthor:" +
-        userInput +
-        "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            userInput +
+            "+inauthor:" +
+            userInput +
+            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
-    .then(function (response) {
-        // request was successful
-        if (response.ok) {
-            response.json().then(function (data) {
-                // send data to function which will create object of
-                // relevent information
-                console.log(data);
-                bookInputEl.value = "";
-                bookObjectCreator(data);
-            });
-        } else {
-            alert("Error: " + response.statusText);
-        }
-    })
-    .catch(function (error) {
-        alert("Unable to connect");
-    });
+        .then(function (response) {
+            // request was successful
+            if (response.ok) {
+                response.json().then(function (data) {
+                    // send data to function which will create object of
+                    // relevent information
+                    console.log(data);
+                    bookInputEl.value = "";
+                    bookObjectCreator(data);
+                });
+            } else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            alert("Unable to connect");
+        });
 };
 
 var bookObjectCreator = function (data) {
@@ -342,16 +350,11 @@ var bookObjectCreator = function (data) {
         };
         // create book object
         var bookObject = {
-            title: [],
-            imageUrl: [],
-            description: [],
-            authors: []
+            title: title,
+            imageUrl: imageUrl,
+            description: description,
+            authors: authors,
         }
-        // push info to book object
-        bookObject.title.push(title);
-        bookObject.imageUrl.push(imageUrl);
-        bookObject.description.push(description);
-        bookObject.authors.push(authors);
         // push book object to booksArray
         booksArray.push(bookObject);
         console.log(booksArray);
@@ -387,7 +390,9 @@ var bookContentCreator = function (booksArray) {
         bookImgWrapperEl.appendChild(bookImageEl);
         bookPosterEl.appendChild(bookImgWrapperEl);
         // append book poster to postersWrapper to be displayed
+
         postersWrapperEl.appendChild(bookPosterEl);
+
     }
     // jump to content section
     window.location.hash = "content-display";
@@ -431,49 +436,6 @@ const panelTabHandler = function (event) {
             musicPanelEl.setAttribute('class', 'is-hidden');
             break;
     }
-}
-
-// Save Interest Feature
-// event listener target needs an id (for event listener),
-// a type (movie, book, or music)
-// and a data-id (for getting the item from the array),
-// and will be attatched to the display modals
-
-
-const saveInterest = function (event) {
-    let targetEl = event.target
-
-    let targetType = targetEl.getAttribute("type")
-    let targetId = targetEl.getAttribute("data-id")
-    targetId = targetId.split("-")
-    targetId = targetId[1]
-
-    let interestEl;
-    debugger;
-    switch (targetType) {
-        case 'movie':
-            savedMovies = JSON.parse(localStorage.getItem("m4u-savedMovies")) || []
-            interestEl = movieArray[targetId]
-            savedMovies.push(interestEl)
-            localStorage.setItem("m4u-savedMovies", JSON.stringify(savedMovies))
-            break;
-        case 'music':
-            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
-            interestEl = musicArray[targetId]
-            savedMusic.push(interestEl)
-            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
-            break;
-        case 'book':
-            savedBooks = JSON.parse(localStorage.getItem("m4u-savedBooks")) || []
-            interestEl = booksArray[targetId]
-            savedBooks.push(interestEl)
-            localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
-            break;
-        default:
-        // error handling
-    }
-
-    updateInterestSection()
 }
 
 var bookModalCreator = function () {
@@ -534,11 +496,38 @@ var bookModalCreator = function () {
     modalBodyEl.appendChild(modalAuthorsEl);
     modalCardEl.appendChild(modalBodyEl);
     contentDisplayEl.appendChild(modalEl);
-    
+
+    let interestButtonEl = document.createElement('button');
+    interestButtonEl.classList = 'button';
+    interestButtonEl.setAttribute('type', 'book');
+    interestButtonEl.textContent = 'Add to interests'
+    interestButtonEl.addEventListener('click', saveInterest)
+    modalImageEl.appendChild(interestButtonEl)
+
     console.log(clickedBook);
 }
 //===============END OF BOOK SECTION==========================//
 // function to close modals when close button is clicked
+
+const createDeleteButton = function (itemEl, array, type) {
+    deleteContainerEl = document.createElement('div');
+    deleteContainerEl.className = 'ml-2';
+    itemEl.appendChild(deleteContainerEl);
+    deleteButtonEl = document.createElement('button');
+    deleteButtonEl.className = 'delete';
+    deleteContainerEl.appendChild(deleteButtonEl);
+
+    deleteContainerEl.addEventListener('click', function (event) {
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].title === itemEl.textContent) {
+                array.splice(i, 1)
+                localStorage.setItem(`m4u-saved${type}`, JSON.stringify(array))
+                itemEl.remove();
+            }
+        }
+    })
+}
+
 var closeModal = function () {
     var modalEl = document.querySelector(".is-active");
     console.log("modal close was clicked")
@@ -557,34 +546,79 @@ var clickChecker = function (event) {
 };
 
 document.addEventListener("click", clickChecker);
+
+// Save Interest Feature
+// event listener target needs an id (for event listener),
+// a type (movie, book, or music)
+// and a data-id (for getting the item from the array),
+// and will be attatched to the display modals
+
+
+const saveInterest = function (event) {
+    let targetEl = event.target
+
+    let targetType = targetEl.getAttribute("type")
+    let targetId = targetEl.getAttribute("data-id")
+    targetId = targetId.split("-")
+    targetId = targetId[1]
+
+    let interestEl;
+    switch (targetType) {
+        case 'movie':
+            savedMovies = JSON.parse(localStorage.getItem("m4u-savedMovies")) || []
+            interestEl = movieArray[targetId]
+            savedMovies.push(interestEl)
+            localStorage.setItem("m4u-savedMovies", JSON.stringify(savedMovies))
+            break;
+        case 'music':
+            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
+            interestEl = musicArray[targetId]
+            savedMusic.push(interestEl)
+            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
+            break;
+        case 'book':
+            savedBooks = JSON.parse(localStorage.getItem("m4u-savedBooks")) || []
+            interestEl = booksArray[targetId]
+            savedBooks.push(interestEl)
+            localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
+            break;
+        default:
+        // error handling
+    }
+
+    updateInterestSection()
+}
+
 const updateInterestSection = function () {
-    let array = [];
 
     moviePanelEl.textContent = ''
-    array = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
-    for (let i = 0; i < array.length; i++) {
+    let movieArray = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
+    for (let i = 0; i < movieArray.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
+        itemEl.textContent = movieArray[i].title
         moviePanelEl.appendChild(itemEl)
+        createDeleteButton(itemEl, movieArray, "Movies");
     }
 
     musicPanelEl.textContent = ''
-    array = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
-    for (let i = 0; i < array.length; i++) {
+    let musicArray = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
+    for (let i = 0; i < musicArray.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
-        musicPanelEl.appendChild(itemEl)
+        itemEl.textContent = musicArray[i].title;
+        musicPanelEl.appendChild(itemEl);
+        createDeleteButton(itemEl, musicArray, "Music");
     }
 
     bookPanelEl.textContent = ''
-    array = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
-    for (let i = 0; i < array.length; i++) {
+    let bookArray = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
+    for (let i = 0; i < bookArray.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
+        itemEl.textContent = bookArray[i].title
         bookPanelEl.appendChild(itemEl)
+        createDeleteButton(itemEl, bookArray, "Books");
     }
 }
 
@@ -596,3 +630,4 @@ mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 
 updateInterestSection();
+
