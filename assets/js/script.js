@@ -5,7 +5,7 @@ var submitButtonEl = document.getElementById("submit-button");
 var closeEl = document.getElementsByClassName("modal-close");
 var panelTabsEl = document.getElementById('panel-tabs')
 var moviePanelEl = document.getElementById('movie-panel')
-var musicPanelEl = document.getElementById('music-panel')
+/* var musicPanelEl = document.getElementById('music-panel') */
 var bookPanelEl = document.getElementById('book-panel')
 // content section elements
 var contentDisplayEl = document.getElementById("content-display");
@@ -22,9 +22,9 @@ var bookInputEl = document.getElementById("book-input")
 // arrays
 var booksArray = [];
 var movieArray = [];
-var musicArray = [];
+/* var musicArray = []; */
 var savedMovies = [];
-var savedMusic = [];
+/* var savedMusic = []; */
 var savedBooks = [];
 
 
@@ -42,33 +42,33 @@ var formHandler = function (event) {
 
         movieSearchHandler();
 
-    } else if (selectedMedia === "music") {
-        console.log("sent to music");
-        // send userInput to music fetch function
-        // musicFetchHandler(userInput);
     } else if (selectedMedia === "books") {
-        console.log("sent to books");
+
         bookFetchHandler();
     }
+    /* } else if (selectedMedia === "music") {
+        console.log("sent to music");
+        // send userInput to music fetch function
+        // musicFetchHandler(userInput); */
 };
 
 const mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
             document.getElementById('movie-form').setAttribute('class', 'field');
-            document.getElementById('music-form').setAttribute('class', 'is-hidden');
             document.getElementById('book-form').setAttribute('class', 'is-hidden');
-            break;
-        case "music":
-            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-            document.getElementById('music-form').setAttribute('class', 'field');
-            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            // document.getElementById('music-form').setAttribute('class', 'is-hidden');
             break;
         case "books":
             document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-            document.getElementById('music-form').setAttribute('class', 'is-hidden');
             document.getElementById('book-form').setAttribute('class', 'field');
+            // document.getElementById('music-form').setAttribute('class', 'is-hidden');
             break;
+        /* case "music":
+            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            document.getElementById('music-form').setAttribute('class', 'field');
+            break; */
     }
 }
 
@@ -413,27 +413,27 @@ const panelTabHandler = function (event) {
     switch (event.target.id) {
         case "movie-tab":
             document.getElementById('movie-tab').setAttribute('class', 'is-active');
-            document.getElementById('music-tab').removeAttribute('class');
             document.getElementById('book-tab').removeAttribute('class');
+            // document.getElementById('music-tab').removeAttribute('class');
             moviePanelEl.removeAttribute('class');
-            musicPanelEl.setAttribute('class', 'is-hidden');
             bookPanelEl.setAttribute('class', 'is-hidden');
+            // musicPanelEl.setAttribute('class', 'is-hidden');
             break;
-        case "music-tab":
+        /* case "music-tab":
             document.getElementById('music-tab').setAttribute('class', 'is-active');
             document.getElementById('movie-tab').removeAttribute('class');
             document.getElementById('book-tab').removeAttribute('class');
             musicPanelEl.removeAttribute('class');
             moviePanelEl.setAttribute('class', 'is-hidden');
             bookPanelEl.setAttribute('class', 'is-hidden');
-            break;
+            break; */
         case "book-tab":
             document.getElementById('book-tab').setAttribute('class', 'is-active');
             document.getElementById('movie-tab').removeAttribute('class');
-            document.getElementById('music-tab').removeAttribute('class');
+            // document.getElementById('music-tab').removeAttribute('class');
             bookPanelEl.removeAttribute('class');
             moviePanelEl.setAttribute('class', 'is-hidden');
-            musicPanelEl.setAttribute('class', 'is-hidden');
+            // musicPanelEl.setAttribute('class', 'is-hidden');
             break;
     }
 }
@@ -570,18 +570,18 @@ const saveInterest = function (event) {
             savedMovies.push(interestEl)
             localStorage.setItem("m4u-savedMovies", JSON.stringify(savedMovies))
             break;
-        case 'music':
-            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
-            interestEl = musicArray[targetId]
-            savedMusic.push(interestEl)
-            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
-            break;
         case 'book':
             savedBooks = JSON.parse(localStorage.getItem("m4u-savedBooks")) || []
             interestEl = booksArray[targetId]
             savedBooks.push(interestEl)
             localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
             break;
+        /* case 'music':
+            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
+            interestEl = musicArray[targetId]
+            savedMusic.push(interestEl)
+            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
+            break; */
         default:
         // error handling
     }
@@ -601,16 +601,6 @@ const updateInterestSection = function () {
         createDeleteButton(itemEl, movieArray, "Movies");
     }
 
-    musicPanelEl.textContent = ''
-    let musicArray = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
-    for (let i = 0; i < musicArray.length; i++) {
-        let itemEl = document.createElement('div');
-        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.textContent = musicArray[i].title;
-        musicPanelEl.appendChild(itemEl);
-        createDeleteButton(itemEl, musicArray, "Music");
-    }
-
     bookPanelEl.textContent = ''
     let bookArray = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
     for (let i = 0; i < bookArray.length; i++) {
@@ -620,6 +610,16 @@ const updateInterestSection = function () {
         bookPanelEl.appendChild(itemEl)
         createDeleteButton(itemEl, bookArray, "Books");
     }
+
+    /* musicPanelEl.textContent = ''
+    let musicArray = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
+    for (let i = 0; i < musicArray.length; i++) {
+        let itemEl = document.createElement('div');
+        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
+        itemEl.textContent = musicArray[i].title;
+        musicPanelEl.appendChild(itemEl);
+        createDeleteButton(itemEl, musicArray, "Music");
+    }*/
 }
 
 // saveInterestBtn.addEventListener('click', saveInterest);
