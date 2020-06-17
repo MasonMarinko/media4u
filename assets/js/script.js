@@ -438,7 +438,7 @@ const panelTabHandler = function (event) {
     }
 }
 
-var bookModalCreator = function () {
+var bookModalCreator = function (event) {
     // find out which book was clicked and get corresponding book object from booksArray
     console.log(event.target.id);
     var clickedIndex = event.target.id.replace("index-", "");
@@ -500,6 +500,7 @@ var bookModalCreator = function () {
     let interestButtonEl = document.createElement('button');
     interestButtonEl.classList = 'button';
     interestButtonEl.setAttribute('type', 'book');
+    interestButtonEl.setAttribute('data-id', event.target.id)
     interestButtonEl.textContent = 'Add to interests'
     interestButtonEl.addEventListener('click', saveInterest)
     modalImageEl.appendChild(interestButtonEl)
