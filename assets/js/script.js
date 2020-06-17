@@ -2,7 +2,7 @@
 var mediaSelectEl = document.getElementById("media-select");
 var searchFormEl = document.getElementById("search-form");
 var submitButtonEl = document.getElementById("submit-button");
-var closeEl = document.getElementsByClassName("modal-close");
+var closeEl = document.getElementById("modal-close");
 var panelTabsEl = document.getElementById('panel-tabs')
 var moviePanelEl = document.getElementById('movie-panel')
 /* var musicPanelEl = document.getElementById('music-panel') */
@@ -80,7 +80,9 @@ const mediaSelectHandler = function () {
 // NEED TO ADD INPUTS INTO FETCH
 
 var userSearch = function (title, releaseYear) {
-    var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&query=" +
+    movieArray=[];
+    for (var i = 1; i < 100; i++) {
+    var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" + i + "&query=" +
         title +
         "&include_adult=false&primary_release_year=" +
         releaseYear;
@@ -89,15 +91,18 @@ var userSearch = function (title, releaseYear) {
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
+                    console.log(data)
                     genreCheck(data)
                 });
             } else {
                 alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
             }
         })
+    
         .catch(function (error) {
             alert("Unable to connect to Movie Database, please try again."); //<========== Replace alert with MODAL
         });
+}
 };
 
 
@@ -112,61 +117,76 @@ var genreCheck = function (genreInfo) {
     var genreInput = searchGenreEl.value
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
+
     movieArray = [];
 
     for (var i = 0; i < resultLength; i++) {
-        var resultArray = resultId[i].genre_ids
+        // debugger
+        var resultArray = resultId[i].genre_ids;
         if (resultArray.includes(parseInt(genreInput))) {
             movieArray.push(resultId[i])
         } else if (genreInput === "any") {
             movieArray.push(resultId[i])
-        } else {
-            console.log("Nothing Returned") //<============================ MODAL NEEDED
-            return
         }
     }
-    console.log(movieArray)
     finalResultStyle(movieArray)
 }
 
 
 
+//=================Show movie posters based on results==============//
+var finalResultStyle = function (movieArray) {
+    contentDisplayEl.classList.remove("is-hidden");
+    contentTitleEl.textContent = "Movies";
+    postersWrapperEl.innerHTML = "";
+    for (i = 0; i < movieArray.length; i++) {
+        posterCheck = "http://image.tmdb.org/t/p/original" + movieArray[i].poster_path
+        if (posterCheck === "http://image.tmdb.org/t/p/originalnull") {
+                    // create book element to go inside postersWrapper
+        var singlePosterEl = document.createElement("div");
+        // give book element an id referencing its index in movieArray
+        singlePosterEl.setAttribute("id", "index-" + i);
+        singlePosterEl.addEventListener("click", movieModalCreator)
+        // set styling for book div
+        singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+        // create div to hold img
+        var movieImgWrapperEl = document.createElement("div");
+        // give div class name image
+        movieImgWrapperEl.className = "image pointer";
+        // create img element
+        var movieImageEl = document.createElement("img");
+        movieImageEl.textContent = "working"
+        // set source of img element
+        var imageSrc = movieArray[i].original_title
+        movieImageEl.setAttribute("src", "./assets/images/not-available.jpg");
 
-
-
-
-//================ Results added to DOM in order to display===============//
-var finalResultStyle = function (results) {
-    var movieContainerEl = document.getElementById("movie-container");
-    var movieMainEl = document.getElementById("movie-info-0");
-    movieMainEl.textContent = ""
-
-    if (results.resultLength === 0) {
-        movieContainerEl.textContent = "No Movies Found"
-        return;
-    }
-
-
-    for (var i = 0; i < results.length; i++) {
-
-        //========BEGINNING FIRST CHUNK================//
-        var posterContainerEl = document.createElement("div");
-        posterContainerEl.classList = "media"
-
-        var posterContainerTwoEl = document.createElement("div");
-        posterContainerTwoEl.classList = "media-left"
-
-        var figureEl = document.createElement("figure");
-        figureEl.classList = "image is-48x48"
-
-        var moviePosterEl = document.createElement("img");
-        if (results[i].poster_path) {
-            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].poster_path)
-        } else if (results[i].backdrop_path) {
-            moviePosterEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + results[i].backdrop_path)
-        } else {
-            moviePosterEl.setAttribute("src", "./assets/images/image-unavailable.jpg")
-
+        // append elements
+        movieImgWrapperEl.appendChild(movieImageEl);
+        singlePosterEl.appendChild(movieImgWrapperEl);
+        // append book poster to postersWrapper to be displayed
+        postersWrapperEl.appendChild(singlePosterEl);
+        }else {
+        // create book element to go inside postersWrapper
+        var singlePosterEl = document.createElement("div");
+        // give book element an id referencing its index in movieArray
+        singlePosterEl.setAttribute("id", "index-" + i);
+        singlePosterEl.addEventListener("click", movieModalCreator)
+        // set styling for book div
+        singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+        // create div to hold img
+        var movieImgWrapperEl = document.createElement("div");
+        // give div class name image
+        movieImgWrapperEl.className = "image pointer";
+        // create img element
+        var movieImageEl = document.createElement("img");
+        // set source of img element
+        var imageSrc = "http://image.tmdb.org/t/p/original" + movieArray[i].poster_path;
+        movieImageEl.setAttribute("src", imageSrc);
+        // append elements
+        movieImgWrapperEl.appendChild(movieImageEl);
+        singlePosterEl.appendChild(movieImgWrapperEl);
+        // append book poster to postersWrapper to be displayed
+        postersWrapperEl.appendChild(singlePosterEl);
         }
 
         movieMainEl.appendChild(posterContainerEl)
@@ -208,11 +228,9 @@ var finalResultStyle = function (results) {
         interestButtonEl.textContent = 'Add to interests'
         interestButtonEl.addEventListener('click', saveInterest)
         movieMainEl.appendChild(interestButtonEl)
+
     }
-
-}
-
-
+};
 
 
 
@@ -555,6 +573,84 @@ document.addEventListener("click", clickChecker);
 // and will be attatched to the display modals
 
 
+
+var movieModalCreator = function () {
+    // find out which book was clicked and get corresponding book object from booksArray
+    var clickedStart = event.currentTarget.id;
+    var clickedIndex = clickedStart.split("-")[1];
+    var clickedMovie = movieArray[clickedIndex];
+    // create modal elements
+    var modalEl = document.createElement("div");
+    modalEl.className = "modal is-active";
+    var modalBackGroundEl = document.createElement("div");
+    modalBackGroundEl.className = "modal-background";
+    var modalCardEl = document.createElement("div");
+    modalCardEl.className = "modal-card";
+    // modal card head
+    var modalHeadEl = document.createElement("header");
+    modalHeadEl.className = "modal-card-head";
+    var modalTitleEl = document.createElement("p");
+    modalTitleEl.className = "modal-card-title";
+    modalTitleEl.textContent = clickedMovie.title;
+    var modalCloseEl = document.createElement("button");
+    modalCloseEl.className = "delete";
+    modalCloseEl.id = "modal-close";
+    modalCloseEl.setAttribute("aria-label", "close");
+    // modal card content
+    var modalBodyEl = document.createElement("section");
+    modalBodyEl.className = "modal-card-body";
+    // modal image
+    var modalImageEl = document.createElement("p");
+    modalImageEl.className = "image is-128x128 mb-3";
+    var imgEl = document.createElement("img");
+    imgEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + clickedMovie.poster_path);
+    // modal card book description
+    var modalDescTitleEl = document.createElement("h1");
+    modalDescTitleEl.className = "has-text-weight-bold mt-3";
+    modalDescTitleEl.textContent = "Release Date: " + clickedMovie.release_date;
+    var modalDescEl = document.createElement("p");
+    modalDescEl.className = "pb-3";
+    modalDescEl.textContent = clickedMovie.description;
+    // modal card authors
+    var modalAuthorsTitleEl = document.createElement("h1");
+    modalAuthorsTitleEl.className = "has-text-weight-bold";
+    modalAuthorsTitleEl.textContent = "Movie Description: ";
+    var modalDescriptionEl = document.createElement("p");
+    modalDescriptionEl.textContent = clickedMovie.overview;
+    // append modal elements to DOM
+    modalEl.appendChild(modalBackGroundEl);
+    modalHeadEl.appendChild(modalTitleEl);
+    modalHeadEl.appendChild(modalCloseEl);
+    modalCardEl.appendChild(modalHeadEl);
+    modalEl.appendChild(modalCardEl);
+    modalBodyEl.appendChild(modalImageEl);
+    modalImageEl.appendChild(imgEl);
+    modalBodyEl.appendChild(modalDescTitleEl);
+    modalBodyEl.appendChild(modalDescEl);
+    modalBodyEl.appendChild(modalAuthorsTitleEl);
+    modalBodyEl.appendChild(modalDescriptionEl);
+    modalCardEl.appendChild(modalBodyEl);
+    contentDisplayEl.appendChild(modalEl);
+    
+    modalCloseEl.addEventListener("click", closeModal)
+}
+
+
+
+//===============END OF BOOK SECTION==========================//
+// function to close modals when close button is clicked
+var closeModal = function (event) {
+    var modalEl = document.getElementsByClassName("is-active");
+    var modalElTwo = modalEl[1]
+    modalElTwo.classList.remove("is-active");
+}
+
+
+
+
+
+
+
 const saveInterest = function (event) {
     let targetEl = event.target
 
@@ -625,8 +721,8 @@ const updateInterestSection = function () {
 
 // saveInterestBtn.addEventListener('click', saveInterest);
 // attach saveInterestBtn and event listener to modals
-
-panelTabsEl.addEventListener('click', panelTabHandler)
+// indexEl.addEventListener("click", clickChecker);
+panelTabsEl.addEventListener('click', panelTabHandler);
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 

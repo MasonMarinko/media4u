@@ -1,5 +1,28 @@
+.media {
+    border-top: 3px solid black;
+    padding-top: 5px;
+    height: 150px
+}
+
+.title {
+    padding-bottom: 10px;
+    padding-top: 5px;
+}
+
+.image img {
+    height: 150px;
+    width: auto;
+}
+
+img {
+    max-width: 100px;
+    padding-bottom: 15px;
+}
+
 .pointer {
-    cursor: pointer
+    cursor: pointer;
+    font-size: larger;
+    font-weight: bold;
 }
 
 #movie-panel,
@@ -8,6 +31,11 @@
     display: flex;
     flex-wrap: wrap;
     padding: 0 5em;
+}
+
+
+.text-to-front {
+    z-index: 1;
 }
 
 .modal-card-title {
