@@ -291,13 +291,13 @@ var bookFetchHandler = function (searchTerm) {
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            "&maxResults=30&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
             "+inauthor:" +
             userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            "&maxResults=30&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
@@ -481,7 +481,9 @@ var bookModalCreator = function (event) {
     modalAuthorsTitleEl.textContent = "Author(s):";
     var modalAuthorsEl = document.createElement("p");
     console.log(clickedBook.authors);
-    modalAuthorsEl.textContent = clickedBook.authors;
+    var authorsFormatted = clickedBook.authors.join(", ");
+    console.log(authorsFormatted);
+    modalAuthorsEl.textContent = authorsFormatted;
     // append modal elements to DOM
     modalEl.appendChild(modalBackGroundEl);
     modalHeadEl.appendChild(modalTitleEl);
