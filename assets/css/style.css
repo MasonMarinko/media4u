@@ -13,3 +13,11 @@
 .modal-card-title {
 flex-shrink: 1;
 }
+
+.new-line {
+    flex: 1 100%;
+}
+
+.navbar {
+    flex-wrap: wrap;
+}

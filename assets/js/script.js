@@ -402,7 +402,7 @@ let interestToggleEl = document.getElementById('toggle-interest-panel')
 interestToggleEl.addEventListener('click', function () {
     var interestPanelEl = document.getElementById('interest-panel')
     if (interestPanelEl.className === 'is-hidden') {
-        interestPanelEl.classList = 'panel'
+        interestPanelEl.classList = 'panel new-line'
         window.scrollTo(0, 0)
     } else {
         interestPanelEl.classList = 'is-hidden'
@@ -413,25 +413,25 @@ const panelTabHandler = function (event) {
     switch (event.target.id) {
         case "movie-tab":
             document.getElementById('movie-tab').setAttribute('class', 'is-active');
-            document.getElementById('book-tab').removeAttribute('class');
-            // document.getElementById('music-tab').removeAttribute('class');
-            moviePanelEl.removeAttribute('class');
+            document.getElementById('book-tab').classList.remove('is-active');
+            // document.getElementById('music-tab').classList.remove('is-active');
+            moviePanelEl.classList.remove('is-hidden');
             bookPanelEl.setAttribute('class', 'is-hidden');
             // musicPanelEl.setAttribute('class', 'is-hidden');
             break;
         /* case "music-tab":
             document.getElementById('music-tab').setAttribute('class', 'is-active');
-            document.getElementById('movie-tab').removeAttribute('class');
-            document.getElementById('book-tab').removeAttribute('class');
-            musicPanelEl.removeAttribute('class');
+            document.getElementById('movie-tab').classList.remove('is-active');
+            document.getElementById('book-tab').classList.remove('is-active');
+            musicPanelEl.classList.remove('is-active');
             moviePanelEl.setAttribute('class', 'is-hidden');
             bookPanelEl.setAttribute('class', 'is-hidden');
             break; */
         case "book-tab":
             document.getElementById('book-tab').setAttribute('class', 'is-active');
-            document.getElementById('movie-tab').removeAttribute('class');
-            // document.getElementById('music-tab').removeAttribute('class');
-            bookPanelEl.removeAttribute('class');
+            document.getElementById('movie-tab').classList.remove('is-active');
+            // document.getElementById('music-tab').classList.remove('is-active');
+            bookPanelEl.classList.remove('is-hidden');
             moviePanelEl.setAttribute('class', 'is-hidden');
             // musicPanelEl.setAttribute('class', 'is-hidden');
             break;
