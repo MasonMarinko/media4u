@@ -275,9 +275,6 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
     }
 }
 
-var closeModal = function () {
-    console.log("button clicked")
-}
 //====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
@@ -285,44 +282,47 @@ var bookFetchHandler = function (searchTerm) {
     console.log("book fetch");
     // initiate apiUrl variable
     var apiUrl;
-
+    
     // book input value
     var userInput = bookInputEl.value
-
+    
     // check if searching for title or author
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+        userInput +
+        "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-            userInput +
-            "+inauthor:" +
-            userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+        userInput +
+        "+inauthor:" +
+        userInput +
+        "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
-        .then(function (response) {
-            // request was successful
-            if (response.ok) {
-                response.json().then(function (data) {
-                    // send data to function which will create object of
-                    // relevent information
-                    console.log(data);
-                    bookObjectCreator(data);
-                });
-            } else {
-                alert("Error: " + response.statusText);
-            }
-        })
-        .catch(function (error) {
-            alert("Unable to connect");
-        });
+    .then(function (response) {
+        // request was successful
+        if (response.ok) {
+            response.json().then(function (data) {
+                // send data to function which will create object of
+                // relevent information
+                console.log(data);
+                bookInputEl.value = "";
+                bookObjectCreator(data);
+            });
+        } else {
+            alert("Error: " + response.statusText);
+        }
+    })
+    .catch(function (error) {
+        alert("Unable to connect");
+    });
 };
 
 var bookObjectCreator = function (data) {
+    // clear books array from previous searches
+    booksArray = [];
     console.log(data.items);
     // create array to hold book objects
     booksArray = []
@@ -369,36 +369,33 @@ var bookContentCreator = function (booksArray) {
     postersWrapperEl.innerHTML = "";
     for (i = 0; i < booksArray.length; i++) {
         // create book element to go inside postersWrapper
-        var singlePosterEl = document.createElement("div");
-        // give book element an id referencing its index in booksArray
-        var indexId = "index-" + i;
-        singlePosterEl.setAttribute("id", indexId);
+        var bookPosterEl = document.createElement("div");
         // set styling for book div
-        singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+        bookPosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
         // create div to hold img
         var bookImgWrapperEl = document.createElement("div");
         // give div class name image
         bookImgWrapperEl.className = "image pointer";
         // create img element
         var bookImageEl = document.createElement("img");
+        // set class for img element
+        bookImageEl.className = "book-poster";
+        // give img element an id referencing its index in booksArray
+        var indexId = "index-" + i;
+        bookImageEl.setAttribute("id", indexId);
         // set source of img element
         var imageSrc = booksArray[i].imageUrl;
         bookImageEl.setAttribute("src", imageSrc);
         // append elements
         bookImgWrapperEl.appendChild(bookImageEl);
-        singlePosterEl.appendChild(bookImgWrapperEl);
+        bookPosterEl.appendChild(bookImgWrapperEl);
         // append book poster to postersWrapper to be displayed
+      
         postersWrapperEl.appendChild(singlePosterEl);
 
-        // add to interest button
-        let interestButtonEl = document.createElement('button');
-        interestButtonEl.classList = 'button';
-        interestButtonEl.setAttribute('type', 'book');
-        interestButtonEl.setAttribute('data-id', indexId);
-        interestButtonEl.textContent = 'Add to interests'
-        interestButtonEl.addEventListener('click', saveInterest)
-        singlePosterEl.appendChild(interestButtonEl)
     }
+    // jump to content section
+    window.location.hash = "content-display";
 };
 
 let interestToggleEl = document.getElementById('toggle-interest-panel')
@@ -441,6 +438,115 @@ const panelTabHandler = function (event) {
     }
 }
 
+var bookModalCreator = function () {
+    // find out which book was clicked and get corresponding book object from booksArray
+    console.log(event.target.id);
+    var clickedIndex = event.target.id.replace("index-", "");
+    var clickedBook = booksArray[clickedIndex];
+    // create modal elements
+    var modalEl = document.createElement("div");
+    modalEl.className = "modal is-active";
+    var modalBackGroundEl = document.createElement("div");
+    modalBackGroundEl.className = "modal-background";
+    var modalCardEl = document.createElement("div");
+    modalCardEl.className = "modal-card";
+    // modal card head
+    var modalHeadEl = document.createElement("header");
+    modalHeadEl.className = "modal-card-head";
+    var modalTitleEl = document.createElement("p");
+    modalTitleEl.className = "modal-card-title";
+    modalTitleEl.textContent = clickedBook.title;
+    var modalCloseEl = document.createElement("button");
+    modalCloseEl.className = "delete";
+    modalCloseEl.id = "modal-close";
+    modalCloseEl.setAttribute("aria-label", "close");
+    // modal card content
+    var modalBodyEl = document.createElement("section");
+    modalBodyEl.className = "modal-card-body";
+    // modal image
+    var modalImageEl = document.createElement("p");
+    modalImageEl.className = "image is-128x128 mb-3";
+    var imgEl = document.createElement("img");
+    imgEl.setAttribute("src", clickedBook.imageUrl);
+    // modal card book description
+    var modalDescTitleEl = document.createElement("h1");
+    modalDescTitleEl.className = "has-text-weight-bold mt-3";
+    modalDescTitleEl.textContent = "About the Book";
+    var modalDescEl = document.createElement("p");
+    modalDescEl.className = "pb-3";
+    modalDescEl.textContent = clickedBook.description;
+    // modal card authors
+    var modalAuthorsTitleEl = document.createElement("h1");
+    modalAuthorsTitleEl.className = "has-text-weight-bold";
+    modalAuthorsTitleEl.textContent = "Author(s):";
+    var modalAuthorsEl = document.createElement("p");
+    console.log(clickedBook.authors);
+    modalAuthorsEl.textContent = clickedBook.authors;
+    // append modal elements to DOM
+    modalEl.appendChild(modalBackGroundEl);
+    modalHeadEl.appendChild(modalTitleEl);
+    modalHeadEl.appendChild(modalCloseEl);
+    modalCardEl.appendChild(modalHeadEl);
+    modalEl.appendChild(modalCardEl);
+    modalBodyEl.appendChild(modalImageEl);
+    modalImageEl.appendChild(imgEl);
+    modalBodyEl.appendChild(modalDescTitleEl);
+    modalBodyEl.appendChild(modalDescEl);
+    modalBodyEl.appendChild(modalAuthorsTitleEl);
+    modalBodyEl.appendChild(modalAuthorsEl);
+    modalCardEl.appendChild(modalBodyEl);
+    contentDisplayEl.appendChild(modalEl);
+  
+        let interestButtonEl = document.createElement('button');
+        interestButtonEl.classList = 'button';
+        interestButtonEl.setAttribute('type', 'book');
+        interestButtonEl.textContent = 'Add to interests'
+        interestButtonEl.addEventListener('click', saveInterest)
+        modalImageEl.appendChild(interestButtonEl)
+    
+    console.log(clickedBook);
+}
+//===============END OF BOOK SECTION==========================//
+// function to close modals when close button is clicked
+
+const createDeleteButton = function(itemEl, array, type) {
+    deleteContainerEl = document.createElement('div');
+    deleteContainerEl.className = 'ml-2';
+    itemEl.appendChild(deleteContainerEl);
+    deleteButtonEl = document.createElement('button');
+    deleteButtonEl.className = 'delete';
+    deleteContainerEl.appendChild(deleteButtonEl);
+
+    deleteContainerEl.addEventListener('click', function (event) {
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].title === itemEl.textContent) {
+                array.splice(i, 1)
+                localStorage.setItem(`m4u-saved${type}`, JSON.stringify(array))
+                itemEl.remove();
+            }
+        }
+    })
+}
+
+var closeModal = function () {
+    var modalEl = document.querySelector(".is-active");
+    console.log("modal close was clicked")
+    console.log(modalEl.classList);
+    modalEl.classList.remove("is-active");
+}
+// function to check clicks on dynamically generated elements
+var clickChecker = function (event) {
+    console.log(event.target.className);
+    if (event.target.className == "book-poster") {
+        bookModalCreator(event);
+    }
+    if (event.target.id == "modal-close") {
+        closeModal();
+    }
+};
+
+document.addEventListener("click", clickChecker);
+
 // Save Interest Feature
 // event listener target needs an id (for event listener),
 // a type (movie, book, or music)
@@ -481,25 +587,6 @@ const saveInterest = function (event) {
     }
 
     updateInterestSection()
-}
-
-const createDeleteButton = function(itemEl, array, type) {
-    deleteContainerEl = document.createElement('div');
-    deleteContainerEl.className = 'ml-2';
-    itemEl.appendChild(deleteContainerEl);
-    deleteButtonEl = document.createElement('button');
-    deleteButtonEl.className = 'delete';
-    deleteContainerEl.appendChild(deleteButtonEl);
-
-    deleteContainerEl.addEventListener('click', function (event) {
-        for (let i = 0; i < array.length; i++) {
-            if (array[i].title === itemEl.textContent) {
-                array.splice(i, 1)
-                localStorage.setItem(`m4u-saved${type}`, JSON.stringify(array))
-                itemEl.remove();
-            }
-        }
-    })
 }
 
 const updateInterestSection = function () {
