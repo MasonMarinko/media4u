@@ -282,42 +282,42 @@ var bookFetchHandler = function (searchTerm) {
     console.log("book fetch");
     // initiate apiUrl variable
     var apiUrl;
-    
+
     // book input value
     var userInput = bookInputEl.value
-    
+
     // check if searching for title or author
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-        userInput +
-        "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            userInput +
+            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
-        userInput +
-        "+inauthor:" +
-        userInput +
-        "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            userInput +
+            "+inauthor:" +
+            userInput +
+            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
-    .then(function (response) {
-        // request was successful
-        if (response.ok) {
-            response.json().then(function (data) {
-                // send data to function which will create object of
-                // relevent information
-                console.log(data);
-                bookInputEl.value = "";
-                bookObjectCreator(data);
-            });
-        } else {
-            alert("Error: " + response.statusText);
-        }
-    })
-    .catch(function (error) {
-        alert("Unable to connect");
-    });
+        .then(function (response) {
+            // request was successful
+            if (response.ok) {
+                response.json().then(function (data) {
+                    // send data to function which will create object of
+                    // relevent information
+                    console.log(data);
+                    bookInputEl.value = "";
+                    bookObjectCreator(data);
+                });
+            } else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            alert("Unable to connect");
+        });
 };
 
 var bookObjectCreator = function (data) {
@@ -390,8 +390,8 @@ var bookContentCreator = function (booksArray) {
         bookImgWrapperEl.appendChild(bookImageEl);
         bookPosterEl.appendChild(bookImgWrapperEl);
         // append book poster to postersWrapper to be displayed
-      
-        postersWrapperEl.appendChild(singlePosterEl);
+
+        postersWrapperEl.appendChild(bookPosterEl);
 
     }
     // jump to content section
@@ -496,20 +496,20 @@ var bookModalCreator = function () {
     modalBodyEl.appendChild(modalAuthorsEl);
     modalCardEl.appendChild(modalBodyEl);
     contentDisplayEl.appendChild(modalEl);
-  
-        let interestButtonEl = document.createElement('button');
-        interestButtonEl.classList = 'button';
-        interestButtonEl.setAttribute('type', 'book');
-        interestButtonEl.textContent = 'Add to interests'
-        interestButtonEl.addEventListener('click', saveInterest)
-        modalImageEl.appendChild(interestButtonEl)
-    
+
+    let interestButtonEl = document.createElement('button');
+    interestButtonEl.classList = 'button';
+    interestButtonEl.setAttribute('type', 'book');
+    interestButtonEl.textContent = 'Add to interests'
+    interestButtonEl.addEventListener('click', saveInterest)
+    modalImageEl.appendChild(interestButtonEl)
+
     console.log(clickedBook);
 }
 //===============END OF BOOK SECTION==========================//
 // function to close modals when close button is clicked
 
-const createDeleteButton = function(itemEl, array, type) {
+const createDeleteButton = function (itemEl, array, type) {
     deleteContainerEl = document.createElement('div');
     deleteContainerEl.className = 'ml-2';
     itemEl.appendChild(deleteContainerEl);
