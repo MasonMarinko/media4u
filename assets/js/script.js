@@ -383,6 +383,8 @@ var bookContentCreator = function (booksArray) {
         // give img element an id referencing its index in booksArray
         var indexId = "index-" + i;
         bookImageEl.setAttribute("id", indexId);
+        bookImageEl.addEventListener("click", bookModalCreator)
+
         // set source of img element
         var imageSrc = booksArray[i].imageUrl;
         bookImageEl.setAttribute("src", imageSrc);
@@ -496,6 +498,8 @@ var bookModalCreator = function (event) {
     modalBodyEl.appendChild(modalAuthorsEl);
     modalCardEl.appendChild(modalBodyEl);
     contentDisplayEl.appendChild(modalEl);
+    // event listener for close-modal
+    modalCloseEl.addEventListener("click", closeModal)
 
     let interestButtonEl = document.createElement('button');
     interestButtonEl.classList = 'button';
@@ -529,11 +533,10 @@ const createDeleteButton = function (itemEl, array, type) {
     })
 }
 
-var closeModal = function () {
-    var modalEl = document.querySelector(".is-active");
-    console.log("modal close was clicked")
-    console.log(modalEl.classList);
-    modalEl.classList.remove("is-active");
+var closeModal = function (event) {
+    var modalEl = document.getElementsByClassName("is-active");
+    var modalElTwo = modalEl[1]
+    modalElTwo.classList.remove("is-active");
 }
 // function to check clicks on dynamically generated elements
 var clickChecker = function (event) {
