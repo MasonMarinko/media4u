@@ -9,16 +9,6 @@
     padding-top: 5px;
 }
 
-.image img {
-    height: 150px;
-    width: auto;
-}
-
-img {
-    max-width: 100px;
-    padding-bottom: 15px;
-}
-
 .pointer {
     cursor: pointer;
     font-size: larger;
@@ -41,3 +31,12 @@ img {
 .modal-card-title {
 flex-shrink: 1;
 }
+
+.modal-image {
+    width: 25%;
+}
+
+.title-overlay {
+    position: absolute;
+}
+
