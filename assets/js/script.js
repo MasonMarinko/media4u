@@ -5,7 +5,7 @@ var submitButtonEl = document.getElementById("submit-button");
 var closeEl = document.getElementById("modal-close");
 var panelTabsEl = document.getElementById('panel-tabs')
 var moviePanelEl = document.getElementById('movie-panel')
-var musicPanelEl = document.getElementById('music-panel')
+/* var musicPanelEl = document.getElementById('music-panel') */
 var bookPanelEl = document.getElementById('book-panel')
 // content section elements
 var contentDisplayEl = document.getElementById("content-display");
@@ -22,9 +22,9 @@ var bookInputEl = document.getElementById("book-input")
 // arrays
 var booksArray = [];
 var movieArray = [];
-var musicArray = [];
+/* var musicArray = []; */
 var savedMovies = [];
-var savedMusic = [];
+/* var savedMusic = []; */
 var savedBooks = [];
 
 
@@ -42,33 +42,33 @@ var formHandler = function (event) {
 
         movieSearchHandler();
 
-    } else if (selectedMedia === "music") {
-        console.log("sent to music");
-        // send userInput to music fetch function
-        // musicFetchHandler(userInput);
     } else if (selectedMedia === "books") {
-        console.log("sent to books");
+
         bookFetchHandler();
     }
+    /* } else if (selectedMedia === "music") {
+        console.log("sent to music");
+        // send userInput to music fetch function
+        // musicFetchHandler(userInput); */
 };
 
 const mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
             document.getElementById('movie-form').setAttribute('class', 'field');
-            document.getElementById('music-form').setAttribute('class', 'is-hidden');
             document.getElementById('book-form').setAttribute('class', 'is-hidden');
-            break;
-        case "music":
-            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-            document.getElementById('music-form').setAttribute('class', 'field');
-            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            // document.getElementById('music-form').setAttribute('class', 'is-hidden');
             break;
         case "books":
             document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-            document.getElementById('music-form').setAttribute('class', 'is-hidden');
             document.getElementById('book-form').setAttribute('class', 'field');
+            // document.getElementById('music-form').setAttribute('class', 'is-hidden');
             break;
+        /* case "music":
+            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+            document.getElementById('book-form').setAttribute('class', 'is-hidden');
+            document.getElementById('music-form').setAttribute('class', 'field');
+            break; */
     }
 }
 
@@ -117,6 +117,8 @@ var genreCheck = function (genreInfo) {
     var genreInput = searchGenreEl.value
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
+
+    movieArray = [];
 
     for (var i = 0; i < resultLength; i++) {
         // debugger
@@ -186,6 +188,47 @@ var finalResultStyle = function (movieArray) {
         // append book poster to postersWrapper to be displayed
         postersWrapperEl.appendChild(singlePosterEl);
         }
+
+        movieMainEl.appendChild(posterContainerEl)
+
+        posterContainerEl.appendChild(posterContainerTwoEl)
+
+        posterContainerTwoEl.appendChild(figureEl)
+
+        figureEl.appendChild(moviePosterEl)
+        //==============END FIRST CHUNK===============//
+
+        //============= Beginning Second Chunk=============//
+        var titleContainerEl = document.createElement("div");
+        titleContainerEl.classList = "media-content"
+
+        var movieTitleEl = document.createElement("p");
+        movieTitleEl.classList = "title is-4"
+        movieTitleEl.setAttribute("id", "main-movie-title")
+        movieTitleEl.textContent = results[i].original_title;
+
+        movieMainEl.appendChild(titleContainerEl)
+
+        titleContainerEl.appendChild(movieTitleEl)
+        //================End second chunk===============//
+
+        //================= Beginning Final Chunk================//
+        var descContainerEl = document.createElement("div");
+        descContainerEl.classList = "content"
+        descContainerEl.setAttribute = "movie-description"
+        descContainerEl.textContent = results[i].overview
+
+        movieMainEl.appendChild(descContainerEl)
+
+        // ================== Interest Button =================//
+        let interestButtonEl = document.createElement('button');
+        interestButtonEl.classList = 'button';
+        interestButtonEl.setAttribute('type', 'movie');
+        interestButtonEl.setAttribute('data-id', `index-${i}`);
+        interestButtonEl.textContent = 'Add to interests'
+        interestButtonEl.addEventListener('click', saveInterest)
+        movieMainEl.appendChild(interestButtonEl)
+
     }
 };
 
@@ -250,9 +293,6 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
     }
 }
 
-var closeModal = function () {
-    console.log("button clicked")
-}
 //====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
@@ -286,6 +326,7 @@ var bookFetchHandler = function (searchTerm) {
                     // send data to function which will create object of
                     // relevent information
                     console.log(data);
+                    bookInputEl.value = "";
                     bookObjectCreator(data);
                 });
             } else {
@@ -298,6 +339,8 @@ var bookFetchHandler = function (searchTerm) {
 };
 
 var bookObjectCreator = function (data) {
+    // clear books array from previous searches
+    booksArray = [];
     console.log(data.items);
     // create array to hold book objects
     booksArray = []
@@ -325,16 +368,11 @@ var bookObjectCreator = function (data) {
         };
         // create book object
         var bookObject = {
-            title: [],
-            imageUrl: [],
-            description: [],
-            authors: []
+            title: title,
+            imageUrl: imageUrl,
+            description: description,
+            authors: authors,
         }
-        // push info to book object
-        bookObject.title.push(title);
-        bookObject.imageUrl.push(imageUrl);
-        bookObject.description.push(description);
-        bookObject.authors.push(authors);
         // push book object to booksArray
         booksArray.push(bookObject);
         console.log(booksArray);
@@ -349,27 +387,33 @@ var bookContentCreator = function (booksArray) {
     postersWrapperEl.innerHTML = "";
     for (i = 0; i < booksArray.length; i++) {
         // create book element to go inside postersWrapper
-        var singlePosterEl = document.createElement("div");
-        // give book element an id referencing its index in booksArray
-        var indexId = "index-" + i;
-        singlePosterEl.setAttribute("id", indexId);
+        var bookPosterEl = document.createElement("div");
         // set styling for book div
-        singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+        bookPosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
         // create div to hold img
         var bookImgWrapperEl = document.createElement("div");
         // give div class name image
         bookImgWrapperEl.className = "image pointer";
         // create img element
         var bookImageEl = document.createElement("img");
+        // set class for img element
+        bookImageEl.className = "book-poster";
+        // give img element an id referencing its index in booksArray
+        var indexId = "index-" + i;
+        bookImageEl.setAttribute("id", indexId);
         // set source of img element
         var imageSrc = booksArray[i].imageUrl;
         bookImageEl.setAttribute("src", imageSrc);
         // append elements
         bookImgWrapperEl.appendChild(bookImageEl);
-        singlePosterEl.appendChild(bookImgWrapperEl);
+        bookPosterEl.appendChild(bookImgWrapperEl);
         // append book poster to postersWrapper to be displayed
-        postersWrapperEl.appendChild(singlePosterEl);
+
+        postersWrapperEl.appendChild(bookPosterEl);
+
     }
+    // jump to content section
+    window.location.hash = "content-display";
 };
 
 let interestToggleEl = document.getElementById('toggle-interest-panel')
@@ -387,30 +431,140 @@ const panelTabHandler = function (event) {
     switch (event.target.id) {
         case "movie-tab":
             document.getElementById('movie-tab').setAttribute('class', 'is-active');
-            document.getElementById('music-tab').removeAttribute('class');
             document.getElementById('book-tab').removeAttribute('class');
+            // document.getElementById('music-tab').removeAttribute('class');
             moviePanelEl.removeAttribute('class');
-            musicPanelEl.setAttribute('class', 'is-hidden');
             bookPanelEl.setAttribute('class', 'is-hidden');
+            // musicPanelEl.setAttribute('class', 'is-hidden');
             break;
-        case "music-tab":
+        /* case "music-tab":
             document.getElementById('music-tab').setAttribute('class', 'is-active');
             document.getElementById('movie-tab').removeAttribute('class');
             document.getElementById('book-tab').removeAttribute('class');
             musicPanelEl.removeAttribute('class');
             moviePanelEl.setAttribute('class', 'is-hidden');
             bookPanelEl.setAttribute('class', 'is-hidden');
-            break;
+            break; */
         case "book-tab":
             document.getElementById('book-tab').setAttribute('class', 'is-active');
             document.getElementById('movie-tab').removeAttribute('class');
-            document.getElementById('music-tab').removeAttribute('class');
+            // document.getElementById('music-tab').removeAttribute('class');
             bookPanelEl.removeAttribute('class');
             moviePanelEl.setAttribute('class', 'is-hidden');
-            musicPanelEl.setAttribute('class', 'is-hidden');
+            // musicPanelEl.setAttribute('class', 'is-hidden');
             break;
     }
 }
+
+var bookModalCreator = function (event) {
+    // find out which book was clicked and get corresponding book object from booksArray
+    console.log(event.target.id);
+    var clickedIndex = event.target.id.replace("index-", "");
+    var clickedBook = booksArray[clickedIndex];
+    // create modal elements
+    var modalEl = document.createElement("div");
+    modalEl.className = "modal is-active";
+    var modalBackGroundEl = document.createElement("div");
+    modalBackGroundEl.className = "modal-background";
+    var modalCardEl = document.createElement("div");
+    modalCardEl.className = "modal-card";
+    // modal card head
+    var modalHeadEl = document.createElement("header");
+    modalHeadEl.className = "modal-card-head";
+    var modalTitleEl = document.createElement("p");
+    modalTitleEl.className = "modal-card-title";
+    modalTitleEl.textContent = clickedBook.title;
+    var modalCloseEl = document.createElement("button");
+    modalCloseEl.className = "delete";
+    modalCloseEl.id = "modal-close";
+    modalCloseEl.setAttribute("aria-label", "close");
+    // modal card content
+    var modalBodyEl = document.createElement("section");
+    modalBodyEl.className = "modal-card-body";
+    // modal image
+    var modalImageEl = document.createElement("p");
+    modalImageEl.className = "image is-128x128 mb-3";
+    var imgEl = document.createElement("img");
+    imgEl.setAttribute("src", clickedBook.imageUrl);
+    // modal card book description
+    var modalDescTitleEl = document.createElement("h1");
+    modalDescTitleEl.className = "has-text-weight-bold mt-3";
+    modalDescTitleEl.textContent = "About the Book";
+    var modalDescEl = document.createElement("p");
+    modalDescEl.className = "pb-3";
+    modalDescEl.textContent = clickedBook.description;
+    // modal card authors
+    var modalAuthorsTitleEl = document.createElement("h1");
+    modalAuthorsTitleEl.className = "has-text-weight-bold";
+    modalAuthorsTitleEl.textContent = "Author(s):";
+    var modalAuthorsEl = document.createElement("p");
+    console.log(clickedBook.authors);
+    modalAuthorsEl.textContent = clickedBook.authors;
+    // append modal elements to DOM
+    modalEl.appendChild(modalBackGroundEl);
+    modalHeadEl.appendChild(modalTitleEl);
+    modalHeadEl.appendChild(modalCloseEl);
+    modalCardEl.appendChild(modalHeadEl);
+    modalEl.appendChild(modalCardEl);
+    modalBodyEl.appendChild(modalImageEl);
+    modalImageEl.appendChild(imgEl);
+    modalBodyEl.appendChild(modalDescTitleEl);
+    modalBodyEl.appendChild(modalDescEl);
+    modalBodyEl.appendChild(modalAuthorsTitleEl);
+    modalBodyEl.appendChild(modalAuthorsEl);
+    modalCardEl.appendChild(modalBodyEl);
+    contentDisplayEl.appendChild(modalEl);
+
+    let interestButtonEl = document.createElement('button');
+    interestButtonEl.classList = 'button';
+    interestButtonEl.setAttribute('type', 'book');
+    interestButtonEl.setAttribute('data-id', event.target.id)
+    interestButtonEl.textContent = 'Add to interests'
+    interestButtonEl.addEventListener('click', saveInterest)
+    modalImageEl.appendChild(interestButtonEl)
+
+    console.log(clickedBook);
+}
+//===============END OF BOOK SECTION==========================//
+// function to close modals when close button is clicked
+
+const createDeleteButton = function (itemEl, array, type) {
+    deleteContainerEl = document.createElement('div');
+    deleteContainerEl.className = 'ml-2';
+    itemEl.appendChild(deleteContainerEl);
+    deleteButtonEl = document.createElement('button');
+    deleteButtonEl.className = 'delete';
+    deleteContainerEl.appendChild(deleteButtonEl);
+
+    deleteContainerEl.addEventListener('click', function (event) {
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].title === itemEl.textContent) {
+                array.splice(i, 1)
+                localStorage.setItem(`m4u-saved${type}`, JSON.stringify(array))
+                itemEl.remove();
+            }
+        }
+    })
+}
+
+var closeModal = function () {
+    var modalEl = document.querySelector(".is-active");
+    console.log("modal close was clicked")
+    console.log(modalEl.classList);
+    modalEl.classList.remove("is-active");
+}
+// function to check clicks on dynamically generated elements
+var clickChecker = function (event) {
+    console.log(event.target.className);
+    if (event.target.className == "book-poster") {
+        bookModalCreator(event);
+    }
+    if (event.target.id == "modal-close") {
+        closeModal();
+    }
+};
+
+document.addEventListener("click", clickChecker);
 
 // Save Interest Feature
 // event listener target needs an id (for event listener),
@@ -506,7 +660,6 @@ const saveInterest = function (event) {
     targetId = targetId[1]
 
     let interestEl;
-    debugger;
     switch (targetType) {
         case 'movie':
             savedMovies = JSON.parse(localStorage.getItem("m4u-savedMovies")) || []
@@ -514,18 +667,18 @@ const saveInterest = function (event) {
             savedMovies.push(interestEl)
             localStorage.setItem("m4u-savedMovies", JSON.stringify(savedMovies))
             break;
-        case 'music':
-            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
-            interestEl = musicArray[targetId]
-            savedMusic.push(interestEl)
-            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
-            break;
         case 'book':
             savedBooks = JSON.parse(localStorage.getItem("m4u-savedBooks")) || []
             interestEl = booksArray[targetId]
             savedBooks.push(interestEl)
             localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
             break;
+        /* case 'music':
+            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
+            interestEl = musicArray[targetId]
+            savedMusic.push(interestEl)
+            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
+            break; */
         default:
         // error handling
     }
@@ -534,34 +687,36 @@ const saveInterest = function (event) {
 }
 
 const updateInterestSection = function () {
-    let array = [];
 
     moviePanelEl.textContent = ''
-    array = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
-    for (let i = 0; i < array.length; i++) {
+    let movieArray = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
+    for (let i = 0; i < movieArray.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
+        itemEl.textContent = movieArray[i].title
         moviePanelEl.appendChild(itemEl)
-    }
-
-    musicPanelEl.textContent = ''
-    array = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
-    for (let i = 0; i < array.length; i++) {
-        let itemEl = document.createElement('div');
-        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
-        musicPanelEl.appendChild(itemEl)
+        createDeleteButton(itemEl, movieArray, "Movies");
     }
 
     bookPanelEl.textContent = ''
-    array = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
-    for (let i = 0; i < array.length; i++) {
+    let bookArray = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
+    for (let i = 0; i < bookArray.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.innerHTML = `${array[i].title}<div class='ml-1'><button class='delete'></button></div>`
+        itemEl.textContent = bookArray[i].title
         bookPanelEl.appendChild(itemEl)
+        createDeleteButton(itemEl, bookArray, "Books");
     }
+
+    /* musicPanelEl.textContent = ''
+    let musicArray = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
+    for (let i = 0; i < musicArray.length; i++) {
+        let itemEl = document.createElement('div');
+        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
+        itemEl.textContent = musicArray[i].title;
+        musicPanelEl.appendChild(itemEl);
+        createDeleteButton(itemEl, musicArray, "Music");
+    }*/
 }
 
 // saveInterestBtn.addEventListener('click', saveInterest);
@@ -572,3 +727,4 @@ mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 
 updateInterestSection();
+

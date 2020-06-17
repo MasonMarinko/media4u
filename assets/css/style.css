@@ -33,6 +33,11 @@ img {
     padding: 0 5em;
 }
 
+
 .text-to-front {
     z-index: 1;
+}
+
+.modal-card-title {
+flex-shrink: 1;
 }

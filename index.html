@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="./assets/images/favicon.png" type="image/x-icon">
 
-    <title>Media 4 U</title>
+    <title>media 4U</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css">
@@ -19,8 +19,7 @@
     <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="#top">
-                <img src="assets/images/favicon.png" width="48" height="18">
-                <h1 class="is-primary"><strong>Media 4 U</strong></h1>
+                <img src="assets/images/BlueLogo_LostCount.png" alt= "media 4U" width="200" height="68">
             </a>
         </div>
         <button class="button panel-heading" id="toggle-interest-panel">
@@ -34,11 +33,11 @@
     <div class="is-hidden" id='interest-panel'>
             <p class="panel-tabs" id='panel-tabs'>
                 <a class="is-active" id='movie-tab'>Movies</a>
-                <a id='music-tab'>Music</a>
+                <!-- <a id='music-tab'>Music</a> -->
                 <a id='book-tab'>Books</a>
             </p>
             <div id="movie-panel"></div>
-            <div id="music-panel" class='is-hidden'></div>
+            <!-- <div id="music-panel" class='is-hidden'></div> -->
             <div id="book-panel" class='is-hidden'></div>
     </div>
 
@@ -59,7 +58,7 @@
                                             <div class="select is-fullwidth">
                                                 <select id="media-select">
                                                     <option value="movies">Movies</option>
-                                                    <option value="music">Music</option>
+                                                    <!-- <option value="music">Music</option> -->
                                                     <option value="books">Books</option>
                                                 </select>
                                             </div>
@@ -133,7 +132,7 @@
                             </div>
                             <!-- End of movie Form -->
                             <!-- Start music form-->
-                            <div id="music-form" class="field is-hidden">
+                            <!-- <div id="music-form" class="field is-hidden">
                                 <div class="field is-horizontal">
                                     <div class="field-label">
                                         <label class="label">Search By</label>
@@ -159,7 +158,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- End music form -->
                             <!-- BOOK FORM -->
                             <div id="book-form" class="field is-hidden">
@@ -178,7 +177,7 @@
                                 </div>
                                 <div class="field is-horizontal">
                                     <div class="field-label">
-                                        <label class="label">Search For:</label>
+                                        <label class="label">Keyword</label>
                                     </div>
                                     <div class="field-body">
                                         <div class="field control is-expanded">
@@ -246,12 +245,9 @@
 
 
     <footer class="footer">
-        <div class="content has-text-centered">
+        <div class="content has-text-centered" >
             <p>
-                <a href="#top"><strong>Media 4 U</strong></a>
-            </p>
-            <p>
-                <strong>&copy; Copyright 2020</strong>
+                <img src="assets/images/BlueLogo_LostCount.png" alt="media 4U" width="140" height="68" > <strong>&copy; Copyright 2020</strong>
             </p>
         </div>
     </footer>
