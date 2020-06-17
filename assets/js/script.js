@@ -5,6 +5,7 @@ var submitButtonEl = document.getElementById("submit-button");
 var closeEl = document.getElementById("modal-close");
 var panelTabsEl = document.getElementById('panel-tabs')
 var moviePanelEl = document.getElementById('movie-panel')
+var bookInputLabelEl = document.getElementById('book-input-label')
 /* var musicPanelEl = document.getElementById('music-panel') */
 var bookPanelEl = document.getElementById('book-panel')
 // content section elements
@@ -16,7 +17,6 @@ var movieTitleEl = document.getElementById("movie-title");
 var searchGenreEl = document.getElementById("search-by-genre");
 var yearInputEl = document.getElementById("search-by-year");
 // book elements
-var bookSearchInputEl = document.getElementById("book-input");
 var bookSearchByEl = document.getElementById("book-search-by");
 var bookInputEl = document.getElementById("book-input")
 // arrays
@@ -667,9 +667,19 @@ const updateInterestSection = function () {
     }*/
 }
 
+const bookInputHandler = function () {
+
+    if (bookSearchByEl.value === 'Keyword') {
+        bookInputLabelEl.textContent = 'Keyword'
+    } else {
+        bookInputLabelEl.textContent = 'Author'
+    }
+}
+
 // saveInterestBtn.addEventListener('click', saveInterest);
 // attach saveInterestBtn and event listener to modals
 // indexEl.addEventListener("click", clickChecker);
+bookSearchByEl.addEventListener('change', bookInputHandler)
 panelTabsEl.addEventListener('click', panelTabHandler);
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
