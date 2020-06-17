@@ -41,14 +41,12 @@ flex-shrink: 1;
 
 }
 
-.navbar-end {
-    justify-content: flex-end;
-    margin-left: auto;
-    align-items: stretch;
-    display: flex;
-}
-
 .navbar {
     flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#interest-panel {
+    flex: 1 100%;
 }
 
