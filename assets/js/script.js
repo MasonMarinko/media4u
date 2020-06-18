@@ -27,21 +27,14 @@ var movieArray = [];
 var savedMovies = [];
 var savedBooks = [];
 
-
-
-
 // function to check which media types are selected
 // then send input to correct fetch functions
 var formHandler = function (event) {
     event.preventDefault();
-
     var selectedMedia = mediaSelectEl.value;
-
     // send user input to appropriate fetch function
     if (selectedMedia === "movies") {
-
         movieSearchHandler();
-
     } else if (selectedMedia === "books") {
 
         bookFetchHandler();
@@ -64,22 +57,19 @@ const mediaSelectHandler = function () {
             document.getElementById('book-form').setAttribute('class', 'field');
             // document.getElementById('music-form').setAttribute('class', 'is-hidden');
             break;
-        /* case "music":
-            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-            document.getElementById('book-form').setAttribute('class', 'is-hidden');
-            document.getElementById('music-form').setAttribute('class', 'field');
-            break; */
+            /* case "music":
+                document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+                document.getElementById('book-form').setAttribute('class', 'is-hidden');
+                document.getElementById('music-form').setAttribute('class', 'field');
+                break; */
     }
 }
 
 // MOVIE SECTION
-//============= Don't forget to add query locators in order to grab answers below
 
-
-
-// NEED TO ADD INPUTS INTO FETCH
-
+// ADD INPUTS INTO FETCH
 var userSearch = function (title, releaseYear) {
+    movieArray = [];
     for (var i = 1; i < 100; i++) {
         var apiUrl =
             "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" +
@@ -89,34 +79,32 @@ var userSearch = function (title, releaseYear) {
             "&primary_release_year=" +
             releaseYear +
             "&include_adult=false";
-
         fetch(apiUrl)
             .then(function (response) {
                 if (response.ok) {
                     response.json().then(function (data) {
-                        console.log(data)
+                        if (data.total_results == 0) {
+                            movieArray = []
+                            finalResultStyle(movieArray);
+                        }
                         genreCheck(data)
                     });
                 } else {
                     alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
                 }
             })
-
             .catch(function (error) {
                 alert("Unable to connect to Movie Database, please try again."); //<========== Replace alert with MODAL
             });
     }
 };
 
-
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
 var genreCheck = function (genreInfo) {
     var genreInput = searchGenreEl.value
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
-
     for (var i = 0; i < resultLength; i++) {
-
         var resultArray = resultId[i].genre_ids;
         if (resultArray.includes(parseInt(genreInput))) {
             movieArray.push(resultId[i])
@@ -130,10 +118,13 @@ var genreCheck = function (genreInfo) {
 //=================Show movie posters based on results==============//
 var finalResultStyle = function (movieArray) {
     contentDisplayEl.classList.remove("is-hidden");
-    contentTitleEl.textContent = "Movies";
+    if (movieArray.length == 0) {
+        contentTitleEl.textContent = "No results. Please try a different search."
+    } else {
+        contentTitleEl.textContent = "Movies";
+    }
     postersWrapperEl.innerHTML = "";
     for (i = 0; i < movieArray.length; i++) {
-
         // create element to go inside postersWrapper
         var singlePosterEl = document.createElement("div");
         // give element an id referencing its index in movieArray
@@ -147,10 +138,8 @@ var finalResultStyle = function (movieArray) {
         movieImgWrapperEl.className = "image pointer";
         // create img element
         var movieImageEl = document.createElement("img");
-
         posterCheck = movieArray[i].poster_path
-        if (!posterCheck) {
-
+        if (posterCheck === null) {
             // set source of img element
             movieImageEl.setAttribute("src", "./assets/images/not-available.jpg");
             var movieTitle = movieArray[i].title
@@ -158,34 +147,24 @@ var finalResultStyle = function (movieArray) {
             titleOverlayEl.className = 'title-overlay'
             titleOverlayEl.textContent = movieTitle;
             movieImgWrapperEl.appendChild(titleOverlayEl);
-
         } else {
-
             // set source of img element
             var imageSrc = "http://image.tmdb.org/t/p/original" + movieArray[i].poster_path;
             movieImageEl.setAttribute("src", imageSrc);
-
         }
-
         // append elements
         movieImgWrapperEl.appendChild(movieImageEl);
         singlePosterEl.appendChild(movieImgWrapperEl);
         // append poster to postersWrapper to be displayed
         postersWrapperEl.appendChild(singlePosterEl);
-
-
     }
     contentDisplayEl.scrollIntoView();
 };
-
-
-
 
 //============ MAIN search function that calls everything else for MOVIE TITLES! ==============================//
 //============= Function that takes all search criteria and will compound it =================================//
 //============ together and send to the "userSearch"/fetch request============================================//
 var movieSearchHandler = function () {
-
     //======= Movie title checks if a title is entered and then returns a movie title they've selected
     var movieName = movieTitle(movieTitleEl.value);
     movieTitleEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
@@ -197,11 +176,6 @@ var movieSearchHandler = function () {
     // sends all inputs to fetch/userSearch
     userSearch(movieName, releaseDate) //<========== CALL TO FETCH, COMMENTED FOR NOW
 }
-
-
-
-
-
 
 //================ FOURTH FUNCTION=========================//
 // function checks to make sure year is 4 digits long, and is beyond 1887 (first movie 1888) and returns a year/integer
@@ -218,19 +192,10 @@ var releaseInput = function (yearInput) {
     }
 }
 
-
-
-
-
-
-
-
 //================ SECOND FUNCTION=========================//
 //==================== function takes in search result for movie title and returns answer to "userSearchInformation, if user leaves blank then "any" is returned
 //==================== this could also be an alert/modal if preferred.==================================//
-
 var movieTitle = function (movieTitleInput) { //<====================== Ready
-
     if (movieTitleInput) {
         return movieTitleInput;
     } else if (movieTitleInput === "") {
@@ -274,7 +239,6 @@ var movieModalCreator = function (event) {
         imgEl.setAttribute("src", "./assets/images/not-available.jpg")
     } else {
         imgEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + clickedMovie.poster_path);
-
     }
     // modal card book description
     var modalDescTitleEl = document.createElement("h1");
@@ -303,7 +267,6 @@ var movieModalCreator = function (event) {
     modalBodyEl.appendChild(modalDescriptionEl);
     modalCardEl.appendChild(modalBodyEl);
     contentDisplayEl.appendChild(modalEl);
-
     // ================== Interest Button =================//
     let interestButtonEl = document.createElement('button');
     interestButtonEl.classList = 'button';
@@ -312,25 +275,17 @@ var movieModalCreator = function (event) {
     interestButtonEl.textContent = 'Add to interests'
     interestButtonEl.addEventListener('click', saveInterest)
     modalImageEl.appendChild(interestButtonEl)
-
     modalCloseEl.addEventListener("click", closeModal)
 }
-
-
-
-
 
 //====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
 var bookFetchHandler = function (searchTerm) {
-    console.log("book fetch");
     // initiate apiUrl variable
     var apiUrl;
-
     // book input value
     var userInput = bookInputEl.value
-
     // check if searching for title or author
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
@@ -352,7 +307,6 @@ var bookFetchHandler = function (searchTerm) {
                 response.json().then(function (data) {
                     // send data to function which will create object of
                     // relevent information
-                    console.log(data);
                     bookInputEl.value = "";
                     bookObjectCreator(data);
                 });
@@ -368,49 +322,56 @@ var bookFetchHandler = function (searchTerm) {
 var bookObjectCreator = function (data) {
     // clear books array from previous searches
     booksArray = [];
-    console.log(data.items);
     // create array to hold book objects
     booksArray = []
-    // cycle through data and add info to object
-    for (i = 0; i < data.items.length; i++) {
-        // get title information
-        var title = data.items[i].volumeInfo.title;
-        // get image url
-        var imageUrl;
-        var imagesLocation = data.items[i].volumeInfo.imageLinks;
-        if (!imagesLocation) {
-            imageUrl = "./assets/images/image-unavailable.jpg";
-        } else {
-            imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+    // if no results go to bookContentCreator
+    if (data.totalItems == 0) {
+        return bookContentCreator(booksArray)
+    } else {
+        // cycle through data and add info to object
+        for (i = 0; i < data.items.length; i++) {
+            // get title information
+            var title = data.items[i].volumeInfo.title;
+            // get image url
+            var imageUrl;
+            var imagesLocation = data.items[i].volumeInfo.imageLinks;
+            if (!imagesLocation) {
+                imageUrl = "./assets/images/image-unavailable.jpg";
+            } else {
+                imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+            };
+            // get description
+            var description = data.items[i].volumeInfo.description;
+            if (!description) {
+                description = "Description is unavailable for this book.";
+            };
+            // define "authors" location in data
+            var authors = data.items[i].volumeInfo.authors;
+            if (!authors) {
+                authors = "Authors unavailable for this book."
+            };
+            // create book object
+            var bookObject = {
+                title: title,
+                imageUrl: imageUrl,
+                description: description,
+                authors: authors,
+            }
+            // push book object to booksArray
+            booksArray.push(bookObject);
         };
-        // get description
-        var description = data.items[i].volumeInfo.description;
-        if (!description) {
-            description = "Description is unavailable for this book.";
-        };
-        // define "authors" location in data
-        var authors = data.items[i].volumeInfo.authors;
-        if (!authors) {
-            authors = "Authors unavailable for this book."
-        };
-        // create book object
-        var bookObject = {
-            title: title,
-            imageUrl: imageUrl,
-            description: description,
-            authors: authors,
-        }
-        // push book object to booksArray
-        booksArray.push(bookObject);
-        console.log(booksArray);
-    };
-    // send bookObject to DOM element creator function
-    bookContentCreator(booksArray);
+        // send bookObject to DOM element creator function
+        bookContentCreator(booksArray);
+    }
 };
 
 var bookContentCreator = function (booksArray) {
     contentDisplayEl.classList.remove("is-hidden");
-    contentTitleEl.textContent = "Books";
+    if (booksArray.length == 0) {
+        contentTitleEl.textContent = "No results. Please try a different search.";
+    } else {
+        contentTitleEl.textContent = "Books";
+    }
     postersWrapperEl.innerHTML = "";
     for (i = 0; i < booksArray.length; i++) {
         // create book element to go inside postersWrapper
@@ -442,10 +403,8 @@ var bookContentCreator = function (booksArray) {
         bookImgWrapperEl.appendChild(bookImageEl);
         bookPosterEl.appendChild(bookImgWrapperEl);
         // append book poster to postersWrapper to be displayed
-
         postersWrapperEl.appendChild(bookPosterEl);
         bookPosterEl.addEventListener('click', bookModalCreator)
-
     }
     // jump to content section
     contentDisplayEl.scrollIntoView();
@@ -453,7 +412,6 @@ var bookContentCreator = function (booksArray) {
 
 var bookModalCreator = function (event) {
     // find out which book was clicked and get corresponding book object from booksArray
-    console.log(event.currentTarget.id);
     var clickedIndex = event.currentTarget.id.replace("index-", "");
     var clickedBook = booksArray[clickedIndex];
     // create modal elements
@@ -493,9 +451,7 @@ var bookModalCreator = function (event) {
     modalAuthorsTitleEl.className = "has-text-weight-bold";
     modalAuthorsTitleEl.textContent = "Author(s):";
     var modalAuthorsEl = document.createElement("p");
-    console.log(clickedBook.authors);
     var authorsFormatted = clickedBook.authors.join(", ");
-    console.log(authorsFormatted);
     modalAuthorsEl.textContent = authorsFormatted;
     // append modal elements to DOM
     modalEl.appendChild(modalBackGroundEl);
@@ -513,7 +469,6 @@ var bookModalCreator = function (event) {
     contentDisplayEl.appendChild(modalEl);
     // event listener for close-modal
     modalCloseEl.addEventListener("click", closeModal)
-
     let interestButtonEl = document.createElement('button');
     interestButtonEl.classList = 'button';
     interestButtonEl.setAttribute('type', 'book');
@@ -546,14 +501,14 @@ const panelTabHandler = function (event) {
             bookPanelEl.setAttribute('class', 'is-hidden');
             // musicPanelEl.setAttribute('class', 'is-hidden');
             break;
-        /* case "music-tab":
-            document.getElementById('music-tab').setAttribute('class', 'is-active');
-            document.getElementById('movie-tab').removeAttribute('class');
-            document.getElementById('book-tab').removeAttribute('class');
-            musicPanelEl.removeAttribute('class');
-            moviePanelEl.setAttribute('class', 'is-hidden');
-            bookPanelEl.setAttribute('class', 'is-hidden');
-            break; */
+            /* case "music-tab":
+                document.getElementById('music-tab').setAttribute('class', 'is-active');
+                document.getElementById('movie-tab').removeAttribute('class');
+                document.getElementById('book-tab').removeAttribute('class');
+                musicPanelEl.removeAttribute('class');
+                moviePanelEl.setAttribute('class', 'is-hidden');
+                bookPanelEl.setAttribute('class', 'is-hidden');
+                break; */
         case "book-tab":
             document.getElementById('book-tab').setAttribute('class', 'is-active');
             document.getElementById('movie-tab').removeAttribute('class');
@@ -572,7 +527,6 @@ const createDeleteButton = function (itemEl, array, type) {
     deleteButtonEl = document.createElement('button');
     deleteButtonEl.className = 'delete';
     deleteContainerEl.appendChild(deleteButtonEl);
-
     deleteContainerEl.addEventListener('click', function (event) {
         for (let i = 0; i < array.length; i++) {
             if (array[i].title === itemEl.textContent) {
@@ -589,7 +543,6 @@ var closeModal = function (event) {
     var modalEl = event.target.closest(".is-active");
     modalEl.classList.remove("is-active");
 }
-
 const saveInterest = function (event) {
     let targetEl = event.target
 
@@ -597,7 +550,6 @@ const saveInterest = function (event) {
     let targetId = targetEl.getAttribute("data-id")
     targetId = targetId.split("-")
     targetId = targetId[1]
-
     let interestEl;
     switch (targetType) {
         case 'movie':
@@ -612,16 +564,15 @@ const saveInterest = function (event) {
             savedBooks.push(interestEl)
             localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
             break;
-        /* case 'music':
-            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
-            interestEl = musicArray[targetId]
-            savedMusic.push(interestEl)
-            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
-            break; */
+            /* case 'music':
+                savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
+                interestEl = musicArray[targetId]
+                savedMusic.push(interestEl)
+                localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
+                break; */
         default:
-        // error handling
+            // error handling
     }
-
     updateInterestSection()
 }
 
@@ -636,7 +587,6 @@ const updateInterestSection = function () {
         moviePanelEl.appendChild(itemEl)
         createDeleteButton(itemEl, savedMovies, "Movies");
     }
-
     bookPanelEl.textContent = ''
     let savedBooks = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
     for (let i = 0; i < savedBooks.length; i++) {
@@ -646,7 +596,6 @@ const updateInterestSection = function () {
         bookPanelEl.appendChild(itemEl)
         createDeleteButton(itemEl, savedBooks, "Books");
     }
-
     /* musicPanelEl.textContent = ''
     let savedMusic = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
     for (let i = 0; i < savedMusic.length; i++) {
@@ -676,4 +625,3 @@ mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 
 updateInterestSection();
-
