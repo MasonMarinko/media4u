@@ -120,7 +120,7 @@ var genreCheck = function (genreInfo) {
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
 
-    for (var i = 0; i < resultLength; i++) {
+    for (var i = 0; movieArray.length < 20; i++) {
 
         var resultArray = resultId[i].genre_ids;
         if (resultArray.includes(parseInt(genreInput))) {
