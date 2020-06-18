@@ -64,11 +64,11 @@ const mediaSelectHandler = function () {
             document.getElementById('book-form').setAttribute('class', 'field');
             // document.getElementById('music-form').setAttribute('class', 'is-hidden');
             break;
-        /* case "music":
-            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-            document.getElementById('book-form').setAttribute('class', 'is-hidden');
-            document.getElementById('music-form').setAttribute('class', 'field');
-            break; */
+            /* case "music":
+                document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+                document.getElementById('book-form').setAttribute('class', 'is-hidden');
+                document.getElementById('music-form').setAttribute('class', 'field');
+                break; */
     }
 }
 
@@ -132,7 +132,11 @@ var genreCheck = function (genreInfo) {
 //=================Show movie posters based on results==============//
 var finalResultStyle = function (movieArray) {
     contentDisplayEl.classList.remove("is-hidden");
-    contentTitleEl.textContent = "Movies";
+    if (movieArray.length == 0) {
+        contentTitleEl.textContent = "No results. Please try a different search."
+    } else {
+        contentTitleEl.textContent = "Movies";
+    }
     postersWrapperEl.innerHTML = "";
     for (i = 0; i < movieArray.length; i++) {
 
@@ -372,46 +376,56 @@ var bookObjectCreator = function (data) {
     console.log(data.items);
     // create array to hold book objects
     booksArray = []
-    // cycle through data and add info to object
-    for (i = 0; i < data.items.length; i++) {
-        // get title information
-        var title = data.items[i].volumeInfo.title;
-        // get image url
-        var imageUrl;
-        var imagesLocation = data.items[i].volumeInfo.imageLinks;
-        if (!imagesLocation) {
-            imageUrl = "./assets/images/image-unavailable.jpg";
-        } else {
-            imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+    // if no results go to bookContentCreator
+    if (data.totalItems == 0) {
+        return bookContentCreator(booksArray)
+    } else {
+        // cycle through data and add info to object
+        for (i = 0; i < data.items.length; i++) {
+            // get title information
+            var title = data.items[i].volumeInfo.title;
+            // get image url
+            var imageUrl;
+            var imagesLocation = data.items[i].volumeInfo.imageLinks;
+            if (!imagesLocation) {
+                imageUrl = "./assets/images/image-unavailable.jpg";
+            } else {
+                imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+            };
+            // get description
+            var description = data.items[i].volumeInfo.description;
+            if (!description) {
+                description = "Description is unavailable for this book.";
+            };
+            // define "authors" location in data
+            var authors = data.items[i].volumeInfo.authors;
+            if (!authors) {
+                authors = "Authors unavailable for this book."
+            };
+            // create book object
+            var bookObject = {
+                title: title,
+                imageUrl: imageUrl,
+                description: description,
+                authors: authors,
+            }
+            // push book object to booksArray
+            booksArray.push(bookObject);
+            console.log(booksArray);
         };
-        // get description
-        var description = data.items[i].volumeInfo.description;
-        if (!description) {
-            description = "Description is unavailable for this book.";
-        };
-        // define "authors" location in data
-        var authors = data.items[i].volumeInfo.authors;
-        if (!authors) {
-            authors = "Authors unavailable for this book."
-        };
-        // create book object
-        var bookObject = {
-            title: title,
-            imageUrl: imageUrl,
-            description: description,
-            authors: authors,
-        }
-        // push book object to booksArray
-        booksArray.push(bookObject);
-        console.log(booksArray);
-    };
-    // send bookObject to DOM element creator function
-    bookContentCreator(booksArray);
+        // send bookObject to DOM element creator function
+        bookContentCreator(booksArray);
+    }
 };
 
 var bookContentCreator = function (booksArray) {
     contentDisplayEl.classList.remove("is-hidden");
-    contentTitleEl.textContent = "Books";
+    if (booksArray.length == 0) {
+        contentTitleEl.textContent = "No results. Please try a different search.";
+    } else {
+        contentTitleEl.textContent = "Books";
+    }
+    console.log(booksArray);
     postersWrapperEl.innerHTML = "";
     for (i = 0; i < booksArray.length; i++) {
         // create book element to go inside postersWrapper
@@ -536,14 +550,14 @@ const panelTabHandler = function (event) {
             bookPanelEl.setAttribute('class', 'is-hidden');
             // musicPanelEl.setAttribute('class', 'is-hidden');
             break;
-        /* case "music-tab":
-            document.getElementById('music-tab').setAttribute('class', 'is-active');
-            document.getElementById('movie-tab').removeAttribute('class');
-            document.getElementById('book-tab').removeAttribute('class');
-            musicPanelEl.removeAttribute('class');
-            moviePanelEl.setAttribute('class', 'is-hidden');
-            bookPanelEl.setAttribute('class', 'is-hidden');
-            break; */
+            /* case "music-tab":
+                document.getElementById('music-tab').setAttribute('class', 'is-active');
+                document.getElementById('movie-tab').removeAttribute('class');
+                document.getElementById('book-tab').removeAttribute('class');
+                musicPanelEl.removeAttribute('class');
+                moviePanelEl.setAttribute('class', 'is-hidden');
+                bookPanelEl.setAttribute('class', 'is-hidden');
+                break; */
         case "book-tab":
             document.getElementById('book-tab').setAttribute('class', 'is-active');
             document.getElementById('movie-tab').removeAttribute('class');
@@ -602,14 +616,14 @@ const saveInterest = function (event) {
             savedBooks.push(interestEl)
             localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
             break;
-        /* case 'music':
-            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
-            interestEl = musicArray[targetId]
-            savedMusic.push(interestEl)
-            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
-            break; */
+            /* case 'music':
+                savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
+                interestEl = musicArray[targetId]
+                savedMusic.push(interestEl)
+                localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
+                break; */
         default:
-        // error handling
+            // error handling
     }
 
     updateInterestSection()
@@ -666,4 +680,3 @@ mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 
 updateInterestSection();
-
