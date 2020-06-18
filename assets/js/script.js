@@ -115,8 +115,6 @@ var genreCheck = function (genreInfo) {
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
 
-    movieArray = [];
-
     for (var i = 0; i < resultLength; i++) {
 
         var resultArray = resultId[i].genre_ids;
@@ -337,13 +335,13 @@ var bookFetchHandler = function (searchTerm) {
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            "&maxResults=30&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
             "+inauthor:" +
             userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            "&maxResults=30&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
@@ -488,7 +486,9 @@ var bookModalCreator = function (event) {
     modalAuthorsTitleEl.textContent = "Author(s):";
     var modalAuthorsEl = document.createElement("p");
     console.log(clickedBook.authors);
-    modalAuthorsEl.textContent = clickedBook.authors;
+    var authorsFormatted = clickedBook.authors.join(", ");
+    console.log(authorsFormatted);
+    modalAuthorsEl.textContent = authorsFormatted;
     // append modal elements to DOM
     modalEl.appendChild(modalBackGroundEl);
     modalHeadEl.appendChild(modalTitleEl);
@@ -503,6 +503,8 @@ var bookModalCreator = function (event) {
     modalBodyEl.appendChild(modalAuthorsEl);
     modalCardEl.appendChild(modalBodyEl);
     contentDisplayEl.appendChild(modalEl);
+    // event listener for close-modal
+    modalCloseEl.addEventListener("click", closeModal)
 
     let interestButtonEl = document.createElement('button');
     interestButtonEl.classList = 'button';
