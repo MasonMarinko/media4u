@@ -428,13 +428,7 @@ var bookContentCreator = function (booksArray) {
         bookImageEl.className = "book-poster";
         // give poster element an id referencing its index in booksArray
         var indexId = "index-" + i;
-<<<<<<< HEAD
-        bookImageEl.setAttribute("id", indexId);
-        bookImageEl.addEventListener("click", bookModalCreator)
-
-=======
         bookPosterEl.setAttribute("id", indexId);
->>>>>>> master
         // set source of img element
         var imageSrc = booksArray[i].imageUrl;
         bookImageEl.setAttribute("src", imageSrc);
@@ -582,17 +576,10 @@ const createDeleteButton = function (itemEl, array, type) {
     })
 }
 
-<<<<<<< HEAD
-var closeModal = function (event) {
-    var modalEl = document.getElementsByClassName("is-active");
-    var modalElTwo = modalEl[1]
-    modalElTwo.classList.remove("is-active");
-=======
 // function to close modals when close button is clicked
 var closeModal = function (event) {
     var modalEl = event.target.closest(".is-active");
     modalEl.classList.remove("is-active");
->>>>>>> master
 }
 
 const saveInterest = function (event) {
