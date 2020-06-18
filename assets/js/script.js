@@ -182,8 +182,9 @@ var finalResultStyle = function (movieArray) {
         // append poster to postersWrapper to be displayed
         postersWrapperEl.appendChild(singlePosterEl);
 
-        contentDisplayEl.scrollIntoView();
+
     }
+    contentDisplayEl.scrollIntoView();
 };
 
 
@@ -448,6 +449,13 @@ var bookContentCreator = function (booksArray) {
         bookPosterEl.setAttribute("id", indexId);
         // set source of img element
         var imageSrc = booksArray[i].imageUrl;
+        if (imageSrc === "./assets/images/image-unavailable.jpg") {
+            var bookTitle = booksArray[i].title
+            var titleOverlayEl = document.createElement('div');
+            titleOverlayEl.className = 'title-overlay'
+            titleOverlayEl.textContent = bookTitle;
+            bookImgWrapperEl.appendChild(titleOverlayEl);
+        }
         bookImageEl.setAttribute("src", imageSrc);
         // append elements
         bookImgWrapperEl.appendChild(bookImageEl);
