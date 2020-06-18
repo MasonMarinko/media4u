@@ -505,6 +505,8 @@ var bookModalCreator = function (event) {
     modalBodyEl.appendChild(modalAuthorsEl);
     modalCardEl.appendChild(modalBodyEl);
     contentDisplayEl.appendChild(modalEl);
+    // event listener for close-modal
+    modalCloseEl.addEventListener("click", closeModal)
 
     let interestButtonEl = document.createElement('button');
     interestButtonEl.classList = 'button';
