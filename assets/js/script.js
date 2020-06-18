@@ -5,8 +5,9 @@ var submitButtonEl = document.getElementById("submit-button");
 var closeEl = document.getElementById("modal-close");
 var panelTabsEl = document.getElementById('panel-tabs')
 var moviePanelEl = document.getElementById('movie-panel')
-/* var musicPanelEl = document.getElementById('music-panel') */
+var bookInputLabelEl = document.getElementById('book-input-label')
 var bookPanelEl = document.getElementById('book-panel')
+/* var musicPanelEl = document.getElementById('music-panel') */
 // content section elements
 var contentDisplayEl = document.getElementById("content-display");
 var contentTitleEl = document.getElementById("content-title");
@@ -16,15 +17,14 @@ var movieTitleEl = document.getElementById("movie-title");
 var searchGenreEl = document.getElementById("search-by-genre");
 var yearInputEl = document.getElementById("search-by-year");
 // book elements
-var bookSearchInputEl = document.getElementById("book-input");
 var bookSearchByEl = document.getElementById("book-search-by");
 var bookInputEl = document.getElementById("book-input")
 // arrays
 var booksArray = [];
 var movieArray = [];
 /* var musicArray = []; */
-var savedMovies = [];
 /* var savedMusic = []; */
+var savedMovies = [];
 var savedBooks = [];
 
 
@@ -80,36 +80,34 @@ const mediaSelectHandler = function () {
 // NEED TO ADD INPUTS INTO FETCH
 
 var userSearch = function (title, releaseYear) {
-    movieArray=[];
+    movieArray = [];
     for (var i = 1; i < 100; i++) {
-    var apiUrl = "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" + i + "&query=" +
-        title +
-        "&include_adult=false&primary_release_year=" +
-        releaseYear;
+        var apiUrl =
+            "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" +
+            i +
+            "&query=" +
+            title +
+            "&primary_release_year=" +
+            releaseYear +
+            "&include_adult=false";
 
-    fetch(apiUrl)
-        .then(function (response) {
-            if (response.ok) {
-                response.json().then(function (data) {
-                    console.log(data)
-                    genreCheck(data)
-                });
-            } else {
-                alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
-            }
-        })
-    
-        .catch(function (error) {
-            alert("Unable to connect to Movie Database, please try again."); //<========== Replace alert with MODAL
-        });
-}
+        fetch(apiUrl)
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (data) {
+                        console.log(data)
+                        genreCheck(data)
+                    });
+                } else {
+                    alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
+                }
+            })
+
+            .catch(function (error) {
+                alert("Unable to connect to Movie Database, please try again."); //<========== Replace alert with MODAL
+            });
+    }
 };
-
-
-
-
-
-
 
 
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
@@ -132,46 +130,19 @@ var genreCheck = function (genreInfo) {
     finalResultStyle(movieArray)
 }
 
-
-
 //=================Show movie posters based on results==============//
 var finalResultStyle = function (movieArray) {
     contentDisplayEl.classList.remove("is-hidden");
     contentTitleEl.textContent = "Movies";
     postersWrapperEl.innerHTML = "";
     for (i = 0; i < movieArray.length; i++) {
-        posterCheck = "http://image.tmdb.org/t/p/original" + movieArray[i].poster_path
-        if (posterCheck === "http://image.tmdb.org/t/p/originalnull") {
-                    // create book element to go inside postersWrapper
-        var singlePosterEl = document.createElement("div");
-        // give book element an id referencing its index in movieArray
-        singlePosterEl.setAttribute("id", "index-" + i);
-        singlePosterEl.addEventListener("click", movieModalCreator)
-        // set styling for book div
-        singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
-        // create div to hold img
-        var movieImgWrapperEl = document.createElement("div");
-        // give div class name image
-        movieImgWrapperEl.className = "image pointer";
-        // create img element
-        var movieImageEl = document.createElement("img");
-        movieImageEl.textContent = "working"
-        // set source of img element
-        var imageSrc = movieArray[i].original_title
-        movieImageEl.setAttribute("src", "./assets/images/not-available.jpg");
 
-        // append elements
-        movieImgWrapperEl.appendChild(movieImageEl);
-        singlePosterEl.appendChild(movieImgWrapperEl);
-        // append book poster to postersWrapper to be displayed
-        postersWrapperEl.appendChild(singlePosterEl);
-        }else {
-        // create book element to go inside postersWrapper
+        // create element to go inside postersWrapper
         var singlePosterEl = document.createElement("div");
-        // give book element an id referencing its index in movieArray
+        // give element an id referencing its index in movieArray
         singlePosterEl.setAttribute("id", "index-" + i);
         singlePosterEl.addEventListener("click", movieModalCreator)
-        // set styling for book div
+        // set styling for div
         singlePosterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
         // create div to hold img
         var movieImgWrapperEl = document.createElement("div");
@@ -179,56 +150,33 @@ var finalResultStyle = function (movieArray) {
         movieImgWrapperEl.className = "image pointer";
         // create img element
         var movieImageEl = document.createElement("img");
-        // set source of img element
-        var imageSrc = "http://image.tmdb.org/t/p/original" + movieArray[i].poster_path;
-        movieImageEl.setAttribute("src", imageSrc);
-        // append elements
-        movieImgWrapperEl.appendChild(movieImageEl);
-        singlePosterEl.appendChild(movieImgWrapperEl);
-        // append book poster to postersWrapper to be displayed
-        postersWrapperEl.appendChild(singlePosterEl);
+
+        posterCheck = movieArray[i].poster_path
+        if (!posterCheck) {
+
+            // set source of img element
+            movieImageEl.setAttribute("src", "./assets/images/not-available.jpg");
+            var movieTitle = movieArray[i].title
+            var titleOverlayEl = document.createElement('div');
+            titleOverlayEl.className = 'title-overlay'
+            titleOverlayEl.textContent = movieTitle;
+            movieImgWrapperEl.appendChild(titleOverlayEl);
+
+        } else {
+
+            // set source of img element
+            var imageSrc = "http://image.tmdb.org/t/p/original" + movieArray[i].poster_path;
+            movieImageEl.setAttribute("src", imageSrc);
+
         }
 
-        movieMainEl.appendChild(posterContainerEl)
+        // append elements
+        movieImgWrapperEl.appendChild(movieImageEl);
+        singlePosterEl.appendChild(movieImgWrapperEl);
+        // append poster to postersWrapper to be displayed
+        postersWrapperEl.appendChild(singlePosterEl);
 
-        posterContainerEl.appendChild(posterContainerTwoEl)
-
-        posterContainerTwoEl.appendChild(figureEl)
-
-        figureEl.appendChild(moviePosterEl)
-        //==============END FIRST CHUNK===============//
-
-        //============= Beginning Second Chunk=============//
-        var titleContainerEl = document.createElement("div");
-        titleContainerEl.classList = "media-content"
-
-        var movieTitleEl = document.createElement("p");
-        movieTitleEl.classList = "title is-4"
-        movieTitleEl.setAttribute("id", "main-movie-title")
-        movieTitleEl.textContent = results[i].original_title;
-
-        movieMainEl.appendChild(titleContainerEl)
-
-        titleContainerEl.appendChild(movieTitleEl)
-        //================End second chunk===============//
-
-        //================= Beginning Final Chunk================//
-        var descContainerEl = document.createElement("div");
-        descContainerEl.classList = "content"
-        descContainerEl.setAttribute = "movie-description"
-        descContainerEl.textContent = results[i].overview
-
-        movieMainEl.appendChild(descContainerEl)
-
-        // ================== Interest Button =================//
-        let interestButtonEl = document.createElement('button');
-        interestButtonEl.classList = 'button';
-        interestButtonEl.setAttribute('type', 'movie');
-        interestButtonEl.setAttribute('data-id', `index-${i}`);
-        interestButtonEl.textContent = 'Add to interests'
-        interestButtonEl.addEventListener('click', saveInterest)
-        movieMainEl.appendChild(interestButtonEl)
-
+        contentDisplayEl.scrollIntoView();
     }
 };
 
@@ -292,6 +240,87 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
         // alert("Please enter a movie title to search") //<=========================UPDATE and make a modal!
     }
 }
+
+//=================MOVIE MODAL CREATOR==============//
+
+var movieModalCreator = function () {
+    // find out which book was clicked and get corresponding book object from booksArray
+    var clickedStart = event.currentTarget.id;
+    var clickedIndex = clickedStart.split("-")[1];
+    var clickedMovie = movieArray[clickedIndex];
+    // create modal elements
+    var modalEl = document.createElement("div");
+    modalEl.className = "modal is-active";
+    var modalBackGroundEl = document.createElement("div");
+    modalBackGroundEl.className = "modal-background";
+    var modalCardEl = document.createElement("div");
+    modalCardEl.className = "modal-card";
+    // modal card head
+    var modalHeadEl = document.createElement("header");
+    modalHeadEl.className = "modal-card-head";
+    var modalTitleEl = document.createElement("p");
+    modalTitleEl.className = "modal-card-title";
+    modalTitleEl.textContent = clickedMovie.title;
+    var modalCloseEl = document.createElement("button");
+    modalCloseEl.className = "delete";
+    modalCloseEl.id = "modal-close";
+    modalCloseEl.setAttribute("aria-label", "close");
+    // modal card content
+    var modalBodyEl = document.createElement("section");
+    modalBodyEl.className = "modal-card-body";
+    // modal image
+    var modalImageEl = document.createElement("p");
+    modalImageEl.className = "image mb-3 modal-image";
+    var imgEl = document.createElement("img");
+    if (!clickedMovie.poster_path) {
+        imgEl.setAttribute("src", "./assets/images/not-available.jpg")
+    } else {
+        imgEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + clickedMovie.poster_path);
+
+    }
+    // modal card book description
+    var modalDescTitleEl = document.createElement("h1");
+    modalDescTitleEl.className = "has-text-weight-bold mt-3";
+    modalDescTitleEl.textContent = "Release Date: " + clickedMovie.release_date;
+    var modalDescEl = document.createElement("p");
+    modalDescEl.className = "pb-3";
+    modalDescEl.textContent = clickedMovie.description;
+    // modal card authors
+    var modalAuthorsTitleEl = document.createElement("h1");
+    modalAuthorsTitleEl.className = "has-text-weight-bold";
+    modalAuthorsTitleEl.textContent = "Movie Description: ";
+    var modalDescriptionEl = document.createElement("p");
+    modalDescriptionEl.textContent = clickedMovie.overview;
+    // append modal elements to DOM
+    modalEl.appendChild(modalBackGroundEl);
+    modalHeadEl.appendChild(modalTitleEl);
+    modalHeadEl.appendChild(modalCloseEl);
+    modalCardEl.appendChild(modalHeadEl);
+    modalEl.appendChild(modalCardEl);
+    modalBodyEl.appendChild(modalImageEl);
+    modalImageEl.appendChild(imgEl);
+    modalBodyEl.appendChild(modalDescTitleEl);
+    modalBodyEl.appendChild(modalDescEl);
+    modalBodyEl.appendChild(modalAuthorsTitleEl);
+    modalBodyEl.appendChild(modalDescriptionEl);
+    modalCardEl.appendChild(modalBodyEl);
+    contentDisplayEl.appendChild(modalEl);
+
+    // ================== Interest Button =================//
+    let interestButtonEl = document.createElement('button');
+    interestButtonEl.classList = 'button';
+    interestButtonEl.setAttribute('type', 'movie');
+    interestButtonEl.setAttribute('data-id', `index-${i}`);
+    interestButtonEl.textContent = 'Add to interests'
+    interestButtonEl.addEventListener('click', saveInterest)
+    modalImageEl.appendChild(interestButtonEl)
+
+    modalCloseEl.addEventListener("click", closeModal)
+}
+
+
+
+
 
 //====================BOOK SECTION==========================//
 
@@ -410,51 +439,12 @@ var bookContentCreator = function (booksArray) {
         // append book poster to postersWrapper to be displayed
 
         postersWrapperEl.appendChild(bookPosterEl);
+        bookPosterEl.addEventListener('click', bookModalCreator)
 
     }
     // jump to content section
-    window.location.hash = "content-display";
+    contentDisplayEl.scrollIntoView();
 };
-
-let interestToggleEl = document.getElementById('toggle-interest-panel')
-interestToggleEl.addEventListener('click', function () {
-    var interestPanelEl = document.getElementById('interest-panel')
-    if (interestPanelEl.className === 'is-hidden') {
-        interestPanelEl.classList = 'panel'
-        window.scrollTo(0, 0)
-    } else {
-        interestPanelEl.classList = 'is-hidden'
-    }
-})
-
-const panelTabHandler = function (event) {
-    switch (event.target.id) {
-        case "movie-tab":
-            document.getElementById('movie-tab').setAttribute('class', 'is-active');
-            document.getElementById('book-tab').removeAttribute('class');
-            // document.getElementById('music-tab').removeAttribute('class');
-            moviePanelEl.removeAttribute('class');
-            bookPanelEl.setAttribute('class', 'is-hidden');
-            // musicPanelEl.setAttribute('class', 'is-hidden');
-            break;
-        /* case "music-tab":
-            document.getElementById('music-tab').setAttribute('class', 'is-active');
-            document.getElementById('movie-tab').removeAttribute('class');
-            document.getElementById('book-tab').removeAttribute('class');
-            musicPanelEl.removeAttribute('class');
-            moviePanelEl.setAttribute('class', 'is-hidden');
-            bookPanelEl.setAttribute('class', 'is-hidden');
-            break; */
-        case "book-tab":
-            document.getElementById('book-tab').setAttribute('class', 'is-active');
-            document.getElementById('movie-tab').removeAttribute('class');
-            // document.getElementById('music-tab').removeAttribute('class');
-            bookPanelEl.removeAttribute('class');
-            moviePanelEl.setAttribute('class', 'is-hidden');
-            // musicPanelEl.setAttribute('class', 'is-hidden');
-            break;
-    }
-}
 
 var bookModalCreator = function (event) {
     // find out which book was clicked and get corresponding book object from booksArray
@@ -483,7 +473,7 @@ var bookModalCreator = function (event) {
     modalBodyEl.className = "modal-card-body";
     // modal image
     var modalImageEl = document.createElement("p");
-    modalImageEl.className = "image is-128x128 mb-3";
+    modalImageEl.className = "image mb-3 modal-image";
     var imgEl = document.createElement("img");
     imgEl.setAttribute("src", clickedBook.imageUrl);
     // modal card book description
@@ -523,10 +513,48 @@ var bookModalCreator = function (event) {
     interestButtonEl.addEventListener('click', saveInterest)
     modalImageEl.appendChild(interestButtonEl)
 
-    console.log(clickedBook);
+    modalCloseEl.addEventListener("click", closeModal)
 }
 //===============END OF BOOK SECTION==========================//
-// function to close modals when close button is clicked
+
+let interestToggleEl = document.getElementById('toggle-interest-panel')
+interestToggleEl.addEventListener('click', function () {
+    var interestPanelEl = document.getElementById('interest-panel')
+    if (interestPanelEl.className === 'is-hidden') {
+        interestPanelEl.classList = 'panel'
+    } else {
+        interestPanelEl.classList = 'is-hidden'
+    }
+})
+
+const panelTabHandler = function (event) {
+    switch (event.target.id) {
+        case "movie-tab":
+            document.getElementById('movie-tab').setAttribute('class', 'is-active');
+            document.getElementById('book-tab').removeAttribute('class');
+            // document.getElementById('music-tab').removeAttribute('class');
+            moviePanelEl.removeAttribute('class');
+            bookPanelEl.setAttribute('class', 'is-hidden');
+            // musicPanelEl.setAttribute('class', 'is-hidden');
+            break;
+        /* case "music-tab":
+            document.getElementById('music-tab').setAttribute('class', 'is-active');
+            document.getElementById('movie-tab').removeAttribute('class');
+            document.getElementById('book-tab').removeAttribute('class');
+            musicPanelEl.removeAttribute('class');
+            moviePanelEl.setAttribute('class', 'is-hidden');
+            bookPanelEl.setAttribute('class', 'is-hidden');
+            break; */
+        case "book-tab":
+            document.getElementById('book-tab').setAttribute('class', 'is-active');
+            document.getElementById('movie-tab').removeAttribute('class');
+            // document.getElementById('music-tab').removeAttribute('class');
+            bookPanelEl.removeAttribute('class');
+            moviePanelEl.setAttribute('class', 'is-hidden');
+            // musicPanelEl.setAttribute('class', 'is-hidden');
+            break;
+    }
+}
 
 const createDeleteButton = function (itemEl, array, type) {
     deleteContainerEl = document.createElement('div');
@@ -547,109 +575,11 @@ const createDeleteButton = function (itemEl, array, type) {
     })
 }
 
-var closeModal = function () {
-    var modalEl = document.querySelector(".is-active");
-    console.log("modal close was clicked")
-    console.log(modalEl.classList);
-    modalEl.classList.remove("is-active");
-}
-// function to check clicks on dynamically generated elements
-var clickChecker = function (event) {
-    console.log(event.target.className);
-    if (event.target.className == "book-poster") {
-        bookModalCreator(event);
-    }
-    if (event.target.id == "modal-close") {
-        closeModal();
-    }
-};
-
-document.addEventListener("click", clickChecker);
-
-// Save Interest Feature
-// event listener target needs an id (for event listener),
-// a type (movie, book, or music)
-// and a data-id (for getting the item from the array),
-// and will be attatched to the display modals
-
-
-
-var movieModalCreator = function () {
-    // find out which book was clicked and get corresponding book object from booksArray
-    var clickedStart = event.currentTarget.id;
-    var clickedIndex = clickedStart.split("-")[1];
-    var clickedMovie = movieArray[clickedIndex];
-    // create modal elements
-    var modalEl = document.createElement("div");
-    modalEl.className = "modal is-active";
-    var modalBackGroundEl = document.createElement("div");
-    modalBackGroundEl.className = "modal-background";
-    var modalCardEl = document.createElement("div");
-    modalCardEl.className = "modal-card";
-    // modal card head
-    var modalHeadEl = document.createElement("header");
-    modalHeadEl.className = "modal-card-head";
-    var modalTitleEl = document.createElement("p");
-    modalTitleEl.className = "modal-card-title";
-    modalTitleEl.textContent = clickedMovie.title;
-    var modalCloseEl = document.createElement("button");
-    modalCloseEl.className = "delete";
-    modalCloseEl.id = "modal-close";
-    modalCloseEl.setAttribute("aria-label", "close");
-    // modal card content
-    var modalBodyEl = document.createElement("section");
-    modalBodyEl.className = "modal-card-body";
-    // modal image
-    var modalImageEl = document.createElement("p");
-    modalImageEl.className = "image is-128x128 mb-3";
-    var imgEl = document.createElement("img");
-    imgEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + clickedMovie.poster_path);
-    // modal card book description
-    var modalDescTitleEl = document.createElement("h1");
-    modalDescTitleEl.className = "has-text-weight-bold mt-3";
-    modalDescTitleEl.textContent = "Release Date: " + clickedMovie.release_date;
-    var modalDescEl = document.createElement("p");
-    modalDescEl.className = "pb-3";
-    modalDescEl.textContent = clickedMovie.description;
-    // modal card authors
-    var modalAuthorsTitleEl = document.createElement("h1");
-    modalAuthorsTitleEl.className = "has-text-weight-bold";
-    modalAuthorsTitleEl.textContent = "Movie Description: ";
-    var modalDescriptionEl = document.createElement("p");
-    modalDescriptionEl.textContent = clickedMovie.overview;
-    // append modal elements to DOM
-    modalEl.appendChild(modalBackGroundEl);
-    modalHeadEl.appendChild(modalTitleEl);
-    modalHeadEl.appendChild(modalCloseEl);
-    modalCardEl.appendChild(modalHeadEl);
-    modalEl.appendChild(modalCardEl);
-    modalBodyEl.appendChild(modalImageEl);
-    modalImageEl.appendChild(imgEl);
-    modalBodyEl.appendChild(modalDescTitleEl);
-    modalBodyEl.appendChild(modalDescEl);
-    modalBodyEl.appendChild(modalAuthorsTitleEl);
-    modalBodyEl.appendChild(modalDescriptionEl);
-    modalCardEl.appendChild(modalBodyEl);
-    contentDisplayEl.appendChild(modalEl);
-    
-    modalCloseEl.addEventListener("click", closeModal)
-}
-
-
-
-//===============END OF BOOK SECTION==========================//
 // function to close modals when close button is clicked
 var closeModal = function (event) {
-    var modalEl = document.getElementsByClassName("is-active");
-    var modalElTwo = modalEl[1]
-    modalElTwo.classList.remove("is-active");
+    var modalEl = event.target.closest(".is-active");
+    modalEl.classList.remove("is-active");
 }
-
-
-
-
-
-
 
 const saveInterest = function (event) {
     let targetEl = event.target
@@ -719,9 +649,19 @@ const updateInterestSection = function () {
     }*/
 }
 
+const bookInputHandler = function () {
+
+    if (bookSearchByEl.value === 'Keyword') {
+        bookInputLabelEl.textContent = 'Keyword'
+    } else {
+        bookInputLabelEl.textContent = 'Author'
+    }
+}
+
 // saveInterestBtn.addEventListener('click', saveInterest);
 // attach saveInterestBtn and event listener to modals
 // indexEl.addEventListener("click", clickChecker);
+bookSearchByEl.addEventListener('change', bookInputHandler)
 panelTabsEl.addEventListener('click', panelTabHandler);
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);

@@ -16,7 +16,7 @@
 
 <body>
 
-    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-fixed-top is-flex" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="#top">
                 <img src="assets/images/BlueLogo_LostCount.png" alt= "media 4U" width="200" height="68">
@@ -28,9 +28,7 @@
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
             </span>
         </button>
-    </nav>
-
-    <div class="is-hidden" id='interest-panel'>
+        <div class="is-hidden" id='interest-panel'>
             <p class="panel-tabs" id='panel-tabs'>
                 <a class="is-active" id='movie-tab'>Movies</a>
                 <!-- <a id='music-tab'>Music</a> -->
@@ -40,6 +38,9 @@
             <!-- <div id="music-panel" class='is-hidden'></div> -->
             <div id="book-panel" class='is-hidden'></div>
     </div>
+    </nav>
+
+
 
     <section class='hero is-fullheight-with-navbar'>
 
@@ -169,7 +170,7 @@
                                     <div class="field-body control is-expanded">
                                         <div class="select is-fullwidth">
                                             <select id="book-search-by">
-                                                <option class=" value="title">Title</option>
+                                                <option class=" value="title">Keyword</option>
                                                 <option class=" value="author">Author</option>
                                             </select>
                                         </div>
@@ -177,7 +178,7 @@
                                 </div>
                                 <div class="field is-horizontal">
                                     <div class="field-label">
-                                        <label class="label">Keyword</label>
+                                        <label class="label" id='book-input-label'>Keyword</label>
                                     </div>
                                     <div class="field-body">
                                         <div class="field control is-expanded">
@@ -199,32 +200,10 @@
             </div>
         </div>
 
-        <div class="card" id="movie-container">
-            <div class="card-content" id=movie-info-0>
-            </div>
-        </div>
-
     </section>
 
-    <section class='section is-hidden'>
-        <div class="container has-text-centered has text-weight-bold is-size-1">
-            <!-- dynamic value -->
-            <h2>Movies</h2>
-        </div>
-        <div class="container">
-            <div class="columns is-mobile is-multiline">
-                <!-- start of dynamically created element -->
-                <div class="column is-one-fifth-desktop is-one-third-tablet is-half-mobile">
-                    <div class="image">
-                        <!-- poster image -->
-                        <img src="http://image.tmdb.org/t/p/original/ygCQnDEqUEIamBpdQdDYnFfxvgM.jpg" alt="">
-                    </div>
-                </div> <!-- end of dynamically created element -->
-            </div>
-        </div>
-    </section>
 
-    <!-- CLONE OF DISPLAY SECTION FOR TESTING BOOK CONTENT -->
+    <!-- DISPLAY SECTION FOR CONTENT -->
     <section id="content-display" class='section is-hidden'>
         <div class="container has-text-centered has text-weight-bold is-size-1">
             <!-- dynamic value -->
@@ -232,11 +211,11 @@
         </div>
         <div class="container">
             <div id="posters-wrapper" class="columns is-mobile is-multiline">
-                <!-- start of dynamically created element -->
+                <!-- start of dynamically created element to be overwritten-->
                 <div class="column is-one-fifth-desktop is-one-third-tablet is-half-mobile">
                     <div class="image">
                         <!-- poster image -->
-                        <img src="http://image.tmdb.org/t/p/original/ygCQnDEqUEIamBpdQdDYnFfxvgM.jpg" alt="">
+                        <img src="./assets/images/not-available.jpg" alt="">
                     </div>
                 </div> <!-- end of dynamically created element -->
             </div>
@@ -247,7 +226,9 @@
     <footer class="footer">
         <div class="content has-text-centered" >
             <p>
-                <img src="assets/images/BlueLogo_LostCount.png" alt="media 4U" width="140" height="68" > <strong>&copy; Copyright 2020</strong>
+                <img src="assets/images/BlueLogo_LostCount.png" alt="media 4U" width="140" height="68" >
+                <br>
+                <strong>&copy; Copyright 2020</strong>
             </p>
         </div>
     </footer>
