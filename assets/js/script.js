@@ -148,9 +148,8 @@ var finalResultStyle = function (movieArray) {
         movieImgWrapperEl.className = "image pointer";
         // create img element
         var movieImageEl = document.createElement("img");
-
         posterCheck = movieArray[i].poster_path
-        if (!posterCheck) {
+        if (posterCheck === null) {
 
             // set source of img element
             movieImageEl.setAttribute("src", "./assets/images/not-available.jpg");
