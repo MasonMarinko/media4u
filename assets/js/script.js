@@ -115,8 +115,6 @@ var genreCheck = function (genreInfo) {
     var resultLength = genreInfo.results.length;
     var resultId = genreInfo.results;
 
-    movieArray = [];
-
     for (var i = 0; i < resultLength; i++) {
 
         var resultArray = resultId[i].genre_ids;
