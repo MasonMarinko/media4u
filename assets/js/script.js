@@ -80,7 +80,6 @@ const mediaSelectHandler = function () {
 // NEED TO ADD INPUTS INTO FETCH
 
 var userSearch = function (title, releaseYear) {
-    movieArray = [];
     for (var i = 1; i < 100; i++) {
         var apiUrl =
             "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" +
@@ -117,7 +116,7 @@ var genreCheck = function (genreInfo) {
     var resultId = genreInfo.results;
 
     for (var i = 0; i < resultLength; i++) {
-        // debugger
+
         var resultArray = resultId[i].genre_ids;
         if (resultArray.includes(parseInt(genreInput))) {
             movieArray.push(resultId[i])
@@ -241,7 +240,7 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
 
 //=================MOVIE MODAL CREATOR==============//
 
-var movieModalCreator = function () {
+var movieModalCreator = function (event) {
     // find out which book was clicked and get corresponding book object from booksArray
     var clickedStart = event.currentTarget.id;
     var clickedIndex = clickedStart.split("-")[1];
@@ -308,7 +307,7 @@ var movieModalCreator = function () {
     let interestButtonEl = document.createElement('button');
     interestButtonEl.classList = 'button';
     interestButtonEl.setAttribute('type', 'movie');
-    interestButtonEl.setAttribute('data-id', `index-${i}`);
+    interestButtonEl.setAttribute('data-id', event.currentTarget.id);
     interestButtonEl.textContent = 'Add to interests'
     interestButtonEl.addEventListener('click', saveInterest)
     modalImageEl.appendChild(interestButtonEl)
@@ -425,9 +424,9 @@ var bookContentCreator = function (booksArray) {
         var bookImageEl = document.createElement("img");
         // set class for img element
         bookImageEl.className = "book-poster";
-        // give img element an id referencing its index in booksArray
+        // give poster element an id referencing its index in booksArray
         var indexId = "index-" + i;
-        bookImageEl.setAttribute("id", indexId);
+        bookPosterEl.setAttribute("id", indexId);
         // set source of img element
         var imageSrc = booksArray[i].imageUrl;
         bookImageEl.setAttribute("src", imageSrc);
@@ -446,8 +445,8 @@ var bookContentCreator = function (booksArray) {
 
 var bookModalCreator = function (event) {
     // find out which book was clicked and get corresponding book object from booksArray
-    console.log(event.target.id);
-    var clickedIndex = event.target.id.replace("index-", "");
+    console.log(event.currentTarget.id);
+    var clickedIndex = event.currentTarget.id.replace("index-", "");
     var clickedBook = booksArray[clickedIndex];
     // create modal elements
     var modalEl = document.createElement("div");
@@ -506,7 +505,7 @@ var bookModalCreator = function (event) {
     let interestButtonEl = document.createElement('button');
     interestButtonEl.classList = 'button';
     interestButtonEl.setAttribute('type', 'book');
-    interestButtonEl.setAttribute('data-id', event.target.id)
+    interestButtonEl.setAttribute('data-id', event.currentTarget.id)
     interestButtonEl.textContent = 'Add to interests'
     interestButtonEl.addEventListener('click', saveInterest)
     modalImageEl.appendChild(interestButtonEl)
@@ -617,33 +616,33 @@ const saveInterest = function (event) {
 const updateInterestSection = function () {
 
     moviePanelEl.textContent = ''
-    let movieArray = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
-    for (let i = 0; i < movieArray.length; i++) {
+    let savedMovies = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
+    for (let i = 0; i < savedMovies.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.textContent = movieArray[i].title
+        itemEl.textContent = savedMovies[i].title
         moviePanelEl.appendChild(itemEl)
-        createDeleteButton(itemEl, movieArray, "Movies");
+        createDeleteButton(itemEl, savedMovies, "Movies");
     }
 
     bookPanelEl.textContent = ''
-    let bookArray = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
-    for (let i = 0; i < bookArray.length; i++) {
+    let savedBooks = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
+    for (let i = 0; i < savedBooks.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.textContent = bookArray[i].title
+        itemEl.textContent = savedBooks[i].title
         bookPanelEl.appendChild(itemEl)
-        createDeleteButton(itemEl, bookArray, "Books");
+        createDeleteButton(itemEl, savedBooks, "Books");
     }
 
     /* musicPanelEl.textContent = ''
-    let musicArray = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
-    for (let i = 0; i < musicArray.length; i++) {
+    let savedMusic = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
+    for (let i = 0; i < savedMusic.length; i++) {
         let itemEl = document.createElement('div');
         itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.textContent = musicArray[i].title;
+        itemEl.textContent = savedMusic[i].title;
         musicPanelEl.appendChild(itemEl);
-        createDeleteButton(itemEl, musicArray, "Music");
+        createDeleteButton(itemEl, savedMusic, "Music");
     }*/
 }
 
