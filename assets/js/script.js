@@ -31,7 +31,7 @@ var savedMovies = [];
 var savedBooks = [];
 
 
-
+//***********************FORM SECTION******************************* *//
 
 // function to check which media types are selected
 // then send input to correct fetch functions
@@ -54,6 +54,8 @@ var formHandler = function (event) {
         // musicFetchHandler(); */
 };
 
+
+// switches between forms
 const mediaSelectHandler = function () {
     switch (mediaSelectEl.value) {
         case "movies":
@@ -74,14 +76,37 @@ const mediaSelectHandler = function () {
     }
 }
 
-// MOVIE SECTION
-//============= Don't forget to add query locators in order to grab answers below
+// dynamic text on the book form
+const bookInputHandler = function () {
 
+    if (bookSearchByEl.value === 'Keyword') {
+        bookInputLabelEl.textContent = 'Keyword'
+    } else {
+        bookInputLabelEl.textContent = 'Author'
+    }
+}
 
+//*****************END FORM SECTION **************************//
+//*************** MOVIE SECTION*******************//
 
-// NEED TO ADD INPUTS INTO FETCH
+//============ MAIN search function that calls everything else for MOVIE TITLES!
+// Function that takes all search criteria and will compound it
+// together and send to the "movieFetch"/fetch request
+var movieSearchHandler = function () {
 
-var userSearch = function (title, releaseYear) {
+    //======= Movie title checks if a title is entered and then returns a movie title they've selected
+    var movieName = movieTitle(movieTitleEl.value);
+    movieTitleEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
+
+    //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
+    var releaseDate = releaseInput(yearInputEl.value);
+    yearInputEl.value = "";
+
+    // sends all inputs to fetch/movieFetch
+    movieFetch(movieName, releaseDate) //<========== CALL TO FETCH, COMMENTED FOR NOW
+}
+
+var movieFetch = function (title, releaseYear) {
     for (var i = 1; i < 20; i++) {
         var apiUrl =
             "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" +
@@ -135,75 +160,6 @@ var genreCheck = function (resultArray) {
     displayContent(movieArray, 'movie')
 }
 
-//=================Show movie posters based on results==============//
-var displayContent = function (array, type) {
-    contentDisplayEl.classList.remove("is-hidden");
-    postersWrapperEl.innerHTML = "";
-
-    let title = type + "s"
-    title = title.charAt(0).toUpperCase() + title.slice(1);
-    contentTitleEl.textContent = title;
-
-    for (i = 0; i < array.length; i++) {
-        // create element to go inside postersWrapper
-        var posterEl = document.createElement("div");
-        // give element an id referencing its index in array
-        posterEl.setAttribute("id", "index-" + i);
-        posterEl.setAttribute('type', type);
-        posterEl.addEventListener('click', modalCreator);
-        // set styling for div
-        posterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
-        // create div to hold img
-        var imgWrapperEl = document.createElement("div");
-        // give div class name image
-        imgWrapperEl.className = "image pointer";
-        // create img element
-        var imageEl = document.createElement("img");
-
-        if (type === 'movie') {
-            getMovieImage(imageEl, array, imgWrapperEl);
-
-        } else if (type === 'book') {
-            getBookImage(array, imageEl);
-        }
-
-        // append elements
-        imgWrapperEl.appendChild(imageEl);
-        posterEl.appendChild(imgWrapperEl);
-        // append poster to postersWrapper to be displayed
-        postersWrapperEl.appendChild(posterEl);
-
-    }
-    // jump to content section
-    contentDisplayEl.scrollIntoView();
-};
-
-
-
-
-//============ MAIN search function that calls everything else for MOVIE TITLES! ==============================//
-//============= Function that takes all search criteria and will compound it =================================//
-//============ together and send to the "userSearch"/fetch request============================================//
-var movieSearchHandler = function () {
-
-    //======= Movie title checks if a title is entered and then returns a movie title they've selected
-    var movieName = movieTitle(movieTitleEl.value);
-    movieTitleEl.value = ""; //<== Check to see if it clears value and doesn't mess with anything, also change search element
-
-    //======== Release date function, verifies if date is 4 digits, and beyond 1887 (first movie made in 1888) otherwise loops back============
-    var releaseDate = releaseInput(yearInputEl.value);
-    yearInputEl.value = "";
-
-    // sends all inputs to fetch/userSearch
-    userSearch(movieName, releaseDate) //<========== CALL TO FETCH, COMMENTED FOR NOW
-}
-
-
-
-
-
-
-//================ FOURTH FUNCTION=========================//
 // function checks to make sure year is 4 digits long, and is beyond 1887 (first movie 1888) and returns a year/integer
 var releaseInput = function (yearInput) {
     var dateInput = parseInt(yearInput); //<========Change to grab from HTML/Search Box
@@ -218,15 +174,7 @@ var releaseInput = function (yearInput) {
     }
 }
 
-
-
-
-
-
-
-
-//================ SECOND FUNCTION=========================//
-//==================== function takes in search result for movie title and returns answer to "userSearchInformation, if user leaves blank then "any" is returned
+//==================== function takes in search result for movie title and returns answer to "movieFetchInformation, if user leaves blank then "any" is returned
 //==================== this could also be an alert/modal if preferred.==================================//
 
 var movieTitle = function (movieTitleInput) { //<====================== Ready
@@ -239,6 +187,7 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
     }
 }
 
+//====================END MOVIE SECTION==========================//
 //====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
@@ -325,6 +274,51 @@ var bookObjectCreator = function (data) {
     };
     // send bookObject to DOM element creator function
     displayContent(booksArray, 'book');
+};
+
+//===============END OF BOOK SECTION==========================//
+//**************************Display Section******************************** */
+
+var displayContent = function (array, type) {
+    contentDisplayEl.classList.remove("is-hidden");
+    postersWrapperEl.innerHTML = "";
+
+    let title = type + "s"
+    title = title.charAt(0).toUpperCase() + title.slice(1);
+    contentTitleEl.textContent = title;
+
+    for (i = 0; i < array.length; i++) {
+        // create element to go inside postersWrapper
+        var posterEl = document.createElement("div");
+        // give element an id referencing its index in array
+        posterEl.setAttribute("id", "index-" + i);
+        posterEl.setAttribute('type', type);
+        posterEl.addEventListener('click', modalCreator);
+        // set styling for div
+        posterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+        // create div to hold img
+        var imgWrapperEl = document.createElement("div");
+        // give div class name image
+        imgWrapperEl.className = "image pointer";
+        // create img element
+        var imageEl = document.createElement("img");
+
+        if (type === 'movie') {
+            getMovieImage(imageEl, array, imgWrapperEl);
+
+        } else if (type === 'book') {
+            getBookImage(array, imageEl, imgWrapperEl);
+        }
+
+        // append elements
+        imgWrapperEl.appendChild(imageEl);
+        posterEl.appendChild(imgWrapperEl);
+        // append poster to postersWrapper to be displayed
+        postersWrapperEl.appendChild(posterEl);
+
+    }
+    // jump to content section
+    contentDisplayEl.scrollIntoView();
 };
 
 var modalCreator = function (event) {
@@ -429,8 +423,10 @@ var modalCreator = function (event) {
     modalimageEl.appendChild(interestButtonEl)
 
     modalCloseEl.addEventListener("click", closeModal)
-}
-//===============END OF BOOK SECTION==========================//
+};
+
+//*********************End Display Section********************** //
+//********************* Interest Section********************** //
 
 let interestToggleEl = document.getElementById('toggle-interest-panel')
 interestToggleEl.addEventListener('click', function () {
@@ -440,7 +436,7 @@ interestToggleEl.addEventListener('click', function () {
     } else {
         interestPanelEl.classList = 'is-hidden'
     }
-})
+});
 
 const panelTabHandler = function (event) {
     switch (event.target.id) {
@@ -488,12 +484,6 @@ const createDeleteButton = function (itemEl, array, type) {
             }
         }
     })
-}
-
-// function to close modals when close button is clicked
-var closeModal = function (event) {
-    var modalEl = event.target.closest(".is-active");
-    modalEl.classList.remove("is-active");
 }
 
 const saveInterest = function (event) {
@@ -564,44 +554,54 @@ const updateInterestSection = function () {
     }*/
 }
 
-const bookInputHandler = function () {
+//***************End Interest Section**********************/
+//***************Miscelaneous Functions**********************/
 
-    if (bookSearchByEl.value === 'Keyword') {
-        bookInputLabelEl.textContent = 'Keyword'
-    } else {
-        bookInputLabelEl.textContent = 'Author'
+// function to close modals when close button is clicked
+var closeModal = function (event) {
+    var modalEl = event.target.closest(".is-active");
+    modalEl.classList.remove("is-active");
+}
+
+// if the image in unavailable or doesn't exist, replace with placeholder and add text
+const getMovieImage = function (imageEl, array, imgWrapperEl) {
+    imagePath = array[i].poster_path
+    if (!imagePath) {
+        // set source of img element
+        imageEl.setAttribute("src", "./assets/images/not-available.jpg");
+
+        addTitleOverlay(array, imgWrapperEl);
+    }
+    else {
+        // set source of img element
+        var imageSrc = "http://image.tmdb.org/t/p/original" + imagePath;
+        imageEl.setAttribute("src", imageSrc);
     }
 }
 
-// saveInterestBtn.addEventListener('click', saveInterest);
-// attach saveInterestBtn and event listener to modals
-// indexEl.addEventListener("click", clickChecker);
+// if the image in unavailable or doesn't exist, replace with placeholder and add title overlay
+const getBookImage = function (array, imageEl, imgWrapperEl) {
+    var imageSrc = array[i].imageUrl;
+
+    imageEl.setAttribute("src", imageSrc);
+
+    if (imageSrc === './assets/images/image-unavailable.jpg') {
+        addTitleOverlay(array, imgWrapperEl);
+    }
+}
+
+// adds a title overlay to placeholder images
+const addTitleOverlay = function (array, imgWrapperEl) {
+    var title = array[i].title;
+    var titleOverlayEl = document.createElement('div');
+    titleOverlayEl.className = 'title-overlay';
+    titleOverlayEl.textContent = title;
+    imgWrapperEl.appendChild(titleOverlayEl);
+}
+
 bookSearchByEl.addEventListener('change', bookInputHandler)
 panelTabsEl.addEventListener('click', panelTabHandler);
 mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 
 updateInterestSection();
-
-const getBookImage = function (array, imageEl) {
-    var imageSrc = array[i].imageUrl;
-    imageEl.setAttribute("src", imageSrc);
-}
-
-const getMovieImage = function (imageEl, array, imgWrapperEl) {
-    poster = array[i].poster_path
-    if (!poster) {
-        // set source of img element
-        imageEl.setAttribute("src", "./assets/images/not-available.jpg");
-        var movieTitle = array[i].title;
-        var titleOverlayEl = document.createElement('div');
-        titleOverlayEl.className = 'title-overlay';
-        titleOverlayEl.textContent = movieTitle;
-        imgWrapperEl.appendChild(titleOverlayEl);
-    }
-    else {
-        // set source of img element
-        var imageSrc = "http://image.tmdb.org/t/p/original" + array[i].poster_path;
-        imageEl.setAttribute("src", imageSrc);
-    }
-}
