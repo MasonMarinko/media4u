@@ -23,13 +23,9 @@ var yearInputEl = document.getElementById("search-by-year");
 var bookSearchByEl = document.getElementById("book-search-by");
 var bookInputEl = document.getElementById("book-input")
 // arrays
-var booksArray = [];
+var bookArray = [];
 var movieArray = [];
 /* var musicArray = []; */
-/* var savedMusic = []; */
-var savedMovies = [];
-var savedBooks = [];
-
 
 //***********************FORM SECTION******************************* *//
 
@@ -235,10 +231,10 @@ var bookFetchHandler = function (searchTerm) {
 
 var bookObjectCreator = function (data) {
     // clear books array from previous searches
-    booksArray = [];
+    bookArray = [];
     console.log(data.items);
     // create array to hold book objects
-    booksArray = []
+    bookArray = []
     // cycle through data and add info to object
     for (i = 0; i < data.items.length; i++) {
         // get title information
@@ -268,12 +264,12 @@ var bookObjectCreator = function (data) {
             description: description,
             authors: authors,
         }
-        // push book object to booksArray
-        booksArray.push(bookObject);
-        console.log(booksArray);
+        // push book object to bookArray
+        bookArray.push(bookObject);
+        console.log(bookArray);
     };
     // send bookObject to DOM element creator function
-    displayContent(booksArray, 'book');
+    displayContent(bookArray, 'book');
 };
 
 //===============END OF BOOK SECTION==========================//
@@ -333,7 +329,7 @@ var modalCreator = function (event) {
             array = movieArray
             break;
         case 'book':
-            array = booksArray
+            array = bookArray
             break;
     }
 
@@ -486,7 +482,7 @@ const createDeleteButton = function (itemEl, array, type) {
     })
 }
 
-const saveInterest = function (event) {
+const saveInterest = function(event) {
     let targetEl = event.target
 
     let targetType = targetEl.getAttribute("type")
@@ -494,29 +490,23 @@ const saveInterest = function (event) {
     targetId = targetId.split("-")
     targetId = targetId[1]
 
-    let interestEl;
+    let array;
+    let key;
     switch (targetType) {
         case 'movie':
-            savedMovies = JSON.parse(localStorage.getItem("m4u-savedMovies")) || []
-            interestEl = movieArray[targetId]
-            savedMovies.push(interestEl)
-            localStorage.setItem("m4u-savedMovies", JSON.stringify(savedMovies))
+            array = movieArray
+            key = 'savedMovies'
             break;
         case 'book':
-            savedBooks = JSON.parse(localStorage.getItem("m4u-savedBooks")) || []
-            interestEl = booksArray[targetId]
-            savedBooks.push(interestEl)
-            localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
+            array = bookArray
+            key = 'savedBooks'
             break;
-        /* case 'music':
-            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
-            interestEl = musicArray[targetId]
-            savedMusic.push(interestEl)
-            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
-            break; */
-        default:
-        // error handling
     }
+
+    let savedArray = JSON.parse(localStorage.getItem(`m4u-${key}`)) || [];
+    let interestEl = array[targetId];
+    savedArray.push(interestEl);
+    localStorage.setItem(`m4u-${key}`, JSON.stringify(savedArray));
 
     updateInterestSection()
 }
