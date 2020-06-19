@@ -149,6 +149,8 @@ var displayContent = function (array, type) {
         var posterEl = document.createElement("div");
         // give element an id referencing its index in array
         posterEl.setAttribute("id", "index-" + i);
+        posterEl.setAttribute('type', type);
+        posterEl.addEventListener('click', modalCreator);
         // set styling for div
         posterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
         // create div to hold img
@@ -160,11 +162,9 @@ var displayContent = function (array, type) {
 
         if (type === 'movie') {
             getMovieImage(imageEl, array, imgWrapperEl);
-            posterEl.addEventListener("click", movieModalCreator);
 
         } else if (type === 'book') {
             getBookImage(array, imageEl);
-            posterEl.addEventListener('click', bookModalCreator);
         }
 
         // append elements
@@ -238,87 +238,6 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
         // alert("Please enter a movie title to search") //<=========================UPDATE and make a modal!
     }
 }
-
-//=================MOVIE MODAL CREATOR==============//
-
-var movieModalCreator = function (event) {
-    // find out which book was clicked and get corresponding book object from booksArray
-    var clickedStart = event.currentTarget.id;
-    var clickedIndex = clickedStart.split("-")[1];
-    var clickedMovie = movieArray[clickedIndex];
-    // create modal elements
-    var modalEl = document.createElement("div");
-    modalEl.className = "modal is-active";
-    var modalBackGroundEl = document.createElement("div");
-    modalBackGroundEl.className = "modal-background";
-    var modalCardEl = document.createElement("div");
-    modalCardEl.className = "modal-card";
-    // modal card head
-    var modalHeadEl = document.createElement("header");
-    modalHeadEl.className = "modal-card-head";
-    var modalTitleEl = document.createElement("p");
-    modalTitleEl.className = "modal-card-title";
-    modalTitleEl.textContent = clickedMovie.title;
-    var modalCloseEl = document.createElement("button");
-    modalCloseEl.className = "delete";
-    modalCloseEl.id = "modal-close";
-    modalCloseEl.setAttribute("aria-label", "close");
-    // modal card content
-    var modalBodyEl = document.createElement("section");
-    modalBodyEl.className = "modal-card-body";
-    // modal image
-    var modalimageEl = document.createElement("p");
-    modalimageEl.className = "image mb-3 modal-image";
-    var imageEl = document.createElement("img");
-    if (!clickedMovie.poster_path) {
-        imageEl.setAttribute("src", "./assets/images/not-available.jpg")
-    } else {
-        imageEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + clickedMovie.poster_path);
-
-    }
-    // modal card book description
-    var modalDescTitleEl = document.createElement("h1");
-    modalDescTitleEl.className = "has-text-weight-bold mt-3";
-    modalDescTitleEl.textContent = "Release Date: " + clickedMovie.release_date;
-    var modalDescEl = document.createElement("p");
-    modalDescEl.className = "pb-3";
-    modalDescEl.textContent = clickedMovie.description;
-    // modal card authors
-    var modalAuthorsTitleEl = document.createElement("h1");
-    modalAuthorsTitleEl.className = "has-text-weight-bold";
-    modalAuthorsTitleEl.textContent = "Movie Description: ";
-    var modalDescriptionEl = document.createElement("p");
-    modalDescriptionEl.textContent = clickedMovie.overview;
-    // append modal elements to DOM
-    modalEl.appendChild(modalBackGroundEl);
-    modalHeadEl.appendChild(modalTitleEl);
-    modalHeadEl.appendChild(modalCloseEl);
-    modalCardEl.appendChild(modalHeadEl);
-    modalEl.appendChild(modalCardEl);
-    modalBodyEl.appendChild(modalimageEl);
-    modalimageEl.appendChild(imageEl);
-    modalBodyEl.appendChild(modalDescTitleEl);
-    modalBodyEl.appendChild(modalDescEl);
-    modalBodyEl.appendChild(modalAuthorsTitleEl);
-    modalBodyEl.appendChild(modalDescriptionEl);
-    modalCardEl.appendChild(modalBodyEl);
-    contentDisplayEl.appendChild(modalEl);
-
-    // ================== Interest Button =================//
-    let interestButtonEl = document.createElement('button');
-    interestButtonEl.classList = 'button';
-    interestButtonEl.setAttribute('type', 'movie');
-    interestButtonEl.setAttribute('data-id', event.currentTarget.id);
-    interestButtonEl.textContent = 'Add to interests'
-    interestButtonEl.addEventListener('click', saveInterest)
-    modalimageEl.appendChild(interestButtonEl)
-
-    modalCloseEl.addEventListener("click", closeModal)
-}
-
-
-
-
 
 //====================BOOK SECTION==========================//
 
@@ -408,11 +327,24 @@ var bookObjectCreator = function (data) {
     displayContent(booksArray, 'book');
 };
 
-var bookModalCreator = function (event) {
-    // find out which book was clicked and get corresponding book object from booksArray
-    console.log(event.currentTarget.id);
-    var clickedIndex = event.currentTarget.id.replace("index-", "");
-    var clickedBook = booksArray[clickedIndex];
+var modalCreator = function (event) {
+    // find out which object was clicked and get corresponding object from array
+
+    var mediaIndex = event.currentTarget.id.replace("index-", "");
+
+    let array;
+    var mediaType = event.currentTarget.getAttribute('type')
+    switch (mediaType) {
+        case 'movie':
+            array = movieArray
+            break;
+        case 'book':
+            array = booksArray
+            break;
+    }
+
+    var mediaObject = array[mediaIndex];
+
     // create modal elements
     var modalEl = document.createElement("div");
     modalEl.className = "modal is-active";
@@ -420,38 +352,59 @@ var bookModalCreator = function (event) {
     modalBackGroundEl.className = "modal-background";
     var modalCardEl = document.createElement("div");
     modalCardEl.className = "modal-card";
+
     // modal card head
     var modalHeadEl = document.createElement("header");
     modalHeadEl.className = "modal-card-head";
     var modalTitleEl = document.createElement("p");
     modalTitleEl.className = "modal-card-title";
-    modalTitleEl.textContent = clickedBook.title;
+    modalTitleEl.textContent = mediaObject.title;
     var modalCloseEl = document.createElement("button");
     modalCloseEl.className = "delete";
     modalCloseEl.id = "modal-close";
     modalCloseEl.setAttribute("aria-label", "close");
+
     // modal card content
     var modalBodyEl = document.createElement("section");
     modalBodyEl.className = "modal-card-body";
+
     // modal image
     var modalimageEl = document.createElement("p");
     modalimageEl.className = "image mb-3 modal-image";
     var imageEl = document.createElement("img");
-    imageEl.setAttribute("src", clickedBook.imageUrl);
-    // modal card book description
-    var modalDescTitleEl = document.createElement("h1");
-    modalDescTitleEl.className = "has-text-weight-bold mt-3";
-    modalDescTitleEl.textContent = "About the Book";
-    var modalDescEl = document.createElement("p");
-    modalDescEl.className = "pb-3";
-    modalDescEl.textContent = clickedBook.description;
-    // modal card authors
-    var modalAuthorsTitleEl = document.createElement("h1");
-    modalAuthorsTitleEl.className = "has-text-weight-bold";
-    modalAuthorsTitleEl.textContent = "Author(s):";
-    var modalAuthorsEl = document.createElement("p");
-    console.log(clickedBook.authors);
-    modalAuthorsEl.textContent = clickedBook.authors;
+
+    var modalHeaderOneEl = document.createElement("h1");
+    modalHeaderOneEl.className = "has-text-weight-bold mt-3";
+    var modalTextOneEl = document.createElement("p");
+    modalTextOneEl.className = "pb-3";
+    var modalHeaderTwoEl = document.createElement("h1");
+    modalHeaderTwoEl.className = "has-text-weight-bold";
+    var modalTextTwoEl = document.createElement("p");
+
+    switch (mediaType) {
+        case 'movie':
+            if (!mediaObject.poster_path) {
+                imageEl.setAttribute("src", "./assets/images/not-available.jpg")
+            } else {
+                imageEl.setAttribute("src", "http://image.tmdb.org/t/p/original" + mediaObject.poster_path);
+            }
+            modalHeaderOneEl.textContent = "Release Date: " + mediaObject.release_date;
+            modalTextOneEl.textContent = mediaObject.description;
+
+            modalHeaderTwoEl.textContent = "Movie Description:";
+            modalTextTwoEl.textContent = mediaObject.overview;
+            break;
+
+        case 'book':
+            imageEl.setAttribute("src", mediaObject.imageUrl);
+            modalHeaderOneEl.textContent = "About the Book";
+            modalTextOneEl.textContent = mediaObject.description;
+            modalHeaderTwoEl.textContent = "Author(s):";
+            modalTextTwoEl.textContent = mediaObject.authors;
+            break;
+    }
+
+
     // append modal elements to DOM
     modalEl.appendChild(modalBackGroundEl);
     modalHeadEl.appendChild(modalTitleEl);
@@ -460,16 +413,16 @@ var bookModalCreator = function (event) {
     modalEl.appendChild(modalCardEl);
     modalBodyEl.appendChild(modalimageEl);
     modalimageEl.appendChild(imageEl);
-    modalBodyEl.appendChild(modalDescTitleEl);
-    modalBodyEl.appendChild(modalDescEl);
-    modalBodyEl.appendChild(modalAuthorsTitleEl);
-    modalBodyEl.appendChild(modalAuthorsEl);
+    modalBodyEl.appendChild(modalHeaderOneEl);
+    modalBodyEl.appendChild(modalTextOneEl);
+    modalBodyEl.appendChild(modalHeaderTwoEl);
+    modalBodyEl.appendChild(modalTextTwoEl);
     modalCardEl.appendChild(modalBodyEl);
     contentDisplayEl.appendChild(modalEl);
 
     let interestButtonEl = document.createElement('button');
     interestButtonEl.classList = 'button';
-    interestButtonEl.setAttribute('type', 'book');
+    interestButtonEl.setAttribute('type', mediaType);
     interestButtonEl.setAttribute('data-id', event.currentTarget.id)
     interestButtonEl.textContent = 'Add to interests'
     interestButtonEl.addEventListener('click', saveInterest)
