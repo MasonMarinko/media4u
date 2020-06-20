@@ -11,6 +11,9 @@ var bookPanelEl = document.getElementById('book-panel')
 var bookFormEl = document.getElementById('book-form')
 var movieFormEl = document.getElementById('movie-form')
 // var musicFormEl = document.getElementById('music-form')
+var bookInterestTab = document.getElementById('book-tab')
+var movieInterestTab = document.getElementById('movie-tab')
+//var musicInterestTab = document.getElementById('music-tab')
 // content section elements
 var contentDisplayEl = document.getElementById("content-display");
 var contentTitleEl = document.getElementById("content-title");
@@ -437,52 +440,37 @@ interestToggleEl.addEventListener('click', function () {
 const panelTabHandler = function (event) {
     switch (event.target.id) {
         case "movie-tab":
-            document.getElementById('movie-tab').setAttribute('class', 'is-active');
-            document.getElementById('book-tab').removeAttribute('class');
-            // document.getElementById('music-tab').removeAttribute('class');
             moviePanelEl.removeAttribute('class');
+            movieInterestTab.setAttribute('class', 'is-active');
+
             bookPanelEl.setAttribute('class', 'is-hidden');
-            // musicPanelEl.setAttribute('class', 'is-hidden');
+            bookInterestTab.removeAttribute('class');
+
+            //musicInterestTab.removeAttribute('class');
+            //musicPanelEl.setAttribute('class', 'is-hidden');
+            break;
+        case "book-tab":
+            bookPanelEl.removeAttribute('class');
+            bookInterestTab.setAttribute('class', 'is-active');
+
+            moviePanelEl.setAttribute('class', 'is-hidden');
+            movieInterestTab.removeAttribute('class');
+
+            //musicInterestTab.removeAttribute('class');
+            //musicPanelEl.setAttribute('class', 'is-hidden');
             break;
         /* case "music-tab":
             document.getElementById('music-tab').setAttribute('class', 'is-active');
-            document.getElementById('movie-tab').removeAttribute('class');
-            document.getElementById('book-tab').removeAttribute('class');
+            movieInterestTab.removeAttribute('class');
+            bookInterestTab.removeAttribute('class');
             musicPanelEl.removeAttribute('class');
             moviePanelEl.setAttribute('class', 'is-hidden');
             bookPanelEl.setAttribute('class', 'is-hidden');
             break; */
-        case "book-tab":
-            document.getElementById('book-tab').setAttribute('class', 'is-active');
-            document.getElementById('movie-tab').removeAttribute('class');
-            // document.getElementById('music-tab').removeAttribute('class');
-            bookPanelEl.removeAttribute('class');
-            moviePanelEl.setAttribute('class', 'is-hidden');
-            // musicPanelEl.setAttribute('class', 'is-hidden');
-            break;
     }
 }
 
-const createDeleteButton = function (itemEl, array, type) {
-    deleteContainerEl = document.createElement('div');
-    deleteContainerEl.className = 'ml-2';
-    itemEl.appendChild(deleteContainerEl);
-    deleteButtonEl = document.createElement('button');
-    deleteButtonEl.className = 'delete';
-    deleteContainerEl.appendChild(deleteButtonEl);
-
-    deleteContainerEl.addEventListener('click', function () {
-        for (let i = 0; i < array.length; i++) {
-            if (array[i].title === itemEl.textContent) {
-                array.splice(i, 1)
-                localStorage.setItem(`m4u-saved${type}`, JSON.stringify(array))
-                itemEl.remove();
-            }
-        }
-    })
-}
-
-const saveInterest = function(event) {
+const saveInterest = function (event) {
     let targetEl = event.target
 
     let targetType = targetEl.getAttribute("type")
@@ -543,6 +531,26 @@ const createInterestItem = function (array, i, type) {
     createDeleteButton(itemEl, array, type);
 }
 
+const createDeleteButton = function (itemEl, array, type) {
+    deleteContainerEl = document.createElement('div');
+    deleteContainerEl.className = 'ml-2';
+    itemEl.appendChild(deleteContainerEl);
+    deleteButtonEl = document.createElement('button');
+    deleteButtonEl.className = 'delete';
+    deleteContainerEl.appendChild(deleteButtonEl);
+
+    deleteContainerEl.addEventListener('click', function () {
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].title === itemEl.textContent) {
+                array.splice(i, 1)
+                localStorage.setItem(`m4u-saved${type}`, JSON.stringify(array))
+                itemEl.remove();
+                break;
+            }
+        }
+    })
+}
+
 
 //***************End Interest Section**********************/
 //***************Miscelaneous Functions**********************/
@@ -595,4 +603,3 @@ mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 
 updateInterestSection();
-
