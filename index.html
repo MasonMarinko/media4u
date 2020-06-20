@@ -8,21 +8,22 @@
 
     <title>media 4U</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="./assets/css/node_modules/bulma/css/bulma.css">
+    <link rel="stylesheet" href="./assets/css/node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/style.css">
 
 </head>
 
 <body>
 
-    <nav class="navbar is-fixed-top is-flex" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-fixed-top is-flex is-primary" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="#top">
                 <img src="assets/images/BlueLogo_LostCount.png" alt= "media 4U" width="200" height="68">
             </a>
         </div>
-        <button class="button panel-heading" id="toggle-interest-panel">
+        <button class="button panel-heading is-primary" id="toggle-interest-panel">
             <span>Saved Interests</span>
             <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -44,11 +45,11 @@
 
     <section class='hero is-fullheight-with-navbar'>
 
-        <div class="hero-body">
+        <div class="hero-body box">
             <div class="container">
                 <div class="columns is-centered">
                     <div class="column is-one-third">
-                        <form id=search-form>
+                        <form class="box is-transparent" id=search-form>
                             <div class="field is-horizontal">
                                 <div class="field-label ">
                                     <label class="label">Search For</label>
@@ -56,7 +57,7 @@
                                 <div class="field-body">
                                     <div class="field">
                                         <div class="control is-expanded">
-                                            <div class="select is-fullwidth">
+                                            <div class="select is-fullwidth is-primary">
                                                 <select id="media-select">
                                                     <option value="movies">Movies</option>
                                                     <!-- <option value="music">Music</option> -->
@@ -74,7 +75,7 @@
                                         <label class="label">Genre</label>
                                     </div>
                                     <div class="field-body control is-expanded">
-                                        <div class="select is-fullwidth">
+                                        <div class="select is-fullwidth is-primary">
                                             <select id="search-by-genre">
                                                 <option value="any">Any</option>
                                                 <option value="28">Action</option>
@@ -116,7 +117,7 @@
                                     </div>
                                     <div class="field-body">
                                         <div class="field control is-expanded">
-                                            <input type="text" class="input" id="search-by-year">
+                                            <input type="text" class="input is-primary" id="search-by-year">
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +127,7 @@
                                     </div>
                                     <div class="field-body">
                                         <div class="field control is-expanded">
-                                            <input class="input" id="movie-title" type="text" placeholder="">
+                                            <input class="input is-primary" id="movie-title" type="text" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -168,7 +169,7 @@
                                         <label class="label">Search By</label>
                                     </div>
                                     <div class="field-body control is-expanded">
-                                        <div class="select is-fullwidth">
+                                        <div class="select is-fullwidth is-primary">
                                             <select id="book-search-by">
                                                 <option class=" value="title">Keyword</option>
                                                 <option class=" value="author">Author</option>
@@ -182,7 +183,7 @@
                                     </div>
                                     <div class="field-body">
                                         <div class="field control is-expanded">
-                                            <input class="input" id="book-input" type="text" placeholder="">
+                                            <input class="input is-primary" id="book-input" type="text" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -191,7 +192,7 @@
 
                             <div class="columns is-centered">
                                 <div class="column is-offset-one-fifth">
-                                    <button class="button is-fullwidth is-link" id="submit-button">Submit</button>
+                                    <button class="button is-fullwidth is-primary" id="submit-button">Submit</button>
                                 </div>
                             </div>
                         </form>
