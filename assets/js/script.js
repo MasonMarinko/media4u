@@ -471,7 +471,7 @@ const createDeleteButton = function (itemEl, array, type) {
     deleteButtonEl.className = 'delete';
     deleteContainerEl.appendChild(deleteButtonEl);
 
-    deleteContainerEl.addEventListener('click', function (event) {
+    deleteContainerEl.addEventListener('click', function () {
         for (let i = 0; i < array.length; i++) {
             if (array[i].title === itemEl.textContent) {
                 array.splice(i, 1)
@@ -516,33 +516,33 @@ const updateInterestSection = function () {
     moviePanelEl.textContent = ''
     let savedMovies = JSON.parse(localStorage.getItem('m4u-savedMovies')) || []
     for (let i = 0; i < savedMovies.length; i++) {
-        let itemEl = document.createElement('div');
-        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.textContent = savedMovies[i].title
-        moviePanelEl.appendChild(itemEl)
-        createDeleteButton(itemEl, savedMovies, "Movies");
+        createInterestItem(savedMovies, i, "Movies");
     }
 
     bookPanelEl.textContent = ''
     let savedBooks = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
     for (let i = 0; i < savedBooks.length; i++) {
-        let itemEl = document.createElement('div');
-        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.textContent = savedBooks[i].title
-        bookPanelEl.appendChild(itemEl)
-        createDeleteButton(itemEl, savedBooks, "Books");
+        createInterestItem(savedBooks, i, "Books")
     }
-
-    /* musicPanelEl.textContent = ''
-    let savedMusic = JSON.parse(localStorage.getItem('m4u-savedMusic')) || []
-    for (let i = 0; i < savedMusic.length; i++) {
-        let itemEl = document.createElement('div');
-        itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item'
-        itemEl.textContent = savedMusic[i].title;
-        musicPanelEl.appendChild(itemEl);
-        createDeleteButton(itemEl, savedMusic, "Music");
-    }*/
 }
+
+const createInterestItem = function (array, i, type) {
+    let selectedPanelEl;
+    switch (type) {
+        case 'Movies':
+            selectedPanelEl = moviePanelEl
+            break;
+        case 'Books':
+            selectedPanelEl = bookPanelEl
+            break;
+    }
+    let itemEl = document.createElement('div');
+    itemEl.classList = 'panel-block container has-text-weight-semibold panel-list-item';
+    itemEl.textContent = array[i].title;
+    selectedPanelEl.appendChild(itemEl);
+    createDeleteButton(itemEl, array, type);
+}
+
 
 //***************End Interest Section**********************/
 //***************Miscelaneous Functions**********************/
@@ -595,3 +595,4 @@ mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 
 updateInterestSection();
+
