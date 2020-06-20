@@ -61,6 +61,10 @@ flex-shrink: 1;
     flex: 1 100%;
 }
 
+#toggle-interest-panel {
+    height: 100%;
+}
+
 strong {
     color: white;
 }
