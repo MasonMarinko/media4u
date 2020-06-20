@@ -4,6 +4,21 @@
     height: 150px
 }
 
+div.hero-body.box {
+    background-image: url("../images/library.jpg");
+    background-position: center;
+    background-size: 100%;
+    
+}
+
+.is-transparent {
+    opacity: 0.9;
+}
+
+.is-opaque {
+    opacity: 1;
+}
+
 .title {
     padding-bottom: 10px;
     padding-top: 5px;
