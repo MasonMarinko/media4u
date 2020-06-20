@@ -36,6 +36,7 @@ var movieArray = [];
 // then send input to correct fetch functions
 var formHandler = function (event) {
     event.preventDefault();
+    postersWrapperEl.innerHTML = "";
     var selectedMedia = mediaSelectEl.value;
     // send user input to appropriate fetch function
     if (selectedMedia === "movies") {
@@ -273,7 +274,6 @@ var bookObjectCreator = function (data) {
 
 var displayContent = function (array, type) {
     contentDisplayEl.classList.remove("is-hidden");
-    postersWrapperEl.innerHTML = "";
 
     if (array.length === 0) {
         contentTitleEl.textContent = "No results. Please try a different search.";
@@ -311,6 +311,8 @@ var displayContent = function (array, type) {
             posterEl.appendChild(imgWrapperEl);
             // append poster to postersWrapper to be displayed
             postersWrapperEl.appendChild(posterEl);
+
+            console.log(true)
         }
     }
 
