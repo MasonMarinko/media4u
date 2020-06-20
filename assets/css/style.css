@@ -12,11 +12,7 @@ div.hero-body.box {
 }
 
 .is-transparent {
-    opacity: 0.9;
-}
-
-.is-opaque {
-    opacity: 1;
+    opacity: 0.93;
 }
 
 .title {
@@ -63,5 +59,9 @@ flex-shrink: 1;
 
 #interest-panel {
     flex: 1 100%;
+}
+
+strong {
+    color: white;
 }
 
