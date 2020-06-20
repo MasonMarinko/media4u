@@ -355,7 +355,7 @@ var modalCreator = function (event) {
     modalCloseEl.id = "modal-close";
     modalCloseEl.setAttribute("aria-label", "close");
 
-    // modal card content
+    // modal card body
     var modalBodyEl = document.createElement("section");
     modalBodyEl.className = "modal-card-body";
 
@@ -429,6 +429,7 @@ var modalCreator = function (event) {
 //*********************End Display Section********************** //
 //********************* Interest Section********************** //
 
+// toggles visibility of interest panel
 let interestToggleEl = document.getElementById('toggle-interest-panel')
 interestToggleEl.addEventListener('click', function () {
     var interestPanelEl = document.getElementById('interest-panel')
@@ -439,6 +440,7 @@ interestToggleEl.addEventListener('click', function () {
     }
 });
 
+// toggles visibility of panel tabs
 const panelTabHandler = function (event) {
     switch (event.target.id) {
         case "movie-tab":
@@ -472,6 +474,7 @@ const panelTabHandler = function (event) {
     }
 }
 
+// saves targeted interest into local storage
 const saveInterest = function (event) {
     let targetEl = event.target
 
@@ -501,6 +504,7 @@ const saveInterest = function (event) {
     updateInterestSection()
 }
 
+// updates the display in the interest panel
 const updateInterestSection = function () {
 
     moviePanelEl.textContent = ''
@@ -515,6 +519,7 @@ const updateInterestSection = function () {
     }
 }
 
+// creates an item to display in the interest panel
 const createInterestItem = function (array, i, type) {
     let selectedPanelEl;
     switch (type) {
@@ -532,6 +537,7 @@ const createInterestItem = function (array, i, type) {
     createDeleteButton(itemEl, array, type);
 }
 
+// creates a delete button for an item in the interest panel
 const createDeleteButton = function (itemEl, array, type) {
     deleteContainerEl = document.createElement('div');
     deleteContainerEl.className = 'ml-2';
