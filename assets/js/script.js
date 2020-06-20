@@ -36,14 +36,10 @@ var movieArray = [];
 // then send input to correct fetch functions
 var formHandler = function (event) {
     event.preventDefault();
-
     var selectedMedia = mediaSelectEl.value;
-
     // send user input to appropriate fetch function
     if (selectedMedia === "movies") {
-
         movieSearchHandler();
-
     } else if (selectedMedia === "books") {
 
         bookFetchHandler();
@@ -106,6 +102,7 @@ var movieSearchHandler = function () {
 }
 
 var movieFetch = function (title, releaseYear) {
+    movieArray = [];
     for (var i = 1; i < 20; i++) {
         var apiUrl =
             "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" +
@@ -115,24 +112,25 @@ var movieFetch = function (title, releaseYear) {
             "&primary_release_year=" +
             releaseYear +
             "&include_adult=false";
-
         fetch(apiUrl)
             .then(function (response) {
                 if (response.ok) {
                     response.json().then(function (data) {
+                        if (data.total_results == 0) {
+                            movieArray = []
+                            finalResultStyle(movieArray);
+                        }
                         genreCheck(data)
                     });
                 } else {
                     alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
                 }
             })
-
             .catch(function (error) {
                 alert("Unable to connect to Movie Database, please try again."); //<========== Replace alert with MODAL
             });
     }
 };
-
 
 //====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
 var genreCheck = function (resultArray) {
@@ -175,9 +173,7 @@ var releaseInput = function (yearInput) {
 
 //==================== function takes in search result for movie title and returns answer to "movieFetchInformation, if user leaves blank then "any" is returned
 //==================== this could also be an alert/modal if preferred.==================================//
-
 var movieTitle = function (movieTitleInput) { //<====================== Ready
-
     if (movieTitleInput) {
         return movieTitleInput;
     } else if (movieTitleInput === "") {
@@ -190,26 +186,23 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
 //====================BOOK SECTION==========================//
 
 // function to fetch book data using user input as parameter
-var bookFetchHandler = function (searchTerm) {
-    console.log("book fetch");
+var bookFetchHandler = function () {
     // initiate apiUrl variable
     var apiUrl;
-
     // book input value
     var userInput = bookInputEl.value
-
     // check if searching for title or author
     var bookSearchByEl = document.getElementById("book-search-by");
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            "&maxResults=30&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
             "+inauthor:" +
             userInput +
-            "&max-results=20&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            "&maxResults=30&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
@@ -219,7 +212,6 @@ var bookFetchHandler = function (searchTerm) {
                 response.json().then(function (data) {
                     // send data to function which will create object of
                     // relevent information
-                    console.log(data);
                     bookInputEl.value = "";
                     bookObjectCreator(data);
                 });
@@ -235,44 +227,45 @@ var bookFetchHandler = function (searchTerm) {
 var bookObjectCreator = function (data) {
     // clear books array from previous searches
     bookArray = [];
-    console.log(data.items);
-    // create array to hold book objects
-    bookArray = []
-    // cycle through data and add info to object
-    for (i = 0; i < data.items.length; i++) {
-        // get title information
-        var title = data.items[i].volumeInfo.title;
-        // get image url
-        var imageUrl;
-        var imagesLocation = data.items[i].volumeInfo.imageLinks;
-        if (!imagesLocation) {
-            imageUrl = "./assets/images/image-unavailable.jpg";
-        } else {
-            imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+    // if no results go to displayContent
+    if (data.totalItems == 0) {
+        return displayContent(bookArray)
+    } else {
+        // cycle through data and add info to object
+        for (i = 0; i < data.items.length; i++) {
+            // get title information
+            var title = data.items[i].volumeInfo.title;
+            // get image url
+            var imageUrl;
+            var imagesLocation = data.items[i].volumeInfo.imageLinks;
+            if (!imagesLocation) {
+                imageUrl = "./assets/images/image-unavailable.jpg";
+            } else {
+                imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+            };
+            // get description
+            var description = data.items[i].volumeInfo.description;
+            if (!description) {
+                description = "Description is unavailable for this book.";
+            };
+            // define "authors" location in data
+            var authors = data.items[i].volumeInfo.authors;
+            if (!authors) {
+                authors = "Authors unavailable for this book."
+            };
+            // create book object
+            var bookObject = {
+                title: title,
+                imageUrl: imageUrl,
+                description: description,
+                authors: authors,
+            }
+            // push book object to bookArray
+            bookArray.push(bookObject);
         };
-        // get description
-        var description = data.items[i].volumeInfo.description;
-        if (!description) {
-            description = "Description is unavailable for this book.";
-        };
-        // define "authors" location in data
-        var authors = data.items[i].volumeInfo.authors;
-        if (!authors) {
-            authors = "Authors unavailable for this book."
-        };
-        // create book object
-        var bookObject = {
-            title: title,
-            imageUrl: imageUrl,
-            description: description,
-            authors: authors,
-        }
-        // push book object to bookArray
-        bookArray.push(bookObject);
-        console.log(bookArray);
-    };
-    // send bookObject to DOM element creator function
-    displayContent(bookArray, 'book');
+        // send bookObject to DOM element creator function
+        displayContent(bookArray, 'book');
+    }
 };
 
 //===============END OF BOOK SECTION==========================//
@@ -282,40 +275,45 @@ var displayContent = function (array, type) {
     contentDisplayEl.classList.remove("is-hidden");
     postersWrapperEl.innerHTML = "";
 
-    let title = type + "s"
-    title = title.charAt(0).toUpperCase() + title.slice(1);
-    contentTitleEl.textContent = title;
+    if (array.length === 0) {
+        contentTitleEl.textContent = "No results. Please try a different search.";
 
-    for (i = 0; i < array.length; i++) {
-        // create element to go inside postersWrapper
-        var posterEl = document.createElement("div");
-        // give element an id referencing its index in array
-        posterEl.setAttribute("id", "index-" + i);
-        posterEl.setAttribute('type', type);
-        posterEl.addEventListener('click', modalCreator);
-        // set styling for div
-        posterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
-        // create div to hold img
-        var imgWrapperEl = document.createElement("div");
-        // give div class name image
-        imgWrapperEl.className = "image pointer";
-        // create img element
-        var imageEl = document.createElement("img");
+    } else {
+        let title = type + "s"
+        title = title.charAt(0).toUpperCase() + title.slice(1);
+        contentTitleEl.textContent = title;
 
-        if (type === 'movie') {
-            getMovieImage(imageEl, array, imgWrapperEl);
+        for (i = 0; i < array.length; i++) {
+            // create element to go inside postersWrapper
+            var posterEl = document.createElement("div");
+            // give element an id referencing its index in array
+            posterEl.setAttribute("id", "index-" + i);
+            posterEl.setAttribute('type', type);
+            posterEl.addEventListener('click', modalCreator);
+            // set styling for div
+            posterEl.className = ("column is-one-fifth-desktop is-one-third-tablet is-half-mobile");
+            // create div to hold img
+            var imgWrapperEl = document.createElement("div");
+            // give div class name image
+            imgWrapperEl.className = "image pointer";
+            // create img element
+            var imageEl = document.createElement("img");
 
-        } else if (type === 'book') {
-            getBookImage(array, imageEl, imgWrapperEl);
+            if (type === 'movie') {
+                getMovieImage(imageEl, array, imgWrapperEl);
+
+            } else if (type === 'book') {
+                getBookImage(array, imageEl, imgWrapperEl);
+            }
+
+            // append elements
+            imgWrapperEl.appendChild(imageEl);
+            posterEl.appendChild(imgWrapperEl);
+            // append poster to postersWrapper to be displayed
+            postersWrapperEl.appendChild(posterEl);
         }
-
-        // append elements
-        imgWrapperEl.appendChild(imageEl);
-        posterEl.appendChild(imgWrapperEl);
-        // append poster to postersWrapper to be displayed
-        postersWrapperEl.appendChild(posterEl);
-
     }
+
     // jump to content section
     contentDisplayEl.scrollIntoView();
 };
@@ -366,6 +364,14 @@ var modalCreator = function (event) {
     modalimageEl.className = "image mb-3 modal-image";
     var imageEl = document.createElement("img");
 
+    // interest button
+    let interestButtonEl = document.createElement('button');
+    interestButtonEl.classList = 'button';
+    interestButtonEl.setAttribute('type', mediaType);
+    interestButtonEl.setAttribute('data-id', event.currentTarget.id)
+    interestButtonEl.textContent = 'Add to interests'
+
+    // modal text containers
     var modalHeaderOneEl = document.createElement("h1");
     modalHeaderOneEl.className = "has-text-weight-bold mt-3";
     var modalTextOneEl = document.createElement("p");
@@ -374,6 +380,7 @@ var modalCreator = function (event) {
     modalHeaderTwoEl.className = "has-text-weight-bold";
     var modalTextTwoEl = document.createElement("p");
 
+    // text and image content
     switch (mediaType) {
         case 'movie':
             if (!mediaObject.poster_path) {
@@ -406,6 +413,7 @@ var modalCreator = function (event) {
     modalEl.appendChild(modalCardEl);
     modalBodyEl.appendChild(modalimageEl);
     modalimageEl.appendChild(imageEl);
+    modalimageEl.appendChild(interestButtonEl);
     modalBodyEl.appendChild(modalHeaderOneEl);
     modalBodyEl.appendChild(modalTextOneEl);
     modalBodyEl.appendChild(modalHeaderTwoEl);
@@ -413,14 +421,8 @@ var modalCreator = function (event) {
     modalCardEl.appendChild(modalBodyEl);
     contentDisplayEl.appendChild(modalEl);
 
-    let interestButtonEl = document.createElement('button');
-    interestButtonEl.classList = 'button';
-    interestButtonEl.setAttribute('type', mediaType);
-    interestButtonEl.setAttribute('data-id', event.currentTarget.id)
-    interestButtonEl.textContent = 'Add to interests'
+    // event listeners
     interestButtonEl.addEventListener('click', saveInterest)
-    modalimageEl.appendChild(interestButtonEl)
-
     modalCloseEl.addEventListener("click", closeModal)
 };
 
@@ -506,7 +508,6 @@ const updateInterestSection = function () {
     for (let i = 0; i < savedMovies.length; i++) {
         createInterestItem(savedMovies, i, "Movies");
     }
-
     bookPanelEl.textContent = ''
     let savedBooks = JSON.parse(localStorage.getItem('m4u-savedBooks')) || []
     for (let i = 0; i < savedBooks.length; i++) {
