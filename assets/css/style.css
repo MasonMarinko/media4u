@@ -9,16 +9,6 @@
     padding-top: 5px;
 }
 
-.image img {
-    height: 150px;
-    width: auto;
-}
-
-img {
-    max-width: 100px;
-    padding-bottom: 15px;
-}
-
 .pointer {
     cursor: pointer;
     font-size: larger;
@@ -33,6 +23,29 @@ img {
     padding: 0 5em;
 }
 
+
 .text-to-front {
     z-index: 1;
+}
+
+.modal-card-title {
+flex-shrink: 1;
+}
+
+.modal-image {
+    width: 25%;
+}
+
+.title-overlay {
+    position: absolute;
+
+}
+
+.navbar {
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#interest-panel {
+    flex: 1 100%;
 }
