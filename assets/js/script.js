@@ -28,7 +28,7 @@ var bookInputEl = document.getElementById("book-input")
 // arrays
 var bookArray = [];
 var movieArray = [];
-let movieResponseArray
+let movieResponseArray = [];
 /* var musicArray = []; */
 
 //***********************FORM SECTION******************************* *//
