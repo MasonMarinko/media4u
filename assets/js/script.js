@@ -48,7 +48,7 @@ var formHandler = function (event) {
         bookFetchHandler();
     }
     /* } else if (selectedMedia === "music") {
-    
+
         // musicFetchHandler(); */
 };
 
