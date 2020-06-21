@@ -1,4 +1,5 @@
 // general elements
+var heroEl = document.getElementById("hero");
 var mediaSelectEl = document.getElementById("media-select");
 var searchFormEl = document.getElementById("search-form");
 var submitButtonEl = document.getElementById("submit-button");
@@ -64,56 +65,63 @@ const mediaSelectHandler = function () {
             document.getElementById('book-form').setAttribute('class', 'field');
             // document.getElementById('music-form').setAttribute('class', 'is-hidden');
             break;
-        /* case "music":
-            document.getElementById('movie-form').setAttribute('class', 'is-hidden');
-            document.getElementById('book-form').setAttribute('class', 'is-hidden');
-            document.getElementById('music-form').setAttribute('class', 'field');
-            break; */
+            /* case "music":
+                document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+                document.getElementById('book-form').setAttribute('class', 'is-hidden');
+                document.getElementById('music-form').setAttribute('class', 'field');
+                break; */
     }
 }
 
 // fetch response modal alert
 var fetchErrorCreator = function (response) {
-    var modalEl = document.createElement("div");
-    modalEl.className = "modal is-active";
-    var modalBackGroundEl = document.createElement("div");
-    modalBackGroundEl.className = "modal-background";
-    var modalCardEl = document.createElement("div");
-    modalCardEl.className = "modal-card";
-    // modal card head
-    var modalHeadEl = document.createElement("header");
-    modalHeadEl.className = "modal-card-head is-danger";
-    var modalTitleEl = document.createElement("p");
-    modalTitleEl.className = "modal-card-title";
-    modalTitleEl.textContent = "Error!";
-    var modalCloseEl = document.createElement("button");
-    modalCloseEl.className = "delete";
-    modalCloseEl.id = "modal-close";
-    modalCloseEl.setAttribute("aria-label", "close");
-    // modal card content
-    var modalBodyEl = document.createElement("section");
-    modalBodyEl.className = "modal-card-body";
-    // error message
-    var modalDescTitleEl = document.createElement("h1");
-    modalDescTitleEl.className = "has-text-weight-bold";
-    modalDescTitleEl.textContent = "The following error has occurred:";
-    var modalDescEl = document.createElement("p");
-    modalDescEl.className = "pb-3";
-    modalDescEl.textContent = response;
-    // append modal elements to DOM
-    modalEl.appendChild(modalBackGroundEl);
-    modalHeadEl.appendChild(modalTitleEl);
-    modalHeadEl.appendChild(modalCloseEl);
-    modalCardEl.appendChild(modalHeadEl);
-    modalEl.appendChild(modalCardEl);
-    modalBodyEl.appendChild(modalImageEl);
-    modalBodyEl.appendChild(modalDescTitleEl);
-    modalBodyEl.appendChild(modalDescEl);
-    modalCardEl.appendChild(modalBodyEl);
-    contentDisplayEl.appendChild(modalEl);
-    // event listener for close-modal
-    modalCloseEl.addEventListener("click", closeModal)
-}
+    var isModal = document.getElementsByClassName("modal is-active error");
+    console.log(isModal);
+    if (isModal.length > 0) {
+        return;
+    } else {
+        console.log(response);
+        var modalEl = document.createElement("div");
+        modalEl.className = "modal is-active error";
+        modalEl.id = "error-modal";
+        var modalBackGroundEl = document.createElement("div");
+        modalBackGroundEl.className = "modal-background";
+        var modalCardEl = document.createElement("div");
+        modalCardEl.className = "modal-card";
+        // modal card head
+        var modalHeadEl = document.createElement("header");
+        modalHeadEl.className = "modal-card-head is-danger";
+        var modalTitleEl = document.createElement("p");
+        modalTitleEl.className = "modal-card-title";
+        modalTitleEl.textContent = "Error!";
+        var modalCloseEl = document.createElement("button");
+        modalCloseEl.className = "delete";
+        modalCloseEl.id = "modal-close";
+        modalCloseEl.setAttribute("aria-label", "close");
+        // modal card content
+        var modalBodyEl = document.createElement("section");
+        modalBodyEl.className = "modal-card-body";
+        // error message
+        var modalDescTitleEl = document.createElement("h1");
+        modalDescTitleEl.className = "has-text-weight-bold";
+        modalDescTitleEl.textContent = "The following error has occurred:";
+        var modalDescEl = document.createElement("p");
+        modalDescEl.className = "pb-3";
+        modalDescEl.textContent = response;
+        // append modal elements to DOM
+        modalEl.appendChild(modalBackGroundEl);
+        modalHeadEl.appendChild(modalTitleEl);
+        modalHeadEl.appendChild(modalCloseEl);
+        modalCardEl.appendChild(modalHeadEl);
+        modalEl.appendChild(modalCardEl);
+        modalBodyEl.appendChild(modalDescTitleEl);
+        modalBodyEl.appendChild(modalDescEl);
+        modalCardEl.appendChild(modalBodyEl);
+        heroEl.appendChild(modalEl);
+        // event listener for close-modal
+        modalCloseEl.addEventListener("click", closeModal)
+    }
+};
 // MOVIE SECTION
 //============= Don't forget to add query locators in order to grab answers below
 
@@ -140,12 +148,12 @@ var userSearch = function (title, releaseYear) {
                         genreCheck(data)
                     });
                 } else {
-                    fetchErrorCreator(response);
+                    fetchErrorCreator(response.statusText);
                 }
             })
 
             .catch(function (error) {
-                fetchErrorCreator("Unable to connect");//<========== Replace alert with MODAL
+                fetchErrorCreator("Unable to connect");
             });
     }
 };
@@ -588,14 +596,14 @@ const panelTabHandler = function (event) {
             bookPanelEl.setAttribute('class', 'is-hidden');
             // musicPanelEl.setAttribute('class', 'is-hidden');
             break;
-        /* case "music-tab":
-            document.getElementById('music-tab').setAttribute('class', 'is-active');
-            document.getElementById('movie-tab').removeAttribute('class');
-            document.getElementById('book-tab').removeAttribute('class');
-            musicPanelEl.removeAttribute('class');
-            moviePanelEl.setAttribute('class', 'is-hidden');
-            bookPanelEl.setAttribute('class', 'is-hidden');
-            break; */
+            /* case "music-tab":
+                document.getElementById('music-tab').setAttribute('class', 'is-active');
+                document.getElementById('movie-tab').removeAttribute('class');
+                document.getElementById('book-tab').removeAttribute('class');
+                musicPanelEl.removeAttribute('class');
+                moviePanelEl.setAttribute('class', 'is-hidden');
+                bookPanelEl.setAttribute('class', 'is-hidden');
+                break; */
         case "book-tab":
             document.getElementById('book-tab').setAttribute('class', 'is-active');
             document.getElementById('movie-tab').removeAttribute('class');
@@ -654,14 +662,14 @@ const saveInterest = function (event) {
             savedBooks.push(interestEl)
             localStorage.setItem("m4u-savedBooks", JSON.stringify(savedBooks))
             break;
-        /* case 'music':
-            savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
-            interestEl = musicArray[targetId]
-            savedMusic.push(interestEl)
-            localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
-            break; */
+            /* case 'music':
+                savedMusic = JSON.parse(localStorage.getItem("m4u-savedMusic")) || []
+                interestEl = musicArray[targetId]
+                savedMusic.push(interestEl)
+                localStorage.setItem("m4u-savedMusic", JSON.stringify(savedMusic))
+                break; */
         default:
-        // error handling
+            // error handling
     }
 
     updateInterestSection()
@@ -718,4 +726,3 @@ mediaSelectEl.addEventListener("change", mediaSelectHandler);
 searchFormEl.addEventListener("submit", formHandler);
 
 updateInterestSection();
-
