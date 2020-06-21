@@ -1,4 +1,5 @@
 // general elements
+var heroEl = document.getElementById("hero");
 var mediaSelectEl = document.getElementById("media-select");
 var searchFormEl = document.getElementById("search-form");
 var submitButtonEl = document.getElementById("submit-button");
@@ -65,13 +66,63 @@ const mediaSelectHandler = function () {
             bookFormEl.setAttribute('class', 'field');
             // musicFormEl.setAttribute('class', 'is-hidden');
             break;
-        /* case "music":
-            movieFormEl.setAttribute('class', 'is-hidden');
-            bookFormEl.setAttribute('class', 'is-hidden');
-            musicFormEl.setAttribute('class', 'field');
-            break; */
+            /* case "music":
+                document.getElementById('movie-form').setAttribute('class', 'is-hidden');
+                document.getElementById('book-form').setAttribute('class', 'is-hidden');
+                document.getElementById('music-form').setAttribute('class', 'field');
+                break; */
     }
 }
+
+// fetch response modal alert
+var fetchErrorCreator = function (response) {
+    var isModal = document.getElementsByClassName("modal is-active error");
+    console.log(isModal);
+    if (isModal.length > 0) {
+        return;
+    } else {
+        console.log(response);
+        var modalEl = document.createElement("div");
+        modalEl.className = "modal is-active error";
+        var modalBackGroundEl = document.createElement("div");
+        modalBackGroundEl.className = "modal-background";
+        var modalCardEl = document.createElement("div");
+        modalCardEl.className = "modal-card";
+        // modal card head
+        var modalHeadEl = document.createElement("header");
+        modalHeadEl.className = "modal-card-head";
+        modalHeadEl.id = "error-modal-head";
+        var modalTitleEl = document.createElement("p");
+        modalTitleEl.className = "modal-card-title";
+        modalTitleEl.textContent = "Error";
+        var modalCloseEl = document.createElement("button");
+        modalCloseEl.className = "delete";
+        modalCloseEl.id = "modal-close";
+        modalCloseEl.setAttribute("aria-label", "close");
+        // modal card content
+        var modalBodyEl = document.createElement("section");
+        modalBodyEl.className = "modal-card-body is-danger";
+        // error message
+        var modalDescTitleEl = document.createElement("h1");
+        modalDescTitleEl.className = "has-text-weight-bold";
+        modalDescTitleEl.textContent = "The following error has occurred:";
+        var modalDescEl = document.createElement("p");
+        modalDescEl.className = "pb-3";
+        modalDescEl.textContent = response;
+        // append modal elements to DOM
+        modalEl.appendChild(modalBackGroundEl);
+        modalHeadEl.appendChild(modalTitleEl);
+        modalHeadEl.appendChild(modalCloseEl);
+        modalCardEl.appendChild(modalHeadEl);
+        modalEl.appendChild(modalCardEl);
+        modalBodyEl.appendChild(modalDescTitleEl);
+        modalBodyEl.appendChild(modalDescEl);
+        modalCardEl.appendChild(modalBodyEl);
+        heroEl.appendChild(modalEl);
+        // event listener for close-modal
+        modalCloseEl.addEventListener("click", closeModal)
+    }
+};
 
 // dynamic text on the book form
 const bookInputHandler = function () {
@@ -82,10 +133,9 @@ const bookInputHandler = function () {
         bookInputLabelEl.textContent = 'Author'
     }
 }
-
 //*****************END FORM SECTION **************************//
-//*************** MOVIE SECTION*******************//
 
+//*************** MOVIE SECTION*******************//
 //============ MAIN search function that calls everything else for MOVIE TITLES!
 // Function that takes all search criteria and will compound it
 // together and send to the "movieFetch"/fetch request
@@ -128,11 +178,11 @@ var movieFetch = function (title, releaseYear) {
                         }
                     });
                 } else {
-                    alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
+                    fetchErrorCreator(response.statusText);
                 }
             })
             .catch(function (error) {
-                alert("Unable to connect to Movie Database, please try again."); //<========== Replace alert with MODAL
+                fetchErrorCreator("Unable to connect");
             });
     }
 };
@@ -243,11 +293,11 @@ var bookFetchHandler = function () {
 
                 });
             } else {
-                alert("Error: " + response.statusText);
+                fetchErrorCreator(response.statusText);
             }
         })
         .catch(function (error) {
-            alert("Unable to connect");
+            fetchErrorCreator("Unable to connect");
         });
 };
 
@@ -387,6 +437,7 @@ var modalCreator = function (event) {
 
     // interest button
     let interestButtonEl = document.createElement('button');
+    interestButtonEl.id = "interest-button";
     interestButtonEl.classList = 'button';
     interestButtonEl.setAttribute('type', mediaType);
     interestButtonEl.setAttribute('data-id', event.currentTarget.id)

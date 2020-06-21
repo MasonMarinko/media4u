@@ -1,0 +1,20 @@
+$dropdown-content-arrow: turquoise;
+$warning: rgb(255, 159, 28);
+$danger: rgb(247, 23, 53);
+$link: #183642;
+$modal-card-head-background-color: #183642;
+$modal-card-title-color: white;
+$panel-tabs-font-size: 1.2em;
+$panel-tab-active-color: black;
+$footer-background-color: #183642;
+$footer-padding: 2rem 1.5rem 2rem;
+#error-modal-head {
+    background-color: rgb(247, 23, 53);
+}
+#interest-button {
+    background-color: turquoise;
+    color: white;
+}
+
+
+@import "./node_modules/bulma/bulma.sass"
