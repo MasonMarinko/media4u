@@ -118,10 +118,10 @@ var movieFetch = function (title, releaseYear) {
                 if (response.ok) {
                     response.json().then(function (data) {
                         if (data.total_results == 0) {
-                            movieArray = []
-                            finalResultStyle(movieArray);
+                            displayContent(movieArray, 'movie');
+                        } else {
+                            genreCheck(data)
                         }
-                        genreCheck(data)
                     });
                 } else {
                     alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
@@ -138,8 +138,6 @@ var genreCheck = function (resultArray) {
     var genreInput = searchGenreEl.value
     var resultLength = resultArray.results.length;
     var resultId = resultArray.results;
-
-    movieArray = [];
 
     for (var i = 0; i < resultLength; i++) {
         var genreInfo = resultId[i].genre_ids;
@@ -188,6 +186,8 @@ var movieTitle = function (movieTitleInput) { //<====================== Ready
 
 // function to fetch book data using user input as parameter
 var bookFetchHandler = function () {
+    // clear books array from previous searches
+    bookArray = [];
     // initiate apiUrl variable
     var apiUrl;
     // book input value
@@ -211,10 +211,15 @@ var bookFetchHandler = function () {
             // request was successful
             if (response.ok) {
                 response.json().then(function (data) {
-                    // send data to function which will create object of
-                    // relevent information
-                    bookInputEl.value = "";
-                    bookObjectCreator(data);
+                    if (data.totalItems == 0) {
+                        displayContent(bookArray, 'book')
+                    } else {
+                        // send data to function which will create object of
+                        // relevent information
+                        bookInputEl.value = "";
+                        bookObjectCreator(data);
+                    }
+
                 });
             } else {
                 alert("Error: " + response.statusText);
@@ -226,47 +231,42 @@ var bookFetchHandler = function () {
 };
 
 var bookObjectCreator = function (data) {
-    // clear books array from previous searches
-    bookArray = [];
-    // if no results go to displayContent
-    if (data.totalItems == 0) {
-        return displayContent(bookArray)
-    } else {
-        // cycle through data and add info to object
-        for (i = 0; i < data.items.length; i++) {
-            // get title information
-            var title = data.items[i].volumeInfo.title;
-            // get image url
-            var imageUrl;
-            var imagesLocation = data.items[i].volumeInfo.imageLinks;
-            if (!imagesLocation) {
-                imageUrl = "./assets/images/image-unavailable.jpg";
-            } else {
-                imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
-            };
-            // get description
-            var description = data.items[i].volumeInfo.description;
-            if (!description) {
-                description = "Description is unavailable for this book.";
-            };
-            // define "authors" location in data
-            var authors = data.items[i].volumeInfo.authors;
-            if (!authors) {
-                authors = "Authors unavailable for this book."
-            };
-            // create book object
-            var bookObject = {
-                title: title,
-                imageUrl: imageUrl,
-                description: description,
-                authors: authors,
-            }
-            // push book object to bookArray
-            bookArray.push(bookObject);
+
+    // cycle through data and add info to object
+    for (i = 0; i < data.items.length; i++) {
+        // get title information
+        var title = data.items[i].volumeInfo.title;
+        // get image url
+        var imageUrl;
+        var imagesLocation = data.items[i].volumeInfo.imageLinks;
+        if (!imagesLocation) {
+            imageUrl = "./assets/images/image-unavailable.jpg";
+        } else {
+            imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
         };
-        // send bookObject to DOM element creator function
-        displayContent(bookArray, 'book');
-    }
+        // get description
+        var description = data.items[i].volumeInfo.description;
+        if (!description) {
+            description = "Description is unavailable for this book.";
+        };
+        // define "authors" location in data
+        var authors = data.items[i].volumeInfo.authors;
+        if (!authors) {
+            authors = "Authors unavailable for this book."
+        };
+        // create book object
+        var bookObject = {
+            title: title,
+            imageUrl: imageUrl,
+            description: description,
+            authors: authors,
+        }
+        // push book object to bookArray
+        bookArray.push(bookObject);
+    };
+    // send bookObject to DOM element creator function
+    displayContent(bookArray, 'book');
+
 };
 
 //===============END OF BOOK SECTION==========================//
@@ -311,8 +311,6 @@ var displayContent = function (array, type) {
             posterEl.appendChild(imgWrapperEl);
             // append poster to postersWrapper to be displayed
             postersWrapperEl.appendChild(posterEl);
-
-            console.log(true)
         }
     }
 
