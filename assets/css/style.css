@@ -69,3 +69,18 @@ strong {
     color: white;
 }
 
+@media screen and (max-width: 434px) {
+    #toggle-interest-panel {
+        width: 100%;
+    }
+
+    .panel-tabs {
+        background-image: none;
+        background-color: #00C4A7;
+    }
+
+    #search-form {
+        margin-top: 112px;
+    }
+}
+
