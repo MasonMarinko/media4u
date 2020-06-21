@@ -49,6 +49,7 @@ var formHandler = function (event) {
     }
     /* } else if (selectedMedia === "music") {
         // musicFetchHandler(); */
+    
 };
 
 
