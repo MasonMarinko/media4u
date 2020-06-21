@@ -21,7 +21,6 @@ div.hero-body.box {
     background-image: url("../images/library.jpg");
     background-position: center;
     background-size: 100%;
-    
 }
 
 .title {
@@ -56,6 +55,8 @@ flex-shrink: 1;
 
 #interest-panel {
     flex: 1 100%;
+    max-height: 80vw;
+    overflow: scroll;
 }
 
 #panel-tabs {
@@ -75,6 +76,16 @@ strong {
 }
 
 /* media queries */
+@media screen and (max-width: 1023px) {
+    div.hero-body.box {
+        background-size: 200%;
+    }
+}
+@media screen and (max-width: 768px) {
+    div.hero-body.box {
+        background-size: 305%;
+    }
+}
 @media screen and (max-width: 434px) {
     #toggle-interest-panel {
         width: 100%;
@@ -88,5 +99,8 @@ strong {
     #search-form {
         margin-top: 112px;
     }
+
+
 }
+
 
