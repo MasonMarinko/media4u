@@ -72,6 +72,48 @@ const mediaSelectHandler = function () {
     }
 }
 
+// fetch response modal alert
+var fetchErrorCreator = function (response) {
+    var modalEl = document.createElement("div");
+    modalEl.className = "modal is-active";
+    var modalBackGroundEl = document.createElement("div");
+    modalBackGroundEl.className = "modal-background";
+    var modalCardEl = document.createElement("div");
+    modalCardEl.className = "modal-card";
+    // modal card head
+    var modalHeadEl = document.createElement("header");
+    modalHeadEl.className = "modal-card-head is-danger";
+    var modalTitleEl = document.createElement("p");
+    modalTitleEl.className = "modal-card-title";
+    modalTitleEl.textContent = "Error!";
+    var modalCloseEl = document.createElement("button");
+    modalCloseEl.className = "delete";
+    modalCloseEl.id = "modal-close";
+    modalCloseEl.setAttribute("aria-label", "close");
+    // modal card content
+    var modalBodyEl = document.createElement("section");
+    modalBodyEl.className = "modal-card-body";
+    // error message
+    var modalDescTitleEl = document.createElement("h1");
+    modalDescTitleEl.className = "has-text-weight-bold";
+    modalDescTitleEl.textContent = "The following error has occurred:";
+    var modalDescEl = document.createElement("p");
+    modalDescEl.className = "pb-3";
+    modalDescEl.textContent = response;
+    // append modal elements to DOM
+    modalEl.appendChild(modalBackGroundEl);
+    modalHeadEl.appendChild(modalTitleEl);
+    modalHeadEl.appendChild(modalCloseEl);
+    modalCardEl.appendChild(modalHeadEl);
+    modalEl.appendChild(modalCardEl);
+    modalBodyEl.appendChild(modalImageEl);
+    modalBodyEl.appendChild(modalDescTitleEl);
+    modalBodyEl.appendChild(modalDescEl);
+    modalCardEl.appendChild(modalBodyEl);
+    contentDisplayEl.appendChild(modalEl);
+    // event listener for close-modal
+    modalCloseEl.addEventListener("click", closeModal)
+}
 // MOVIE SECTION
 //============= Don't forget to add query locators in order to grab answers below
 
@@ -98,12 +140,12 @@ var userSearch = function (title, releaseYear) {
                         genreCheck(data)
                     });
                 } else {
-                    alert("Error: " + response.statusText + '. ' + 'Please make sure to enter valid response'); //<==== replace with modal
+                    fetchErrorCreator(response);
                 }
             })
 
             .catch(function (error) {
-                alert("Unable to connect to Movie Database, please try again."); //<========== Replace alert with MODAL
+                fetchErrorCreator("Unable to connect");//<========== Replace alert with MODAL
             });
     }
 };
@@ -357,11 +399,11 @@ var bookFetchHandler = function (searchTerm) {
                     bookObjectCreator(data);
                 });
             } else {
-                alert("Error: " + response.statusText);
+                fetchErrorCreator(response.statusText);
             }
         })
         .catch(function (error) {
-            alert("Unable to connect");
+            fetchErrorCreator("Unable to connect");
         });
 };
 
