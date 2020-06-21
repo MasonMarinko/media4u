@@ -2760,7 +2760,7 @@ a.tag:hover {
 }
 .is-inline.textarea, .is-inline.input {
   display: inline;
-  width: auto;
+  padding: auto;
 }
 
 .input.is-rounded {
@@ -4299,6 +4299,7 @@ button.dropdown-item.is-active {
   flex-direction: column;
   max-height: calc(100vh - 40px);
   overflow: hidden;
+  overflow-y: hidden;
   -ms-overflow-y: visible;
 }
 
