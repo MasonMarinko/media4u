@@ -130,6 +130,7 @@ var fetchErrorCreator = function (response) {
 // NEED TO ADD INPUTS INTO FETCH
 
 var userSearch = function (title, releaseYear) {
+    movieArray = [];
     for (var i = 1; i < 100; i++) {
         var apiUrl =
             "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" +
@@ -180,10 +181,13 @@ var genreCheck = function (genreInfo) {
 //=================Show movie posters based on results==============//
 var finalResultStyle = function (movieArray) {
     contentDisplayEl.classList.remove("is-hidden");
-    contentTitleEl.textContent = "Movies";
+    if (movieArray.length == 0) {
+        contentTitleEl.textContent = "No results. Please try a different search."
+    } else {
+        contentTitleEl.textContent = "Movies";
+    }
     postersWrapperEl.innerHTML = "";
-    for (i = 0; i < movieArray.length; i++) {
-
+    for (i = 0; i < 20; i++) {
         // create element to go inside postersWrapper
         var singlePosterEl = document.createElement("div");
         // give element an id referencing its index in movieArray
@@ -197,10 +201,8 @@ var finalResultStyle = function (movieArray) {
         movieImgWrapperEl.className = "image pointer";
         // create img element
         var movieImageEl = document.createElement("img");
-
         posterCheck = movieArray[i].poster_path
-        if (!posterCheck) {
-
+        if (posterCheck === null) {
             // set source of img element
             movieImageEl.setAttribute("src", "./assets/images/not-available.jpg");
             var movieTitle = movieArray[i].title
@@ -208,22 +210,16 @@ var finalResultStyle = function (movieArray) {
             titleOverlayEl.className = 'title-overlay'
             titleOverlayEl.textContent = movieTitle;
             movieImgWrapperEl.appendChild(titleOverlayEl);
-
         } else {
-
             // set source of img element
             var imageSrc = "http://image.tmdb.org/t/p/original" + movieArray[i].poster_path;
             movieImageEl.setAttribute("src", imageSrc);
-
         }
-
         // append elements
         movieImgWrapperEl.appendChild(movieImageEl);
         singlePosterEl.appendChild(movieImgWrapperEl);
         // append poster to postersWrapper to be displayed
         postersWrapperEl.appendChild(singlePosterEl);
-
-
     }
     contentDisplayEl.scrollIntoView();
 };
@@ -418,49 +414,54 @@ var bookFetchHandler = function (searchTerm) {
 var bookObjectCreator = function (data) {
     // clear books array from previous searches
     booksArray = [];
-    console.log(data.items);
-    // create array to hold book objects
-    booksArray = []
-    // cycle through data and add info to object
-    for (i = 0; i < data.items.length; i++) {
-        // get title information
-        var title = data.items[i].volumeInfo.title;
-        // get image url
-        var imageUrl;
-        var imagesLocation = data.items[i].volumeInfo.imageLinks;
-        if (!imagesLocation) {
-            imageUrl = "./assets/images/image-unavailable.jpg";
-        } else {
-            imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+    // if no results go to bookContentCreator
+    if (data.totalItems == 0) {
+        return bookContentCreator(booksArray)
+    } else {
+        // cycle through data and add info to object
+        for (i = 0; i < data.items.length; i++) {
+            // get title information
+            var title = data.items[i].volumeInfo.title;
+            // get image url
+            var imageUrl;
+            var imagesLocation = data.items[i].volumeInfo.imageLinks;
+            if (!imagesLocation) {
+                imageUrl = "./assets/images/image-unavailable.jpg";
+            } else {
+                imageUrl = data.items[i].volumeInfo.imageLinks.thumbnail;
+            };
+            // get description
+            var description = data.items[i].volumeInfo.description;
+            if (!description) {
+                description = "Description is unavailable for this book.";
+            };
+            // define "authors" location in data
+            var authors = data.items[i].volumeInfo.authors;
+            if (!authors) {
+                authors = "Authors unavailable for this book."
+            };
+            // create book object
+            var bookObject = {
+                title: title,
+                imageUrl: imageUrl,
+                description: description,
+                authors: authors,
+            }
+            // push book object to booksArray
+            booksArray.push(bookObject);
         };
-        // get description
-        var description = data.items[i].volumeInfo.description;
-        if (!description) {
-            description = "Description is unavailable for this book.";
-        };
-        // define "authors" location in data
-        var authors = data.items[i].volumeInfo.authors;
-        if (!authors) {
-            authors = "Authors unavailable for this book."
-        };
-        // create book object
-        var bookObject = {
-            title: title,
-            imageUrl: imageUrl,
-            description: description,
-            authors: authors,
-        }
-        // push book object to booksArray
-        booksArray.push(bookObject);
-        console.log(booksArray);
-    };
-    // send bookObject to DOM element creator function
-    bookContentCreator(booksArray);
+        // send bookObject to DOM element creator function
+        bookContentCreator(booksArray);
+    }
 };
 
 var bookContentCreator = function (booksArray) {
     contentDisplayEl.classList.remove("is-hidden");
-    contentTitleEl.textContent = "Books";
+    if (booksArray.length == 0) {
+        contentTitleEl.textContent = "No results. Please try a different search.";
+    } else {
+        contentTitleEl.textContent = "Books";
+    }
     postersWrapperEl.innerHTML = "";
     for (i = 0; i < booksArray.length; i++) {
         // create book element to go inside postersWrapper
@@ -492,10 +493,8 @@ var bookContentCreator = function (booksArray) {
         bookImgWrapperEl.appendChild(bookImageEl);
         bookPosterEl.appendChild(bookImgWrapperEl);
         // append book poster to postersWrapper to be displayed
-
         postersWrapperEl.appendChild(bookPosterEl);
         bookPosterEl.addEventListener('click', bookModalCreator)
-
     }
     // jump to content section
     contentDisplayEl.scrollIntoView();
