@@ -5628,7 +5628,9 @@ body.has-spaced-navbar-fixed-bottom {
   display: flex;
   font-size: 0.875em;
   justify-content: center;
+  background-image: linear-gradient(90deg, #183642, #00D1B2, #00D1B2);
 }
+
 .panel-tabs a {
   border-bottom: 1px solid #dbdbdb;
   margin-bottom: -1px;
