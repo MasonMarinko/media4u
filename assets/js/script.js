@@ -83,24 +83,24 @@ var fetchErrorCreator = function (response) {
         console.log(response);
         var modalEl = document.createElement("div");
         modalEl.className = "modal is-active error";
-        modalEl.id = "error-modal";
         var modalBackGroundEl = document.createElement("div");
         modalBackGroundEl.className = "modal-background";
         var modalCardEl = document.createElement("div");
         modalCardEl.className = "modal-card";
         // modal card head
         var modalHeadEl = document.createElement("header");
-        modalHeadEl.className = "modal-card-head is-danger";
+        modalHeadEl.className = "modal-card-head";
+        modalHeadEl.id = "error-modal-head";
         var modalTitleEl = document.createElement("p");
         modalTitleEl.className = "modal-card-title";
-        modalTitleEl.textContent = "Error!";
+        modalTitleEl.textContent = "Error";
         var modalCloseEl = document.createElement("button");
         modalCloseEl.className = "delete";
         modalCloseEl.id = "modal-close";
         modalCloseEl.setAttribute("aria-label", "close");
         // modal card content
         var modalBodyEl = document.createElement("section");
-        modalBodyEl.className = "modal-card-body";
+        modalBodyEl.className = "modal-card-body is-danger";
         // error message
         var modalDescTitleEl = document.createElement("h1");
         modalDescTitleEl.className = "has-text-weight-bold";

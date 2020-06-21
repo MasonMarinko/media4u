@@ -1,4 +1,8 @@
 @charset "UTF-8";
+#error-modal-head {
+  background-color: #f71735;
+}
+
 /*! bulma.io v0.9.0 | MIT License | github.com/jgthms/bulma */
 @keyframes spinAround {
   from {

@@ -8,6 +8,9 @@ $panel-tabs-font-size: 1.2em;
 $panel-tab-active-color: black;
 $footer-background-color: #183642;
 $footer-padding: 2rem 1.5rem 2rem;
+#error-modal-head {
+    background-color: rgb(247, 23, 53);
+}
 
 
 @import "./node_modules/bulma/bulma.sass"
