@@ -3,6 +3,11 @@
   background-color: #f71735;
 }
 
+#interest-button {
+  background-color: turquoise;
+  color: white;
+}
+
 /*! bulma.io v0.9.0 | MIT License | github.com/jgthms/bulma */
 @keyframes spinAround {
   from {

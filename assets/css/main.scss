@@ -11,6 +11,10 @@ $footer-padding: 2rem 1.5rem 2rem;
 #error-modal-head {
     background-color: rgb(247, 23, 53);
 }
+#interest-button {
+    background-color: turquoise;
+    color: white;
+}
 
 
 @import "./node_modules/bulma/bulma.sass"

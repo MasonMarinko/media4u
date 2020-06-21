@@ -437,6 +437,7 @@ var modalCreator = function (event) {
 
     // interest button
     let interestButtonEl = document.createElement('button');
+    interestButtonEl.id = "interest-button";
     interestButtonEl.classList = 'button';
     interestButtonEl.setAttribute('type', mediaType);
     interestButtonEl.setAttribute('data-id', event.currentTarget.id)
