@@ -28,6 +28,7 @@ var bookInputEl = document.getElementById("book-input")
 // arrays
 var bookArray = [];
 var movieArray = [];
+let movieResponseArray
 /* var musicArray = []; */
 
 //***********************FORM SECTION******************************* *//
@@ -104,6 +105,7 @@ var movieSearchHandler = function () {
 
 var movieFetch = function (title, releaseYear) {
     movieArray = [];
+    movieResponseArray = [];
     for (var i = 1; i < 20; i++) {
         var apiUrl =
             "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" +
@@ -120,7 +122,7 @@ var movieFetch = function (title, releaseYear) {
                         if (data.total_results == 0) {
                             displayContent(movieArray, 'movie');
                         } else {
-                            genreCheck(data)
+                            responseArrayCreator(data)
                         }
                     });
                 } else {
@@ -133,28 +135,45 @@ var movieFetch = function (title, releaseYear) {
     }
 };
 
-//====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
-var genreCheck = function (resultArray) {
-    var genreInput = searchGenreEl.value
-    var resultLength = resultArray.results.length;
-    var resultId = resultArray.results;
+// Takes all the responses and returns one array
+const responseArrayCreator = function (data) {
 
-    for (var i = 0; i < resultLength; i++) {
-        var genreInfo = resultId[i].genre_ids;
+    for (let i = 0; i < data.results.length; i++) {
+        movieResponseArray.push(data.results[i])
+    }
+
+    if (movieResponseArray.length >= 380) {
+        genreCheck(movieResponseArray)
+    }
+}
+
+//====== Function takes in data from fetch, and number(id) from genreConversion which will verify if movies that have been fetched match those genre ID's, if they do they are returned, if not they will no longer show.
+var genreCheck = function (array) {
+
+    var genreInput = searchGenreEl.value
+
+    for (var i = 0; i < array.length; i++) {
+        var genreInfo = array[i].genre_ids;
 
         if (genreInfo.includes(parseInt(genreInput))) {
 
-            movieArray.push(resultId[i])
+            movieArray.push(array[i])
 
         } else if (genreInput === "any") {
 
-            movieArray.push(resultId[i])
+            movieArray.push(array[i])
 
         }
     }
 
-    displayContent(movieArray, 'movie')
+    movieArray = removeDuplicates(movieArray);
+    displayContent(movieArray, 'movie');
 }
+
+// removes repeated movies
+const removeDuplicates = function (array) {
+    return array.filter((a, b) => array.indexOf(a) === b)
+};
 
 // function checks to make sure year is 4 digits long, and is beyond 1887 (first movie 1888) and returns a year/integer
 var releaseInput = function (yearInput) {
