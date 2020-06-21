@@ -218,13 +218,13 @@ var bookFetchHandler = function () {
     if (bookSearchByEl.value === "title") {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
-            "&maxResults=30&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            "&maxResults=40&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     } else {
         var apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" +
             userInput +
             "+inauthor:" +
             userInput +
-            "&maxResults=30&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
+            "&maxResults=40&key=AIzaSyA2ONzDIFnpqYkH0ALMjMWuPbNh99zqNhw";
     }
     // fetch data from api URL
     fetch(apiUrl)
