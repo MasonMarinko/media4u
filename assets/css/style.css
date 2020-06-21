@@ -69,6 +69,10 @@ strong {
     color: white;
 }
 
+#movie-panel, #book-panel {
+    background-color: white;
+}
+
 @media screen and (max-width: 434px) {
     #toggle-interest-panel {
         width: 100%;

@@ -306,7 +306,7 @@ var movieModalCreator = function (event) {
 
     // ================== Interest Button =================//
     let interestButtonEl = document.createElement('button');
-    interestButtonEl.classList = 'button';
+    interestButtonEl.classList = 'button is-primary';
     interestButtonEl.setAttribute('type', 'movie');
     interestButtonEl.setAttribute('data-id', event.currentTarget.id);
     interestButtonEl.textContent = 'Add to interests'
@@ -515,7 +515,7 @@ var bookModalCreator = function (event) {
     modalCloseEl.addEventListener("click", closeModal)
 
     let interestButtonEl = document.createElement('button');
-    interestButtonEl.classList = 'button';
+    interestButtonEl.classList = 'button is-primary';
     interestButtonEl.setAttribute('type', 'book');
     interestButtonEl.setAttribute('data-id', event.currentTarget.id)
     interestButtonEl.textContent = 'Add to interests'

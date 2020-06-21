@@ -4296,7 +4296,7 @@ button.dropdown-item.is-active {
 .modal-card-head,
 .modal-card-foot {
   align-items: center;
-  background-color: whitesmoke;
+  background-color: #183642;
   display: flex;
   flex-shrink: 0;
   justify-content: flex-start;
@@ -4311,7 +4311,7 @@ button.dropdown-item.is-active {
 }
 
 .modal-card-title {
-  color: #363636;
+  color: white;
   flex-grow: 1;
   flex-shrink: 0;
   font-size: 1.5rem;
@@ -5626,22 +5626,17 @@ body.has-spaced-navbar-fixed-bottom {
 .panel-tabs {
   align-items: flex-end;
   display: flex;
-  font-size: 1.2em;
+  font-size: 0.875em;
   justify-content: center;
-  background-image: linear-gradient(90deg, rgb(24, 54, 66), rgb(64, 224, 208, 1), rgb(0, 209, 178), rgb(0, 209, 178));
 }
 .panel-tabs a {
-  border-bottom: 2px solid #dbdbdb;
-  margin-bottom: -2px;
+  border-bottom: 1px solid #dbdbdb;
+  margin-bottom: -1px;
   padding: 0.5em;
-  color: #fff;
-  font-weight: light;
 }
-
 .panel-tabs a.is-active {
   border-bottom-color: #4a4a4a;
   color: #363636;
-  font-weight: bolder;
 }
 
 .panel-list a {
@@ -9838,8 +9833,8 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 .footer {
-  background-color: rgb(24, 54, 66);
-  padding: 3rem 1.5rem 3rem;
+  background-color: #fafafa;
+  padding: 3rem 1.5rem 6rem;
 }
 
 /*# sourceMappingURL=main.css.map */
