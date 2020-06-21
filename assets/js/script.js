@@ -106,7 +106,8 @@ var movieSearchHandler = function () {
 var movieFetch = function (title, releaseYear) {
     movieArray = [];
     movieResponseArray = [];
-    for (var i = 1; i < 20; i++) {
+    let returnedResponsesTracker = 0;
+    for (var i = 1; i <= 100; i++) {
         var apiUrl =
             "https://api.themoviedb.org/3/search/movie?api_key=aafd4b8dcf6c14437ba0157bc3e6e116&language=en-US&page=" +
             i +
@@ -122,7 +123,8 @@ var movieFetch = function (title, releaseYear) {
                         if (data.total_results == 0) {
                             displayContent(movieArray, 'movie');
                         } else {
-                            responseArrayCreator(data)
+                            returnedResponsesTracker++
+                            responseArrayCreator(data, returnedResponsesTracker);
                         }
                     });
                 } else {
@@ -136,13 +138,13 @@ var movieFetch = function (title, releaseYear) {
 };
 
 // Takes all the responses and returns one array
-const responseArrayCreator = function (data) {
+const responseArrayCreator = function (data, returnedResponsesTracker) {
 
     for (let i = 0; i < data.results.length; i++) {
         movieResponseArray.push(data.results[i])
     }
 
-    if (movieResponseArray.length >= 380) {
+    if (returnedResponsesTracker >= 100) {
         genreCheck(movieResponseArray)
     }
 }
