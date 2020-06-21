@@ -58,6 +58,10 @@ flex-shrink: 1;
     flex: 1 100%;
 }
 
+#panel-tabs {
+background-image: linear-gradient(90deg, #183642, #00D1B2, #00D1B2);
+}
+
 #toggle-interest-panel {
     height: 100%;
 }
@@ -76,7 +80,7 @@ strong {
         width: 100%;
     }
 
-    .panel-tabs {
+    #panel-tabs {
         background-image: none;
         background-color: #00C4A7;
     }

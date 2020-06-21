@@ -5626,11 +5626,9 @@ body.has-spaced-navbar-fixed-bottom {
 .panel-tabs {
   align-items: flex-end;
   display: flex;
-  font-size: 0.875em;
+  font-size: 1.2em;
   justify-content: center;
-  background-image: linear-gradient(90deg, #183642, #00D1B2, #00D1B2);
 }
-
 .panel-tabs a {
   border-bottom: 1px solid #dbdbdb;
   margin-bottom: -1px;
@@ -5638,7 +5636,7 @@ body.has-spaced-navbar-fixed-bottom {
 }
 .panel-tabs a.is-active {
   border-bottom-color: #4a4a4a;
-  color: #363636;
+  color: black;
 }
 
 .panel-list a {
@@ -9836,7 +9834,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 
 .footer {
   background-color: #183642;
-  padding: 3rem 1.5rem 6rem;
+  padding: 2rem 1.5rem 2rem;
 }
 
 /*# sourceMappingURL=main.css.map */
